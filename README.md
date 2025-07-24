@@ -21,6 +21,7 @@ Application Next.js avec Supabase - Base propre prête pour le développement.
 ### Configuration Locale
 
 1. **Cloner et installer les dépendances**
+
    ```bash
    git clone <votre-repo>
    cd njillu-app
@@ -28,19 +29,22 @@ Application Next.js avec Supabase - Base propre prête pour le développement.
    ```
 
 2. **Variables d'environnement**
-   
+
    Créer un fichier `.env.local` :
+
    ```env
    NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
    ```
 
 3. **Démarrer Supabase local** (optionnel)
+
    ```bash
    supabase start
    ```
 
 4. **Démarrer le serveur de développement**
+
    ```bash
    pnpm dev
    ```
@@ -48,12 +52,14 @@ Application Next.js avec Supabase - Base propre prête pour le développement.
 ## Commandes Disponibles
 
 ### Développement
+
 - `pnpm dev` - Serveur de développement avec Turbopack
 - `pnpm build` - Build de production
 - `pnpm start` - Serveur de production
 - `pnpm lint` - Linter ESLint
 
 ### Supabase (Optionnel - Développement Local)
+
 - `supabase start` - Démarrer les services locaux
 - `supabase stop` - Arrêter les services locaux
 - `supabase status` - Statut des services
@@ -61,7 +67,7 @@ Application Next.js avec Supabase - Base propre prête pour le développement.
 
 ## Structure du Projet
 
-```
+```text
 app/
 ├── auth/           # Pages d'authentification
 ├── protected/      # Routes protégées
@@ -84,6 +90,7 @@ supabase/
 ## Authentification
 
 L'application utilise le système d'authentification de Supabase avec :
+
 - Gestion des sessions par cookies via `@supabase/ssr`
 - Trois clients configurés (client/server/middleware)
 - Protection automatique des routes via middleware
@@ -100,6 +107,6 @@ L'application utilise le système d'authentification de Supabase avec :
 
 Consultez `REFERENCE.md` pour voir tous les exemples et patterns du template original avant nettoyage.
 
-## Développement
+## Commentaires
 
 Cette base propre est prête pour commencer le développement de votre application. Tous les exemples ont été supprimés mais documentés dans le fichier de référence.

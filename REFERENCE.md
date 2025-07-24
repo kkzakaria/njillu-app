@@ -5,18 +5,21 @@ Ce document contient tous les exemples, recommandations et documentations du tem
 ## Structure Originale du Projet
 
 ### Pages d'Exemple
+
 - **Page d'accueil** (`app/page.tsx`) : Landing page avec tutoriel intégré
 - **Page protégée** (`app/protected/page.tsx`) : Exemple de page nécessitant une authentification
 
 ### Composants d'Exemple Supprimés
 
 #### Composants de Navigation et Interface
+
 - `components/auth-button.tsx` : Bouton d'authentification avec gestion d'état
 - `components/deploy-button.tsx` : Bouton de déploiement Vercel
 - `components/env-var-warning.tsx` : Avertissement variables d'environnement
 - `components/hero.tsx` : Section héro avec logos Supabase + Next.js
 
 #### Composants de Tutorial (dossier `components/tutorial/`)
+
 - `connect-supabase-steps.tsx` : Étapes de connexion à Supabase
 - `sign-up-user-steps.tsx` : Étapes d'inscription utilisateur
 - `fetch-data-steps.tsx` : Étapes de récupération de données
@@ -24,6 +27,7 @@ Ce document contient tous les exemples, recommandations et documentations du tem
 - `code-block.tsx` : Affichage de blocs de code
 
 #### Logos et Assets
+
 - `components/next-logo.tsx` : Logo Next.js SVG
 - `components/supabase-logo.tsx` : Logo Supabase SVG
 
@@ -32,6 +36,7 @@ Ce document contient tous les exemples, recommandations et documentations du tem
 ### 1. Authentification avec Supabase
 
 #### Auth Button (components/auth-button.tsx)
+
 ```tsx
 import { signOutAction } from "@/app/auth/actions";
 import Link from "next/link";
@@ -69,6 +74,7 @@ export default async function AuthButton() {
 ### 2. Vérification des Variables d'Environnement
 
 #### Env Var Warning (components/env-var-warning.tsx)
+
 ```tsx
 import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
@@ -107,6 +113,7 @@ export function EnvVarWarning() {
 ### 3. Patterns de Pages Protégées
 
 #### Page Protégée (app/protected/page.tsx)
+
 ```tsx
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -144,14 +151,16 @@ export default async function ProtectedPage() {
 ### 1. Configuration Supabase
 
 #### Étapes de Connexion (connect-supabase-steps.tsx)
+
 1. **Créer un projet Supabase** : Aller sur database.new
-2. **Déclarer les variables d'environnement** : 
+2. **Déclarer les variables d'environnement** :
    - Renommer `.env.example` en `.env.local`
    - Remplir avec les valeurs de l'API Settings Supabase
 3. **Redémarrer le serveur de développement** : `npm run dev`
 4. **Actualiser la page** pour charger les nouvelles variables
 
 #### Variables d'environnement requises
+
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
@@ -160,6 +169,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 ### 2. Pattern d'Inscription Utilisateur
 
 #### Étapes d'inscription (sign-up-user-steps.tsx)
+
 1. **Aller à la page d'inscription** : `/auth/sign-up`
 2. **Créer un compte utilisateur**
 3. **Confirmer l'email** si requis
@@ -168,6 +178,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 ### 3. Pattern de Récupération de Données
 
 #### Étapes de fetch de données (fetch-data-steps.tsx)
+
 1. **Créer une table Supabase**
 2. **Configurer les RLS policies**
 3. **Utiliser le client Supabase pour les requêtes**
@@ -176,6 +187,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 ## Styles et Thèmes
 
 ### Hero Section Original
+
 ```tsx
 export function Hero() {
   return (
@@ -203,6 +215,7 @@ export function Hero() {
 ```
 
 ### Navigation Original
+
 ```tsx
 <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
   <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
@@ -220,24 +233,28 @@ export function Hero() {
 ## Recommandations pour le Développement
 
 ### 1. Structure de Projet Recommandée
+
 - Garder la séparation des clients Supabase (client/server/middleware)
 - Utiliser les formulaires avec Server Actions pour l'authentification
 - Implémenter les RLS policies pour la sécurité des données
 - Utiliser shadcn/ui pour les composants UI cohérents
 
 ### 2. Bonnes Pratiques Authentification
+
 - Toujours vérifier l'authentification côté serveur
 - Utiliser les redirections appropriées pour les pages protégées
 - Gérer les états de chargement et d'erreur
 - Implémenter la gestion des sessions avec cookies
 
 ### 3. Patterns UI Recommandés
+
 - Utiliser Tailwind CSS avec les variables CSS pour les thèmes
 - Implémenter le dark/light mode avec next-themes
 - Utiliser Lucide React pour les icônes
 - Suivre les conventions shadcn/ui pour la cohérence
 
 ### 4. Configuration Déploiement
+
 - Variables d'environnement configurées sur Vercel/plateform
 - Build optimisé avec Next.js
 - Configuration Supabase en production

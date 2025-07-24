@@ -116,10 +116,12 @@ When working with database migrations and RLS policies, follow these conventions
 
 ### Authentication Patterns
 
-- Always create new Supabase clients (don't use global variables)
+- Always create new Supabase clients (don't use global variables) - see REFERENCE.md for examples
 - Use appropriate client type based on context (client/server/middleware)
 - Handle cookie management properly in server contexts
 - Implement proper error handling for auth state changes
+- Use `supabase.auth.getClaims()` for server-side authentication checks
+- Redirect unauthenticated users to `/auth/login` from protected pages
 
 ### Development Workflow
 
@@ -128,6 +130,46 @@ When working with database migrations and RLS policies, follow these conventions
 3. Make database changes via migrations
 4. Test authentication flows thoroughly
 5. Use Supabase Studio at `http://localhost:54323` for database management
+
+### Project History and Context
+
+This project is a cleaned version of the original Supabase + Next.js template. The original template included:
+
+- Tutorial components and step-by-step guides
+- Hero sections with Supabase/Next.js branding
+- Deploy buttons and environment variable warnings
+- Example implementations for common patterns
+
+All examples and tutorial components have been removed to create a clean base, but are preserved in `REFERENCE.md` for reference when implementing similar functionality.
+
+## Code Patterns and Examples
+
+This project was cleaned from the original Supabase template. For reference implementations, see `REFERENCE.md` which contains:
+
+### Authentication Components
+
+- Auth button with user state management
+- Environment variable validation warnings
+- Server-side user authentication checks
+
+### Protected Page Pattern
+
+```tsx
+// Standard pattern for protected pages
+const supabase = await createClient();
+const { data, error } = await supabase.auth.getClaims();
+if (error || !data?.claims) {
+  redirect("/auth/login");
+}
+```
+
+### Common Components Available in REFERENCE.md
+
+- Tutorial step components
+- Code block display components
+- Hero sections with logo integration
+- Deploy buttons for Vercel
+- Navigation with authentication state
 
 ## Testing and Validation
 
