@@ -29,7 +29,7 @@ This is a Next.js application with Supabase integration for authentication and d
 The application requires these environment variables in `.env.local`:
 
 - `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous key
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY` - Supabase anonymous key
 
 ## Architecture Overview
 
@@ -58,8 +58,12 @@ app/
 └── page.tsx                # Landing page
 
 components/
-├── auth-button.tsx         # Authentication state button
-├── tutorial/               # Tutorial components
+├── forgot-password-form.tsx # Forgot password form component
+├── login-form.tsx          # Login form component
+├── logout-button.tsx       # Logout button component
+├── sign-up-form.tsx        # Sign up form component
+├── theme-switcher.tsx      # Theme switching component
+├── update-password-form.tsx # Update password form component
 └── ui/                     # shadcn/ui components
 
 lib/
@@ -108,6 +112,7 @@ When working with database migrations and RLS policies, follow these conventions
 - `@/lib` → `./lib`
 - `@/lib/utils` → `./lib/utils`
 - `@/components/ui` → `./components/ui`
+- `@/hooks` → `./hooks`
 
 ### Authentication Patterns
 
@@ -131,3 +136,10 @@ When working with database migrations and RLS policies, follow these conventions
 - Test protected route redirects
 - Validate environment variable setup
 - Ensure middleware session handling works correctly
+
+## important-instruction-reminders
+
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
