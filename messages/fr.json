@@ -1,0 +1,98 @@
+{
+  "metadata": {
+    "title": "Mon Application",
+    "description": "Application Next.js avec Supabase"
+  },
+  "home": {
+    "welcome": "Bienvenue dans votre application",
+    "description": "Cette application est prête à être développée selon vos besoins."
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "description": "Entrez votre email pour vous connecter à votre compte",
+      "email": "Email",
+      "password": "Mot de passe",
+      "forgotPassword": "Mot de passe oublié ?",
+      "loginButton": "Se connecter",
+      "loggingIn": "Connexion en cours...",
+      "noAccount": "Pas de compte ?",
+      "signUp": "S'inscrire",
+      "error": "Une erreur s'est produite"
+    },
+    "signUp": {
+      "title": "Inscription",
+      "description": "Créez votre nouveau compte",
+      "email": "Email",
+      "password": "Mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "signUpButton": "S'inscrire",
+      "signingUp": "Inscription en cours...",
+      "haveAccount": "Déjà un compte ?",
+      "login": "Se connecter",
+      "success": "Vérifiez votre email pour confirmer votre compte"
+    },
+    "forgotPassword": {
+      "title": "Mot de passe oublié",
+      "description": "Entrez votre email pour recevoir un lien de réinitialisation",
+      "email": "Email",
+      "sendButton": "Envoyer le lien",
+      "sending": "Envoi en cours...",
+      "success": "Email de réinitialisation envoyé",
+      "backToLogin": "Retour à la connexion"
+    },
+    "updatePassword": {
+      "title": "Modifier le mot de passe",
+      "description": "Entrez votre nouveau mot de passe",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "updateButton": "Mettre à jour",
+      "updating": "Mise à jour en cours...",
+      "success": "Mot de passe mis à jour avec succès"
+    },
+    "logout": "Se déconnecter"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "success": "Succès",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "close": "Fermer"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "documentation": "Documentation",
+    "invoicing": "Facturation",
+    "settings": "Paramètres",
+    "profile": "Profil",
+    "logout": "Déconnexion"
+  },
+  "customs": {
+    "fdi": {
+      "title": "Déclaration d'Importation (FDI)",
+      "create": "Créer une FDI",
+      "edit": "Modifier la FDI",
+      "status": "Statut",
+      "number": "Numéro FDI"
+    },
+    "rfcv": {
+      "title": "Demande de Fourniture de Conteneur Vide (RFCV)",
+      "create": "Créer une RFCV",
+      "edit": "Modifier la RFCV",
+      "status": "Statut"
+    }
+  },
+  "language": {
+    "switch": "Changer de langue",
+    "current": "Français",
+    "fr": "Français",
+    "en": "English",
+    "es": "Español"
+  }
+}

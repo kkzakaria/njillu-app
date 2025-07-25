@@ -1,0 +1,98 @@
+{
+  "metadata": {
+    "title": "Mi Aplicación",
+    "description": "Aplicación Next.js con Supabase"
+  },
+  "home": {
+    "welcome": "Bienvenido a tu aplicación",
+    "description": "Esta aplicación está lista para ser desarrollada según tus necesidades."
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar Sesión",
+      "description": "Ingresa tu email para iniciar sesión en tu cuenta",
+      "email": "Email",
+      "password": "Contraseña",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "loginButton": "Iniciar Sesión",
+      "loggingIn": "Iniciando sesión...",
+      "noAccount": "¿No tienes cuenta?",
+      "signUp": "Registrarse",
+      "error": "Ocurrió un error"
+    },
+    "signUp": {
+      "title": "Registrarse",
+      "description": "Crea tu nueva cuenta",
+      "email": "Email",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar Contraseña",
+      "signUpButton": "Registrarse",
+      "signingUp": "Registrándose...",
+      "haveAccount": "¿Ya tienes cuenta?",
+      "login": "Iniciar Sesión",
+      "success": "Revisa tu email para confirmar tu cuenta"
+    },
+    "forgotPassword": {
+      "title": "Contraseña Olvidada",
+      "description": "Ingresa tu email para recibir un enlace de restablecimiento",
+      "email": "Email",
+      "sendButton": "Enviar Enlace",
+      "sending": "Enviando...",
+      "success": "Email de restablecimiento enviado",
+      "backToLogin": "Volver al Inicio de Sesión"
+    },
+    "updatePassword": {
+      "title": "Actualizar Contraseña",
+      "description": "Ingresa tu nueva contraseña",
+      "newPassword": "Nueva Contraseña",
+      "confirmPassword": "Confirmar Contraseña",
+      "updateButton": "Actualizar",
+      "updating": "Actualizando...",
+      "success": "Contraseña actualizada exitosamente"
+    },
+    "logout": "Cerrar Sesión"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "close": "Cerrar"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "documentation": "Documentación",
+    "invoicing": "Facturación",
+    "settings": "Configuración",
+    "profile": "Perfil",
+    "logout": "Cerrar Sesión"
+  },
+  "customs": {
+    "fdi": {
+      "title": "Formulario de Declaración de Importación (FDI)",
+      "create": "Crear FDI",
+      "edit": "Editar FDI",
+      "status": "Estado",
+      "number": "Número FDI"
+    },
+    "rfcv": {
+      "title": "Solicitud de Suministro de Contenedor Vacío (RFCV)",
+      "create": "Crear RFCV",
+      "edit": "Editar RFCV",
+      "status": "Estado"
+    }
+  },
+  "language": {
+    "switch": "Cambiar Idioma",
+    "current": "Español",
+    "fr": "Français",
+    "en": "English",
+    "es": "Español"
+  }
+}

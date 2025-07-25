@@ -1,0 +1,98 @@
+{
+  "metadata": {
+    "title": "My Application",
+    "description": "Next.js Application with Supabase"
+  },
+  "home": {
+    "welcome": "Welcome to your application",
+    "description": "This application is ready to be developed according to your needs."
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "description": "Enter your email below to login to your account",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Forgot your password?",
+      "loginButton": "Login",
+      "loggingIn": "Logging in...",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up",
+      "error": "An error occurred"
+    },
+    "signUp": {
+      "title": "Sign Up",
+      "description": "Create your new account",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "signUpButton": "Sign Up",
+      "signingUp": "Signing up...",
+      "haveAccount": "Already have an account?",
+      "login": "Login",
+      "success": "Check your email to confirm your account"
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "description": "Enter your email to receive a reset link",
+      "email": "Email",
+      "sendButton": "Send Link",
+      "sending": "Sending...",
+      "success": "Reset email sent",
+      "backToLogin": "Back to Login"
+    },
+    "updatePassword": {
+      "title": "Update Password",
+      "description": "Enter your new password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "updateButton": "Update",
+      "updating": "Updating...",
+      "success": "Password updated successfully"
+    },
+    "logout": "Logout"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close"
+  },
+  "navigation": {
+    "home": "Home",
+    "documentation": "Documentation",
+    "invoicing": "Invoicing",
+    "settings": "Settings",
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+  "customs": {
+    "fdi": {
+      "title": "Import Declaration Form (FDI)",
+      "create": "Create FDI",
+      "edit": "Edit FDI",
+      "status": "Status",
+      "number": "FDI Number"
+    },
+    "rfcv": {
+      "title": "Empty Container Supply Request (RFCV)",
+      "create": "Create RFCV",
+      "edit": "Edit RFCV",
+      "status": "Status"
+    }
+  },
+  "language": {
+    "switch": "Switch Language",
+    "current": "English",
+    "fr": "Français",
+    "en": "English",
+    "es": "Español"
+  }
+}
