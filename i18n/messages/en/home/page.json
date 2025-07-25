@@ -1,4 +1,63 @@
 {
-  "welcome": "Welcome to your application",
-  "description": "This application is ready to be developed according to your needs."
+  "badge": "Modern Customs Platform",
+  "hero": {
+    "title": "Revolutionize Your Customs Operations",
+    "description": "Complete digital platform for managing and processing customs brokerage files, from creation to finalization of customs operations.",
+    "cta": {
+      "primary": "Get Started Now",
+      "secondary": "Sign In"
+    }
+  },
+  "features": {
+    "title": "Complete Features",
+    "subtitle": "An integrated solution for all your customs needs",
+    "documents": {
+      "title": "Document Management",
+      "description": "Secure centralization and hierarchical organization of all your customs documents with versioning and complete traceability."
+    },
+    "customs": {
+      "title": "Customs Processes",
+      "description": "Complete management of FDI, RFCV and customs declarations with real-time tracking of each step."
+    },
+    "financial": {
+      "title": "Financial Management",
+      "description": "Automatic invoicing, payment management and submissions to shipping companies."
+    },
+    "users": {
+      "title": "Multi-User",
+      "description": "Granular roles and permissions system with user profiles and complete audit."
+    },
+    "security": {
+      "title": "Advanced Security",
+      "description": "Data encryption, multi-factor authentication and international regulatory compliance."
+    },
+    "performance": {
+      "title": "High Performance",
+      "description": "24/7 availability, horizontal scalability and optimized response times for a fluid interface."
+    }
+  },
+  "benefits": {
+    "title": "Concrete Benefits",
+    "subtitle": "Transform your operational efficiency",
+    "efficiency": {
+      "title": "Operational Efficiency",
+      "description": "Significant reduction in file processing time through automated controls."
+    },
+    "compliance": {
+      "title": "Guaranteed Compliance",
+      "description": "Automatic compliance with customs regulations with integrated controls and validation."
+    },
+    "transparency": {
+      "title": "Total Transparency",
+      "description": "Real-time visibility on file progress with complete traceability of operations."
+    }
+  },
+  "cta": {
+    "title": "Ready to Modernize Your Operations?",
+    "description": "Join customs brokers who have chosen digital excellence to optimize their processes.",
+    "button": "Start Free"
+  },
+  "footer": {
+    "powered": "Powered by Next.js & Supabase"
+  }
 }

@@ -1,4 +1,63 @@
 {
-  "welcome": "Bienvenue dans votre application",
-  "description": "Cette application est prête à être développée selon vos besoins."
+  "badge": "Plateforme Douanière Moderne",
+  "hero": {
+    "title": "Révolutionnez vos Opérations Douanières",
+    "description": "Plateforme numérique complète pour la gestion et le traitement des dossiers de courtage en douane, de la création à la finalisation des opérations douanières.",
+    "cta": {
+      "primary": "Commencer Maintenant",
+      "secondary": "Se Connecter"
+    }
+  },
+  "features": {
+    "title": "Fonctionnalités Complètes",
+    "subtitle": "Une solution intégrée pour tous vos besoins douaniers",
+    "documents": {
+      "title": "Gestion Documentaire",
+      "description": "Centralisation sécurisée et organisation hiérarchique de tous vos documents douaniers avec versioning et traçabilité complète."
+    },
+    "customs": {
+      "title": "Processus Douaniers",
+      "description": "Gestion complète des FDI, RFCV et déclarations douanières avec suivi en temps réel de chaque étape."
+    },
+    "financial": {
+      "title": "Gestion Financière",
+      "description": "Facturation automatique, gestion des paiements et soumissions aux compagnies de navigation."
+    },
+    "users": {
+      "title": "Multi-Utilisateurs",
+      "description": "Système de rôles et permissions granulaire avec profils utilisateurs et audit complet."
+    },
+    "security": {
+      "title": "Sécurité Avancée",
+      "description": "Chiffrement des données, authentification multi-facteurs et conformité réglementaire internationale."
+    },
+    "performance": {
+      "title": "Haute Performance",
+      "description": "Disponibilité 24/7, scalabilité horizontale et temps de réponse optimisés pour une interface fluide."
+    }
+  },
+  "benefits": {
+    "title": "Avantages Concrets",
+    "subtitle": "Transformez votre efficacité opérationnelle",
+    "efficiency": {
+      "title": "Efficacité Opérationnelle",
+      "description": "Réduction significative du temps de traitement des dossiers grâce à l'automatisation des contrôles."
+    },
+    "compliance": {
+      "title": "Conformité Garantie",
+      "description": "Respect automatique des réglementations douanières avec contrôles intégrés et validation."
+    },
+    "transparency": {
+      "title": "Transparence Totale",
+      "description": "Visibilité en temps réel sur l'avancement des dossiers avec traçabilité complète des opérations."
+    }
+  },
+  "cta": {
+    "title": "Prêt à Moderniser vos Opérations ?",
+    "description": "Rejoignez les courtiers en douane qui ont choisi l'excellence numérique pour optimiser leurs processus.",
+    "button": "Démarrer Gratuitement"
+  },
+  "footer": {
+    "powered": "Propulsé par Next.js & Supabase"
+  }
 }
