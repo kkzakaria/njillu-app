@@ -1,4 +1,64 @@
 {
-  "welcome": "Bienvenido a tu aplicación",
-  "description": "Esta aplicación está lista para ser desarrollada según tus necesidades."
+  "subtitle": "Plataforma digital para la gestión de operaciones aduaneras",
+  "badge": "Plataforma Aduanera Moderna",
+  "hero": {
+    "title": "Revoluciona tus Operaciones Aduaneras",
+    "description": "Plataforma digital completa para la gestión y procesamiento de expedientes de corretaje aduanero, desde la creación hasta la finalización de operaciones aduaneras.",
+    "cta": {
+      "primary": "Comenzar Ahora",
+      "secondary": "Iniciar Sesión"
+    }
+  },
+  "features": {
+    "title": "Funcionalidades Completas",
+    "subtitle": "Una solución integrada para todas tus necesidades aduaneras",
+    "documents": {
+      "title": "Gestión Documental",
+      "description": "Centralización segura y organización jerárquica de todos tus documentos aduaneros con control de versiones y trazabilidad completa."
+    },
+    "customs": {
+      "title": "Procesos Aduaneros",
+      "description": "Gestión completa de FDI, RFCV y declaraciones aduaneras con seguimiento en tiempo real de cada etapa."
+    },
+    "financial": {
+      "title": "Gestión Financiera",
+      "description": "Facturación automática, gestión de pagos y envíos a compañías navieras."
+    },
+    "users": {
+      "title": "Multi-Usuario",
+      "description": "Sistema granular de roles y permisos con perfiles de usuario y auditoría completa."
+    },
+    "security": {
+      "title": "Seguridad Avanzada",
+      "description": "Cifrado de datos, autenticación multifactor y cumplimiento regulatorio internacional."
+    },
+    "performance": {
+      "title": "Alto Rendimiento",
+      "description": "Disponibilidad 24/7, escalabilidad horizontal y tiempos de respuesta optimizados para una interfaz fluida."
+    }
+  },
+  "benefits": {
+    "title": "Beneficios Concretos",
+    "subtitle": "Transforma tu eficiencia operacional",
+    "efficiency": {
+      "title": "Eficiencia Operacional",
+      "description": "Reducción significativa del tiempo de procesamiento de expedientes mediante controles automatizados."
+    },
+    "compliance": {
+      "title": "Cumplimiento Garantizado",
+      "description": "Cumplimiento automático de regulaciones aduaneras con controles integrados y validación."
+    },
+    "transparency": {
+      "title": "Transparencia Total",
+      "description": "Visibilidad en tiempo real del progreso de expedientes con trazabilidad completa de operaciones."
+    }
+  },
+  "cta": {
+    "title": "¿Listo para Modernizar tus Operaciones?",
+    "description": "Únete a los corredores aduaneros que han elegido la excelencia digital para optimizar sus procesos.",
+    "button": "Comenzar Gratis"
+  },
+  "footer": {
+    "powered": "Impulsado por Next.js & Supabase"
+  }
 }

@@ -1,31 +1,46 @@
 import { getTranslations } from 'next-intl/server';
-import { HomeNavigation } from "@/components/home-navigation";
+import { Button } from "@/components/ui/button";
+import { Globe } from "@/components/magicui/globe";
+import { ThemeSwitcher } from "@/components/theme-switcher";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import Link from "next/link";
 
 export default async function Home() {
   const t = await getTranslations();
 
   return (
     <main className="min-h-screen flex flex-col">
-      <div className="flex-1 w-full flex flex-col items-center">
-        <HomeNavigation />
-        
-        <div className="flex-1 flex flex-col gap-20 max-w-5xl p-5">
-          <div className="flex flex-col gap-16 items-center pt-20">
-            <h1 className="text-3xl lg:text-4xl font-bold text-center">
-              {t('home.welcome')}
-            </h1>
-            <p className="text-lg text-center text-muted-foreground max-w-2xl">
-              {t('home.description')}
-            </p>
-          </div>
-        </div>
-
-        <footer className="w-full flex items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">
-          <p className="text-muted-foreground">
-            Powered by Next.js & Supabase
+      {/* Section Titre et Bouton */}
+      <section className="flex-grow flex flex-col items-center justify-center pt-12">
+        <div className="text-center space-y-8">
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent">
+            NjilluApp
+          </h1>
+          
+          <p className="text-lg md:text-xl text-muted-foreground max-w-md mx-auto">
+            {t('home.subtitle')}
           </p>
-        </footer>
-      </div>
+          
+          <Button size="lg" className="text-lg px-8" asChild>
+            <Link href="/auth/login">
+              {t('common.login')}
+            </Link>
+          </Button>
+        </div>
+      </section>
+      
+      {/* Section Globe */}
+      <section className="flex-grow relative overflow-hidden">
+        <Globe className="opacity-70 !relative !inset-auto !w-full !h-full" />
+      </section>
+
+      {/* Footer with Centered Controls */}
+      <footer className="w-full h-16 flex items-center justify-center border-t px-8">
+        <div className="flex items-center gap-4">
+          <LanguageSwitcher />
+          <ThemeSwitcher />
+        </div>
+      </footer>
     </main>
   );
 }
