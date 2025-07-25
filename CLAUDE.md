@@ -2,9 +2,17 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+**IMPORTANT**: Always refer to the comprehensive development guide in `/DEVELOPMENT_GUIDE/` for detailed specifications, patterns, and best practices. This file provides a summary - the development guide contains the authoritative documentation.
+
 ## Project Overview
 
-This is a Next.js application with Supabase integration for authentication and database functionality. It's built with TypeScript, Tailwind CSS, and shadcn/ui components. The project includes both local development with Supabase CLI and production deployment capabilities.
+This is a comprehensive digital platform for customs broker file management and processing. It's a Next.js 15.4 application with Supabase integration, built with TypeScript, Tailwind CSS, and shadcn/ui components. The project covers the complete customs operations process from file creation to finalization.
+
+### Business Domain
+- **Complete document management**: Secure storage and organization of customs documents
+- **Integrated customs processes**: FDI (Import Clearance Form) and RFCV (Empty Container Supply Request) management
+- **Financial management**: Client invoicing, payment tracking, and shipping company submissions
+- **Administration**: Multi-user management with granular roles and permissions
 
 ## Key Development Commands
 
@@ -14,6 +22,11 @@ This is a Next.js application with Supabase integration for authentication and d
 - `pnpm build` or `npm run build` - Build production application
 - `pnpm start` or `npm start` - Start production server
 - `pnpm lint` or `npm run lint` - Run ESLint
+
+### Testing
+
+- `npm test` or `pnpm test` - Run Jest unit and integration tests
+- Bundle analysis with `@next/bundle-analyzer` when needed
 
 ### Supabase Local Development
 
@@ -50,38 +63,73 @@ The application uses a three-client pattern for Supabase integration:
 
 ### Project Structure
 
+**Reference**: See `/DEVELOPMENT_GUIDE/PROJECT_STRUCTURE.md` for complete project organization details.
+
 ```text
 app/
-├── auth/                    # Authentication pages
-├── protected/               # Protected routes (requires auth)
-├── layout.tsx              # Root layout with theme provider
-└── page.tsx                # Landing page
+├── [locale]/                       # Internationalized routes (next-intl)
+│   ├── (auth)/                     # Authentication route group
+│   │   ├── login/                  # Login page
+│   │   ├── forgot-password/        # Password reset request
+│   │   ├── otp/                    # OTP verification
+│   │   └── update-password/        # Password update
+│   ├── (main)/                     # Protected application routes
+│   │   ├── (documentation)/        # Document management
+│   │   │   ├── folders/            # Folder management
+│   │   │   ├── containers/         # Container management
+│   │   │   ├── edit-bill-fdi/      # FDI invoice editing
+│   │   │   ├── fdi/                # FDI management
+│   │   │   ├── rfcv/               # RFCV management
+│   │   │   └── declaration/        # Customs declaration
+│   │   ├── (exploitation)/         # Operations management
+│   │   │   ├── shipping-company-submission/
+│   │   │   └── payment-invoice/
+│   │   ├── (invoicing)/            # Client invoicing
+│   │   │   ├── client-invoice/
+│   │   │   └── invoice-history/
+│   │   ├── request-for-funds/      # Fund request management
+│   │   ├── user-profile/           # User profile management
+│   │   ├── users-management/       # User management
+│   │   └── settings/               # Application settings
+│   ├── (error)/                    # Error pages
+│   │   ├── not-found/              # 404 error page
+│   │   └── unauthorized/           # Unauthorized access
+│   └── page.tsx                    # Homepage
 
-components/
-├── forgot-password-form.tsx # Forgot password form component
-├── login-form.tsx          # Login form component
-├── logout-button.tsx       # Logout button component
-├── sign-up-form.tsx        # Sign up form component
-├── theme-switcher.tsx      # Theme switching component
-├── update-password-form.tsx # Update password form component
-└── ui/                     # shadcn/ui components
+components/                         # Reusable UI components (Shadcn UI + custom)
+├── ui/                            # Shadcn UI components (DO NOT MODIFY)
+└── [component-name]/              # Custom components (SOLID structure)
+    ├── index.ts                   # Barrel export
+    ├── [component-name].tsx       # Main component
+    ├── components/                # Sub-components
+    ├── hooks/                     # Component-specific hooks
+    ├── lib/                       # Component utilities
+    ├── types/                     # Component type definitions
+    └── __tests__/                 # Component tests
 
-lib/
-├── supabase/               # Supabase client configurations
-└── utils.ts                # Utility functions
-
-supabase/
-├── config.toml             # Local Supabase configuration
-└── migrations/             # Database migrations
+hooks/                             # Reusable React hooks
+i18n/                             # Internationalization (next-intl)
+lib/                              # Utilities and Supabase configuration
+stores/                           # Zustand stores (UI state only)
+supabase/                         # Database migrations and functions
+types/                            # Global TypeScript definitions
 ```
 
-### UI Framework
+### Technology Stack
 
-- **CSS Framework**: Tailwind CSS with CSS variables for theming
-- **Component Library**: shadcn/ui (New York style)
-- **Theme System**: next-themes with light/dark mode support
-- **Font**: Geist Sans with optimal display settings
+**Reference**: See `/DEVELOPMENT_GUIDE/MAIN_TECHNOLIGIES.md` for detailed technology integration patterns.
+
+- **Framework**: Next.js 15.4 with App Router only
+- **Language**: TypeScript with strict mode enabled
+- **Backend**: Supabase (database, authentication, real-time features)
+- **Styling**: Tailwind CSS with CSS variables for theming
+- **UI Components**: shadcn/ui (New York style) - DO NOT modify library components directly
+- **State Management**: Zustand (UI state only, minimized usage)
+- **URL State**: nuqs for type-safe search parameters
+- **Internationalization**: next-intl with locale routing
 - **Icons**: Lucide React
+- **Testing**: Jest for unit and integration tests
+- **Linting**: ESLint configured for Next.js, TypeScript, and React
 
 ## Database Development Guidelines
 
@@ -104,7 +152,29 @@ When working with database migrations and RLS policies, follow these conventions
 - Add indexes on columns used in policies
 - Prefer `PERMISSIVE` over `RESTRICTIVE` policies
 
-## Key Conventions
+## Development Conventions
+
+**Reference**: See `/DEVELOPMENT_GUIDE/NAMING_CONVENTIONS.md` for complete naming standards.
+
+### Naming Conventions
+
+**Routes and Pages**:
+- Route folders: `kebab-case` (e.g., `user-profile/`, `edit-bill-fdi/`)
+- Next.js files: lowercase (`page.tsx`, `layout.tsx`, `loading.tsx`)
+
+**Components**:
+- File names: `kebab-case` (e.g., `user-card.tsx`, `navigation-menu.tsx`)
+- Component names: `PascalCase` (e.g., `UserCard`, `NavigationMenu`)
+
+**Hooks and Functions**:
+- Files: `camelCase` with "use" prefix for hooks (e.g., `useLocalStorage.ts`)
+- Functions: `camelCase` with descriptive names
+- Event handlers: "handle" prefix (e.g., `handleFormSubmit`, `handleInputChange`)
+
+**Types and Constants**:
+- Type files: `camelCase` with ".types" suffix (e.g., `user.types.ts`)
+- Types: `PascalCase` (e.g., `UserRole`, `ApiStatus`)
+- Constants: `SCREAMING_SNAKE_CASE`
 
 ### Import Aliases
 
@@ -122,6 +192,49 @@ When working with database migrations and RLS policies, follow these conventions
 - Implement proper error handling for auth state changes
 - Use `supabase.auth.getClaims()` for server-side authentication checks
 - Redirect unauthenticated users to `/auth/login` from protected pages
+
+## Architecture Patterns
+
+**Reference**: See `/DEVELOPMENT_GUIDE/COMPONENT_STRUCTURE.md` and `/DEVELOPMENT_GUIDE/PAGE_STRUCTURE.md` for detailed SOLID architecture patterns.
+
+### Component Structure (SOLID Principles)
+
+**Custom Components** follow SOLID structure:
+```text
+components/example-component/
+├── index.ts                    # Barrel export
+├── example-component.tsx       # Main component
+├── components/                 # Sub-components
+├── hooks/                      # Component-specific hooks
+├── lib/                        # Component utilities
+├── types/                      # Component types
+└── __tests__/                  # Component tests
+```
+
+**Library Components** (shadcn/ui):
+- **NEVER modify** library components directly
+- Wrap them in custom components when customization needed
+- Keep original structure from `components/ui/`
+
+### Page Structure (SOLID Principles)
+
+```text
+app/[locale]/(main)/example-feature/
+├── page.tsx                    # Next.js route (re-export only)
+├── example-feature-page.tsx    # Actual page implementation
+├── components/                 # Feature-specific components
+├── hooks/                      # Feature-specific hooks
+├── lib/                        # Feature utilities and actions
+├── types/                      # Feature types
+└── stores/                     # Feature state (if needed)
+```
+
+### State Management Strategy
+
+- **Zustand**: UI state only (sidebar, theme, modals) - minimize usage
+- **nuqs**: URL state management (preferred for filters, pagination)
+- **Server Components**: Data fetching and server state
+- **Supabase**: Backend state and real-time subscriptions
 
 ### Development Workflow
 
@@ -171,6 +284,35 @@ if (error || !data?.claims) {
 - Deploy buttons for Vercel
 - Navigation with authentication state
 
+## Best Practices
+
+**Reference**: See `/DEVELOPMENT_GUIDE/BEST_PRACTRICES_RECOMMENDATIONS.md` for comprehensive best practices and code examples.
+
+### Performance
+- Use Server Components by default, Client Components only when necessary
+- Implement `loading.tsx` files and Suspense boundaries
+- Use `next/dynamic` for non-critical components (`ssr: false` for client-only)
+- Use React.memo() for expensive components with stable props
+- Always use descriptive variable and function names
+
+### Security
+- Always validate user permissions server-side
+- Use Supabase RLS policies for data access control
+- Validate all inputs on both client and server side
+- Use Zod schemas for consistent validation
+- Never expose sensitive data in client-side code
+
+### UI/UX
+- Implement proper ARIA labels and semantic HTML
+- Ensure keyboard navigation works for all interactive elements
+- Always provide loading states for async operations
+- Use skeleton loaders for better perceived performance
+- Design mobile-first with progressive enhancement
+
+### Internationalization
+- Always use translation keys with next-intl, never hardcoded strings
+- Consider RTL support and proper date/number formatting per locale
+
 ## Testing and Validation
 
 - Test authentication flows: sign-up, login, logout, password reset
@@ -178,6 +320,7 @@ if (error || !data?.claims) {
 - Test protected route redirects
 - Validate environment variable setup
 - Ensure middleware session handling works correctly
+- Run Jest unit and integration tests
 
 ## important-instruction-reminders
 
