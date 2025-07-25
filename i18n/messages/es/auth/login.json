@@ -1,0 +1,12 @@
+{
+  "title": "Iniciar sesión",
+  "description": "Ingrese su email para iniciar sesión en su cuenta",
+  "email": "Email",
+  "password": "Contraseña",
+  "forgotPassword": "¿Olvidó su contraseña?",
+  "loginButton": "Iniciar sesión",
+  "loggingIn": "Iniciando sesión...",
+  "noAccount": "¿No tiene cuenta?",
+  "signUp": "Registrarse",
+  "error": "Ha ocurrido un error"
+}

@@ -1,0 +1,12 @@
+{
+  "title": "Registrarse",
+  "description": "Cree su nueva cuenta",
+  "email": "Email",
+  "password": "Contraseña",
+  "confirmPassword": "Confirmar contraseña",
+  "signUpButton": "Registrarse",
+  "signingUp": "Registrándose...",
+  "haveAccount": "¿Ya tiene una cuenta?",
+  "login": "Iniciar sesión",
+  "success": "Revise su email para confirmar su cuenta"
+}

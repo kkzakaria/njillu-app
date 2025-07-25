@@ -1,0 +1,12 @@
+{
+  "title": "Inscription",
+  "description": "Créez votre nouveau compte",
+  "email": "Email",
+  "password": "Mot de passe",
+  "confirmPassword": "Confirmer le mot de passe",
+  "signUpButton": "S'inscrire",
+  "signingUp": "Inscription en cours...",
+  "haveAccount": "Déjà un compte ?",
+  "login": "Se connecter",
+  "success": "Vérifiez votre email pour confirmer votre compte"
+}

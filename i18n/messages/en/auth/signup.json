@@ -1,0 +1,12 @@
+{
+  "title": "Sign Up",
+  "description": "Create your new account",
+  "email": "Email",
+  "password": "Password",
+  "confirmPassword": "Confirm password",
+  "signUpButton": "Sign up",
+  "signingUp": "Signing up...",
+  "haveAccount": "Already have an account?",
+  "login": "Log in",
+  "success": "Check your email to confirm your account"
+}

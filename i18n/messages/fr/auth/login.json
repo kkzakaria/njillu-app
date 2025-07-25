@@ -1,0 +1,12 @@
+{
+  "title": "Connexion",
+  "description": "Entrez votre email pour vous connecter à votre compte",
+  "email": "Email",
+  "password": "Mot de passe",
+  "forgotPassword": "Mot de passe oublié ?",
+  "loginButton": "Se connecter",
+  "loggingIn": "Connexion en cours...",
+  "noAccount": "Pas de compte ?",
+  "signUp": "S'inscrire",
+  "error": "Une erreur s'est produite"
+}
