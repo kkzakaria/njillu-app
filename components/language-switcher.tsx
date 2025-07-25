@@ -19,6 +19,12 @@ const languageNames = {
   es: 'Español'
 } as const;
 
+const languageCodes = {
+  fr: 'FR',
+  en: 'EN',
+  es: 'ES'
+} as const;
+
 export function LanguageSwitcher() {
   const locale = useLocale();
   const router = useRouter();
@@ -34,7 +40,7 @@ export function LanguageSwitcher() {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm">
           <Globe className="h-4 w-4 mr-2" />
-          {languageNames[locale as keyof typeof languageNames]}
+          {languageCodes[locale as keyof typeof languageCodes]}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
