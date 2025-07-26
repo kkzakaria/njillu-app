@@ -125,7 +125,12 @@ types/
 supabase/
 ├── config.toml           # Local Supabase configuration
 └── migrations/           # Database migrations
-    └── 20250724181317_remote_schema.sql
+    ├── 20250724181317_remote_schema.sql
+    ├── 20250726141430_users_roles_initial_schema.sql
+    └── 20250726141431_rls_policies.sql
+
+scripts/
+└── generate-migration.sh # Script de génération de migrations avec timestamp
 ```
 
 ## Development Conventions
@@ -245,9 +250,15 @@ The `lib/utils.ts` includes `hasEnvVars` check that prevents middleware from run
 ### Database Migrations
 
 - Located in `supabase/migrations/`
-- Current schema: `20250724181317_remote_schema.sql`
-- Use `supabase db diff` to generate new migrations
+- Current migrations: user/role management system with RLS policies
+- Use `./scripts/generate-migration.sh` to create new migrations with proper timestamps
 - Local development with `supabase start` and Studio at `http://localhost:54323`
+
+**Migration Rules**:
+- **Never modify a migration that has left your machine** (committed/applied)
+- Use versioned suffixes for updates: `migration_name_v2.sql`
+- Create new migrations for changes to existing applied migrations
+- Use `./scripts/generate-migration.sh "name_v2" --update "base_migration"` for updates
 
 ### Translation System
 
