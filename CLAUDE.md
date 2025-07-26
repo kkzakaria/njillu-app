@@ -32,8 +32,10 @@ The application requires these environment variables in `.env.local`:
 - **Framework**: Next.js (latest) with App Router
 - **Language**: TypeScript with strict mode enabled
 - **Backend**: Supabase (database, authentication, real-time features)
+- **Internationalization**: next-intl with modular translation architecture
 - **Styling**: Tailwind CSS with CSS variables for theming
-- **UI Components**: shadcn/ui (New York style)
+- **UI Components**: shadcn/ui (New York style), magicui (Globe component)
+- **Animations**: Motion (React motion library)
 - **Theme**: next-themes for dark/light mode switching
 - **Icons**: Lucide React
 - **Font**: Geist Sans
@@ -47,57 +49,82 @@ The application uses a three-client pattern for Supabase integration:
 2. **Server-side** (`/lib/supabase/server.ts`): Server client for server components and API routes  
 3. **Middleware** (`/lib/supabase/middleware.ts`): Session management and route protection
 
+### Internationalization Architecture
+
+**Three-Language Support**: French (default), English, Spanish with localized URLs:
+- `/fr/auth/connexion`, `/en/auth/login`, `/es/auth/iniciar-sesion`
+
+**Modular Translation System**:
+- Organized by functional domains (auth, navigation, common, customs, etc.)
+- Each domain has separate JSON files per language 
+- Hooks-based API: `useAuth()`, `useCommon()`, `useNavigation()`
+- Server and client component patterns supported
+
+**Hybrid Middleware**: Combines next-intl internationalization with Supabase authentication in single middleware chain.
+
 ### Authentication Flow
 
 - Uses cookie-based session management through `@supabase/ssr`
 - Middleware automatically handles session refresh and route protection
-- Authentication pages: login, sign-up, forgot password, update password
-- Protected routes redirect unauthenticated users to `/auth/login`
+- Authentication pages: login, sign-up, forgot password, update password (all localized)
+- Protected routes redirect unauthenticated users to localized `/auth/login`
 - Server-side authentication pattern: `supabase.auth.getClaims()` for protected pages
 
 ### Project Structure
 
 ```text
 app/
-├── auth/                    # Authentication pages
-│   ├── confirm/            # Email confirmation
-│   ├── error/              # Auth error handling
-│   ├── forgot-password/    # Password reset request
-│   ├── login/              # Login page
-│   ├── sign-up/            # Registration page
-│   ├── sign-up-success/    # Registration success
-│   └── update-password/    # Password update
-├── protected/              # Protected route example
-├── globals.css             # Global styles with CSS variables
-├── layout.tsx              # Root layout with theme provider
-└── page.tsx                # Homepage
+├── [locale]/               # Internationalized routes
+│   ├── auth/              # Localized authentication pages
+│   ├── protected/         # Protected route example
+│   ├── layout.tsx         # Locale-specific layout
+│   └── page.tsx           # Localized homepage
+├── globals.css            # Global styles with CSS variables
+├── layout.tsx             # Root layout
+└── not-found.tsx          # 404 page
 
 components/
-├── ui/                     # shadcn/ui components (DO NOT MODIFY)
-│   ├── badge.tsx
-│   ├── button.tsx
-│   ├── card.tsx
-│   ├── checkbox.tsx
-│   ├── dropdown-menu.tsx
-│   ├── input.tsx
-│   └── label.tsx
-├── forgot-password-form.tsx # Password reset form
-├── login-form.tsx          # Login form component
-├── logout-button.tsx       # Logout functionality
-├── sign-up-form.tsx        # Registration form
-├── theme-switcher.tsx      # Dark/light mode toggle
-└── update-password-form.tsx # Password update form
+├── ui/                    # shadcn/ui components (DO NOT MODIFY)
+│   └── [various].tsx
+├── magicui/               # Enhanced UI components
+│   └── globe.tsx          # Interactive 3D Globe with COBE
+├── *-form.tsx            # Authentication forms (localized)
+├── theme-switcher.tsx    # Dark/light mode toggle
+├── language-switcher.tsx # Language selection dropdown
+└── home-navigation.tsx   # Navigation component
+
+i18n/
+├── messages/              # Translation files
+│   ├── fr/               # French translations (default)
+│   ├── en/               # English translations  
+│   └── es/               # Spanish translations
+│       ├── auth/         # Authentication-specific
+│       ├── common/       # Shared UI elements
+│       ├── customs/      # Domain-specific (FDI, RFCV)
+│       ├── home/         # Homepage content
+│       ├── language/     # Language switcher
+│       ├── metadata/     # App metadata
+│       └── navigation/   # Navigation labels
+├── routing.ts            # Route definitions with localized paths
+├── request.ts            # Translation loading system
+└── navigation.ts         # Localized navigation helpers
+
+hooks/
+└── useTranslation.ts     # Domain-specific translation hooks
 
 lib/
-├── supabase/               # Supabase client configurations
-│   ├── client.ts           # Browser client
-│   ├── middleware.ts       # Session management
-│   └── server.ts           # Server client
-└── utils.ts                # Utility functions and helpers
+├── supabase/             # Supabase client configurations
+│   ├── client.ts         # Browser client
+│   ├── middleware.ts     # Session management
+│   └── server.ts         # Server client
+└── utils.ts              # Utility functions and helpers
+
+types/
+└── i18n.types.ts         # TypeScript definitions for translations
 
 supabase/
-├── config.toml             # Local Supabase configuration
-└── migrations/             # Database migrations
+├── config.toml           # Local Supabase configuration
+└── migrations/           # Database migrations
     └── 20250724181317_remote_schema.sql
 ```
 
@@ -139,6 +166,9 @@ export default async function ProtectedPage() {
 - `@/components` → `./components`
 - `@/lib` → `./lib`
 - `@/app` → `./app`
+- `@/i18n` → `./i18n`
+- `@/hooks` → `./hooks`
+- `@/types` → `./types`
 
 ### shadcn/ui Integration
 
@@ -147,16 +177,59 @@ export default async function ProtectedPage() {
 - Configuration in `components.json` (New York style, CSS variables enabled)
 - Custom styling through CSS variables in `globals.css`
 
+### Internationalization Patterns
+
+**Client Component Translation**:
+```tsx
+'use client';
+import { useAuth } from '@/hooks/useTranslation';
+
+export function LoginForm() {
+  const t = useAuth();
+  return <h1>{t('login.title')}</h1>;
+}
+```
+
+**Server Component Translation**:
+```tsx
+import { getTranslations } from 'next-intl/server';
+
+export default async function Page() {
+  const t = await getTranslations('auth');
+  return <h1>{t('login.title')}</h1>;
+}
+```
+
+**Localized Navigation**:
+```tsx
+import { Link } from '@/i18n/navigation';
+// Automatically routes to localized paths
+<Link href="/auth/login">Login</Link>
+```
+
+**Translation Hooks Available**:
+- `useAuth()` - Authentication-related translations
+- `useCommon()` - Common UI elements
+- `useNavigation()` - Navigation labels
+- `useCustoms()` - Domain-specific terms (FDI, RFCV)
+- `useLanguage()` - Language switcher labels
+
 ## Key Implementation Details
 
-### Middleware Configuration
+### Hybrid Middleware Configuration
 
-The middleware (`middleware.ts`) protects all routes except:
-- Static files (`_next/static`, `_next/image`)
-- Public assets (images, favicon)
-- Authentication routes (`/auth/*`, `/login`)
+The middleware (`middleware.ts`) combines internationalization and authentication:
 
-Routes without authenticated users are redirected to `/auth/login`.
+1. **First**: next-intl handles locale detection and URL rewriting
+2. **Then**: Supabase middleware handles session management and route protection
+
+**Protected Routes**: All routes except static files and public assets
+**Redirect Flow**: Unauthenticated users → localized `/auth/login` (e.g., `/fr/auth/connexion`)
+
+**Route Examples**:
+- `/` → `/fr/` (default locale)
+- `/auth/login` → `/fr/auth/connexion` (French), `/en/auth/login` (English)
+- `/protected` → `/fr/protege`, `/en/protected`, `/es/protegido`
 
 ### Environment Variable Handling
 
@@ -176,6 +249,13 @@ The `lib/utils.ts` includes `hasEnvVars` check that prevents middleware from run
 - Use `supabase db diff` to generate new migrations
 - Local development with `supabase start` and Studio at `http://localhost:54323`
 
+### Translation System
+
+**Modular Architecture**: 36 translation files (12 per language) organized by functional domain
+**Loading Strategy**: Dynamic imports with Promise.all() for parallel loading
+**Fallback System**: Automatic fallback to default locale (French) on translation failures
+**TypeScript Support**: Full type safety with generated types from translation structure
+
 ## Development Workflow
 
 1. **Setup**: Install dependencies with `pnpm install`
@@ -187,15 +267,25 @@ The `lib/utils.ts` includes `hasEnvVars` check that prevents middleware from run
 
 ## Reference Documentation
 
-The project includes `REFERENCE.md` with preserved examples from the original Supabase template, including:
-- Complete authentication component implementations
-- Tutorial step components
-- Environment variable warning components
-- Deploy button implementations
-- Code block display components
+**Core Documentation**:
+- `REFERENCE.md` - Preserved examples from original Supabase template
+- `docs/INTERNATIONALIZATION.md` - Comprehensive i18n implementation guide
+- `DEVELOPMENT_GUIDE/` - Detailed development guidelines and best practices
 
-These examples can be referenced when implementing similar functionality without cluttering the current clean codebase.
+**Key References**:
+- Authentication component implementations
+- Translation system architecture and usage patterns
+- Component structure and naming conventions
+- Project-specific business domain patterns (FDI, RFCV)
 
 ## Project Context
 
-This is a cleaned version of the official Supabase Next.js starter template. All tutorial and example components have been removed while maintaining the core authentication and routing functionality. The project serves as a clean foundation for building Next.js applications with Supabase integration.
+This is an enhanced version of the official Supabase Next.js starter template with comprehensive internationalization. The project has been cleaned of tutorial components while adding:
+
+- **Full i18n Support**: Three-language system with localized routing
+- **Enhanced UI**: 3D Globe component using COBE and Motion animations  
+- **Modular Translations**: Domain-organized translation files for maintainability
+- **Type Safety**: Complete TypeScript support for translations and routing
+- **Production Ready**: Hybrid middleware, fallback systems, and comprehensive documentation
+
+The project serves as a production-ready foundation for building multilingual Next.js applications with Supabase integration.
