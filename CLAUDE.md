@@ -124,10 +124,16 @@ types/
 
 supabase/
 ├── config.toml           # Local Supabase configuration
+├── MIGRATION_RULES.md    # Migration best practices and security rules
 └── migrations/           # Database migrations
-    ├── 20250724181317_remote_schema.sql
-    ├── 20250726141430_users_roles_initial_schema.sql
-    └── 20250726141431_rls_policies.sql
+    ├── 20250727095022_create_basic_users_table.sql
+    ├── 20250727095145_basic_users_rls_policies.sql
+    └── 20250727101129_fix_functions_search_path.sql
+
+docs/
+├── DATABASE_SCHEMA.md            # Current database schema documentation
+├── POSTGRESQL_SECURITY_GUIDE.md  # PostgreSQL function security guide
+└── INTERNATIONALIZATION.md       # i18n implementation guide
 
 scripts/
 └── generate-migration.sh # Script de génération de migrations avec timestamp
@@ -247,10 +253,15 @@ The `lib/utils.ts` includes `hasEnvVars` check that prevents middleware from run
 - Theme switcher component (`components/theme-switcher.tsx`) available
 - Configured to disable transition animations on theme change
 
-### Database Migrations
+### Database Schema & Migrations
 
+**Current Schema**: 
+- Simple `users` table extending Supabase Auth with basic profile information
+- Row Level Security (RLS) policies for user data protection
+- Automatic profile creation on user signup via trigger
+
+**Migrations**:
 - Located in `supabase/migrations/`
-- Current migrations: user/role management system with RLS policies
 - Use `./scripts/generate-migration.sh` to create new migrations with proper timestamps
 - Local development with `supabase start` and Studio at `http://localhost:54323`
 
@@ -258,7 +269,12 @@ The `lib/utils.ts` includes `hasEnvVars` check that prevents middleware from run
 - **Never modify a migration that has left your machine** (committed/applied)
 - Use versioned suffixes for updates: `migration_name_v2.sql`
 - Create new migrations for changes to existing applied migrations
-- Use `./scripts/generate-migration.sh "name_v2" --update "base_migration"` for updates
+- Full rules in `supabase/MIGRATION_RULES.md`
+
+**PostgreSQL Security**:
+- **CRITICAL**: All functions must use `SET search_path` to prevent security vulnerabilities
+- Functions with `SECURITY DEFINER` MUST have explicit search_path
+- See `docs/POSTGRESQL_SECURITY_GUIDE.md` for detailed security patterns
 
 ### Translation System
 
@@ -289,6 +305,31 @@ The `lib/utils.ts` includes `hasEnvVars` check that prevents middleware from run
 - Component structure and naming conventions
 - Project-specific business domain patterns (FDI, RFCV)
 
+## Key Implementation Patterns
+
+### Database Function Security Pattern
+
+Always use explicit `search_path` in PostgreSQL functions:
+
+```sql
+CREATE OR REPLACE FUNCTION my_function()
+RETURNS TRIGGER 
+SECURITY DEFINER
+SET search_path = public  -- Required for security
+AS $$
+BEGIN
+    -- Function body
+END;
+$$ LANGUAGE plpgsql;
+```
+
+### User Profile Management
+
+The `users` table automatically syncs with Supabase Auth:
+- Profile created on signup via trigger
+- Users can only modify their own profile (RLS)
+- Email must match auth.users email
+
 ## Project Context
 
 This is an enhanced version of the official Supabase Next.js starter template with comprehensive internationalization. The project has been cleaned of tutorial components while adding:
@@ -298,5 +339,6 @@ This is an enhanced version of the official Supabase Next.js starter template wi
 - **Modular Translations**: Domain-organized translation files for maintainability
 - **Type Safety**: Complete TypeScript support for translations and routing
 - **Production Ready**: Hybrid middleware, fallback systems, and comprehensive documentation
+- **Security First**: PostgreSQL function security patterns and RLS policies
 
 The project serves as a production-ready foundation for building multilingual Next.js applications with Supabase integration.

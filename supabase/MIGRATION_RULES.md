@@ -65,3 +65,42 @@ supabase migration up
 3. **Documenter les changements** dans le header de la migration
 4. **Référencer la migration de base** pour les mises à jour
 5. **Garder les migrations atomiques** et indépendantes
+
+## 🛡️ Sécurité des Fonctions PostgreSQL
+
+### ⚠️ IMPORTANT : Search Path Mutable
+
+Toutes les fonctions PostgreSQL DOIVENT définir un `search_path` explicite pour éviter les vulnérabilités de sécurité.
+
+### Règle de sécurité obligatoire
+
+> **"Si votre fonction utilise `SECURITY DEFINER`, elle DOIT avoir `SET search_path`"**
+
+### Exemple de fonction sécurisée
+
+```sql
+-- ✅ BONNE PRATIQUE
+CREATE OR REPLACE FUNCTION my_function()
+RETURNS TRIGGER 
+SECURITY DEFINER
+SET search_path = public  -- Obligatoire pour la sécurité
+AS $$
+BEGIN
+    NEW.updated_at = now();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+### Patterns recommandés
+
+1. **Fonction simple** : `SET search_path = public`
+2. **Multi-schémas** : `SET search_path = public, auth`
+3. **Haute sécurité** : `SET search_path = ''` (tout qualifié)
+
+### Détecter les problèmes
+
+Supabase affichera des avertissements comme :
+- "Function has a role mutable search_path"
+
+Pour plus de détails, consultez : `docs/POSTGRESQL_SECURITY_GUIDE.md`
