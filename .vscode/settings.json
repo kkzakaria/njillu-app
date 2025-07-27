@@ -20,5 +20,12 @@
     "fs",
     "http",
     "net"
+  ],
+  "i18n-ally.localesPaths": [
+    "i18n",
+    "i18n/messages",
+    "i18n/messages/es/language",
+    "i18n/messages/en/language",
+    "i18n/messages/fr/language"
   ]
 }
