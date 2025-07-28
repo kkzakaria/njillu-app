@@ -53,7 +53,8 @@ export function SignUpForm({
         },
       });
       if (error) throw error;
-      router.push("/auth/sign-up-success");
+      // Redirection avec paramètre de validation du flux
+      router.push("/auth/sign-up-success?from=signup");
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : t('signUp.error'));
     } finally {
