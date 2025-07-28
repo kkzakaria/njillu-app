@@ -50,7 +50,7 @@ export function ResetPasswordOtpForm({
     e.preventDefault();
     
     if (otp.length !== 6) {
-      setError(t('resetPasswordOtp.invalidOtpLength'));
+      setError(t('invalidOtpLength'));
       return;
     }
 
@@ -71,7 +71,7 @@ export function ResetPasswordOtpForm({
       localStorage.removeItem('reset-email');
       router.push('/auth/update-password');
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : t('resetPasswordOtp.error'));
+      setError(error instanceof Error ? error.message : t('error'));
     } finally {
       setIsLoading(false);
     }
@@ -83,8 +83,11 @@ export function ResetPasswordOtpForm({
     setError(null);
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/reset-password-otp?email=${encodeURIComponent(email)}`,
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email,
+        options: {
+          shouldCreateUser: false
+        }
       });
       if (error) throw error;
       
@@ -92,7 +95,7 @@ export function ResetPasswordOtpForm({
       setOtp("");
       // Could show a success message here
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : t('resetPasswordOtp.resendError'));
+      setError(error instanceof Error ? error.message : t('resendError'));
     } finally {
       setIsResending(false);
     }
@@ -102,9 +105,9 @@ export function ResetPasswordOtpForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">{t('resetPasswordOtp.title')}</CardTitle>
+          <CardTitle className="text-2xl">{t('title')}</CardTitle>
           <CardDescription>
-            {t('resetPasswordOtp.description')} {email}
+            {t('description')} {email}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -112,7 +115,7 @@ export function ResetPasswordOtpForm({
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="otp" className="text-center">
-                  {t('resetPasswordOtp.otpLabel')}
+                  {t('otpLabel')}
                 </Label>
                 <div className="flex justify-center">
                   <InputOTP
@@ -131,14 +134,14 @@ export function ResetPasswordOtpForm({
                   </InputOTP>
                 </div>
                 <p className="text-sm text-muted-foreground text-center">
-                  {t('resetPasswordOtp.otpHelp')}
+                  {t('otpHelp')}
                 </p>
               </div>
               
               {error && <p className="text-sm text-red-500 text-center">{error}</p>}
               
               <Button type="submit" className="w-full" disabled={isLoading || otp.length !== 6}>
-                {isLoading ? t('resetPasswordOtp.verifying') : t('resetPasswordOtp.verifyButton')}
+                {isLoading ? t('verifying') : t('verifyButton')}
               </Button>
               
               <div className="text-center">
@@ -149,18 +152,18 @@ export function ResetPasswordOtpForm({
                   disabled={isResending}
                   className="text-sm"
                 >
-                  {isResending ? t('resetPasswordOtp.resending') : t('resetPasswordOtp.resendButton')}
+                  {isResending ? t('resending') : t('resendButton')}
                 </Button>
               </div>
             </div>
             
             <div className="mt-4 text-center text-sm">
-              {t('resetPasswordOtp.backToLogin')}{" "}
+              {t('backToLogin')}{" "}
               <Link
                 href="/auth/login"
                 className="underline underline-offset-4"
               >
-                {t('resetPasswordOtp.loginLink')}
+                {t('loginLink')}
               </Link>
             </div>
           </form>
