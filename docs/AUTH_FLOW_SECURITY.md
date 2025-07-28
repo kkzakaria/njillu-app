@@ -246,6 +246,29 @@ Vérification de session Supabase + email parameter
 - **Maintenance** : Pas de tokens custom à gérer
 - **Compatibilité** : Intégration native avec tous les flux Supabase
 
+### Configuration OTP - 5 Minutes
+
+**Sécurité Renforcée** :
+- **MAILER_OTP_EXP** : 300 secondes (5 minutes)
+- **SMS_OTP_EXP** : 300 secondes (5 minutes)
+- **Expiration rapide** : Réduit la fenêtre d'attaque
+- **Rate limiting** : Contrôle des tentatives multiples
+
+**Configuration** :
+```toml
+# supabase/config/auth.toml
+[auth]
+mailer_otp_exp = 300     # 5 minutes
+sms_otp_exp = 300        # 5 minutes
+smtp_max_frequency = 300 # 5 minutes entre emails
+```
+
+**Avantages Sécurité** :
+- ✅ Fenêtre d'attaque réduite (5 min vs 1 heure)
+- ✅ Protection contre interception prolongée
+- ✅ Conformité aux bonnes pratiques sécurité
+- ✅ Expérience utilisateur optimale
+
 ## Avantages de Sécurité
 
 ### 🛡️ Protection Contre
