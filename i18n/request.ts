@@ -12,6 +12,7 @@ async function loadMessages(locale: string) {
       authSignup,
       authForgotPassword,
       authUpdatePassword,
+      authResetPasswordOtp,
       authLogout,
       commonUi,
       navigationMenu,
@@ -25,6 +26,7 @@ async function loadMessages(locale: string) {
       import(`./messages/${locale}/auth/signup.json`),
       import(`./messages/${locale}/auth/forgot-password.json`),
       import(`./messages/${locale}/auth/update-password.json`),
+      import(`./messages/${locale}/auth/reset-password-otp.json`),
       import(`./messages/${locale}/auth/logout.json`),
       import(`./messages/${locale}/common/ui.json`),
       import(`./messages/${locale}/navigation/menu.json`),
@@ -42,6 +44,7 @@ async function loadMessages(locale: string) {
         signUp: authSignup.default,
         forgotPassword: authForgotPassword.default,
         updatePassword: authUpdatePassword.default,
+        resetPasswordOtp: authResetPasswordOtp.default,
         logout: authLogout.default.logout // Extract the logout string
       },
       common: commonUi.default,

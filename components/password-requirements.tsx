@@ -11,10 +11,9 @@ interface PasswordRequirement {
 
 interface PasswordRequirementsProps {
   password: string;
-  className?: string;
 }
 
-export function PasswordRequirements({ password, className }: PasswordRequirementsProps) {
+export function PasswordRequirements({ password }: PasswordRequirementsProps) {
   const t = useCommon();
 
   const requirements: PasswordRequirement[] = [

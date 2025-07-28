@@ -10,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/password-input";
 import { PasswordRequirements } from "@/components/password-requirements";
 import { Label } from "@/components/ui/label";

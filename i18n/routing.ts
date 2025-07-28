@@ -25,6 +25,11 @@ export const routing = defineRouting({
       en: '/auth/update-password',
       es: '/auth/actualizar-contrasena'
     },
+    '/auth/reset-password-otp': {
+      fr: '/auth/verification-code',
+      en: '/auth/reset-password-otp',
+      es: '/auth/codigo-verificacion'
+    },
     '/protected': {
       fr: '/protege',
       en: '/protected', 
