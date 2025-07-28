@@ -6,22 +6,24 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { AuthLayout } from "../components/auth-layout";
+import { getTranslations } from 'next-intl/server';
 
-export default function SignUpSuccessPage() {
+export default async function SignUpSuccessPage() {
+  const t = await getTranslations('auth.signUpSuccess');
+  
   return (
     <AuthLayout>
       <div className="flex flex-col gap-6">
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl">
-              Thank you for signing up!
+              {t('title')}
             </CardTitle>
-            <CardDescription>Check your email to confirm</CardDescription>
+            <CardDescription>{t('description')}</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              You&apos;ve successfully signed up. Please check your email to
-              confirm your account before signing in.
+              {t('message')}
             </p>
           </CardContent>
         </Card>
