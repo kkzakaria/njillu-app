@@ -44,9 +44,24 @@ export function ForgotPasswordForm({
       });
       if (error) throw error;
       
-      // Store email and redirect to OTP verification
+      // Générer un token de validation sécurisé côté serveur
+      const tokenResponse = await fetch('/api/auth/generate-otp-token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+      
+      if (!tokenResponse.ok) {
+        throw new Error('Failed to generate security token');
+      }
+      
+      const { otpToken } = await tokenResponse.json();
+      
+      // Store email and redirect to OTP verification with security token
       localStorage.setItem('reset-email', email);
-      router.push(`/auth/reset-password-otp?email=${encodeURIComponent(email)}`);
+      router.push(`/auth/reset-password-otp?email=${encodeURIComponent(email)}&otpToken=${otpToken}`);
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
