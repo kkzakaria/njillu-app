@@ -7,8 +7,17 @@ import {
 } from "@/components/ui/card";
 import { AuthLayout } from "../components/auth-layout";
 import { getTranslations } from 'next-intl/server';
+import { checkAuthenticationStatus } from "@/lib/auth/session-guard";
+import { redirect } from "next/navigation";
 
 export default async function SignUpSuccessPage() {
+  // Vérification de session - redirige vers /protected si déjà connecté
+  const { shouldRedirect } = await checkAuthenticationStatus();
+  
+  if (shouldRedirect) {
+    redirect("/protected");
+  }
+  
   const t = await getTranslations('auth.signUpSuccess');
   
   return (

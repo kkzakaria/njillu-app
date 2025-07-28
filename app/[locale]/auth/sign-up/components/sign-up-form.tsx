@@ -39,7 +39,7 @@ export function SignUpForm({
     setError(null);
 
     if (password !== repeatPassword) {
-      setError("Les mots de passe ne correspondent pas");
+      setError(t('signUp.passwordMismatch'));
       setIsLoading(false);
       return;
     }

@@ -4,9 +4,11 @@
   "email": "Email",
   "password": "Contraseña",
   "confirmPassword": "Confirmar contraseña",
+  "passwordMismatch": "Las contraseñas no coinciden",
   "signUpButton": "Registrarse",
   "signingUp": "Registrándose...",
   "haveAccount": "¿Ya tiene una cuenta?",
   "login": "Iniciar sesión",
-  "success": "Revise su email para confirmar su cuenta"
+  "success": "Revise su email para confirmar su cuenta",
+  "error": "Ocurrió un error durante el registro"
 }

@@ -4,9 +4,11 @@
   "email": "Email",
   "password": "Mot de passe",
   "confirmPassword": "Confirmer le mot de passe",
+  "passwordMismatch": "Les mots de passe ne correspondent pas",
   "signUpButton": "S'inscrire",
   "signingUp": "Inscription en cours...",
   "haveAccount": "Déjà un compte ?",
   "login": "Se connecter",
-  "success": "Vérifiez votre email pour confirmer votre compte"
+  "success": "Vérifiez votre email pour confirmer votre compte",
+  "error": "Une erreur est survenue lors de l'inscription"
 }

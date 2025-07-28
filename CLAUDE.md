@@ -68,6 +68,10 @@ The application uses a three-client pattern for Supabase integration:
 - Middleware automatically handles session refresh and route protection
 - Authentication pages: login, sign-up, forgot password, update password (all localized)
 - Protected routes redirect unauthenticated users to localized `/auth/login`
+- **Session Guard System**: Prevents authenticated users from accessing auth pages
+  - **Primary method**: `supabase.auth.getClaims()` for JWT Signing Keys (modern, fast)
+  - **Fallback method**: `supabase.auth.getUser()` for compatibility
+  - **Auto-redirection**: Authenticated users → `/protected`
 - Server-side authentication pattern: `supabase.auth.getClaims()` for protected pages
 
 ### Project Structure

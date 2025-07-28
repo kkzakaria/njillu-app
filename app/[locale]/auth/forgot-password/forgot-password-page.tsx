@@ -1,7 +1,16 @@
 import { ForgotPasswordForm } from "./components/forgot-password-form";
 import { AuthLayout } from "../components/auth-layout";
+import { checkAuthenticationStatus } from "@/lib/auth/session-guard";
+import { redirect } from "next/navigation";
 
-export default function ForgotPasswordPage() {
+export default async function ForgotPasswordPage() {
+  // Vérification de session - redirige vers /protected si déjà connecté
+  const { shouldRedirect } = await checkAuthenticationStatus();
+  
+  if (shouldRedirect) {
+    redirect("/protected");
+  }
+  
   return (
     <AuthLayout>
       <ForgotPasswordForm />
