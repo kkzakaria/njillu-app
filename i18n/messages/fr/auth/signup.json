@@ -1,14 +1,12 @@
 {
   "title": "Inscription",
-  "description": "Créez votre nouveau compte",
+  "description": "Créez votre nouveau compte avec vérification par OTP",
   "email": "Email",
-  "password": "Mot de passe",
-  "confirmPassword": "Confirmer le mot de passe",
-  "passwordMismatch": "Les mots de passe ne correspondent pas",
-  "signUpButton": "S'inscrire",
-  "signingUp": "Inscription en cours...",
+  "otpDescription": "Nous vous enverrons un code de vérification à 6 chiffres par email",
+  "signUpButton": "Envoyer le code OTP",
+  "signingUp": "Envoi du code...",
   "haveAccount": "Déjà un compte ?",
   "login": "Se connecter",
-  "success": "Vérifiez votre email pour confirmer votre compte",
-  "error": "Une erreur est survenue lors de l'inscription"
+  "success": "Code OTP envoyé ! Vérifiez votre email",
+  "error": "Une erreur est survenue lors de l'envoi du code"
 }

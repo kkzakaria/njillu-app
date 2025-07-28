@@ -1,0 +1,17 @@
+{
+  "title": "Confirmer votre inscription",
+  "description": "Entrez le code de vérification envoyé à",
+  "otpLabel": "Code de vérification",
+  "otpHelp": "Entrez le code à 6 chiffres reçu par email",
+  "verifyButton": "Confirmer l'inscription",
+  "verifying": "Vérification en cours...",
+  "resendButton": "Renvoyer le code",
+  "resending": "Envoi en cours...",
+  "resendCooldown": "Renvoyer dans {seconds}s",
+  "resendSuccess": "Nouveau code envoyé !",
+  "resendError": "Erreur lors de l'envoi du code",
+  "backToSignUp": "Retour à l'inscription",
+  "signUpLink": "S'inscrire",
+  "invalidOtpLength": "Le code doit contenir 6 chiffres",
+  "error": "Code invalide ou expiré"
+}

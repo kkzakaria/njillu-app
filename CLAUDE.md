@@ -6,13 +6,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a clean Next.js application with Supabase integration, based on the official Supabase starter template. It provides a foundation for building applications with authentication, protected routes, and modern React patterns. The project has been cleaned of tutorial components while preserving reference implementations.
 
+## Package Manager
+
+**IMPORTANT**: This project uses **pnpm** as the package manager. Always use `pnpm` commands, not `npm` or `yarn`.
+
 ## Key Development Commands
 
 ### Development
-- `pnpm dev` or `npm run dev` - Start development server with Turbopack
-- `pnpm build` or `npm run build` - Build production application  
-- `pnpm start` or `npm start` - Start production server
-- `pnpm lint` or `npm run lint` - Run ESLint
+- `pnpm dev` - Start development server with Turbopack
+- `pnpm build` - Build production application  
+- `pnpm start` - Start production server
+- `pnpm lint` - Run ESLint
 
 ### Supabase Local Development
 - `supabase start` - Start local Supabase services (requires Docker)

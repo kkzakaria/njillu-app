@@ -14,7 +14,7 @@ Avant l'implémentation, il était possible d'accéder directement aux pages sui
 
 ### Fichier `lib/auth/flow-guard.ts`
 
-Ce fichier contient les utilitaires de vérification des flux d'authentification :
+Ce fichier contient les utilitaires de vérification des flux d'authentification sécurisés pour l'inscription et la récupération de mot de passe :
 
 #### Fonctions Principales
 
@@ -41,10 +41,20 @@ Ce fichier contient les utilitaires de vérification des flux d'authentification
 - Ou avec un état de récupération valide en session
 - Redirige vers `/auth/forgot-password` si accès illégitime
 
+**`checkSignUpOtpAccess(searchParams)`**
+
+- Vérifie l'accès légitime à la page OTP d'inscription avec **SÉCURITÉ RENFORCÉE**
+- **Double vérification** : Paramètres URL + Session Supabase active
+- Vérification 1 : `email` et `type=signup` requis dans l'URL
+- Vérification 2 : Session OTP Supabase récente pour l'email correspondant
+- **Protection contre contournement** : Impossible d'accéder en construisant manuellement l'URL
+- **Sécurité en profondeur** : Validation côté serveur ET côté client
+- Redirige vers `/auth/sign-up` si accès illégitime détecté
+
 **`checkSignUpSuccessAccess(searchParams)`**
 
 - Vérifie l'accès à la page de succès d'inscription
-- Accepte les accès avec `type=signup`, `confirmed=true`, ou `from=signup`
+- Accepte les accès avec `type=signup`, `confirmed=true`, `from=signup`, ou `from=signup-otp`
 - Redirige vers `/auth/sign-up` si accès illégitime
 
 ### Logique de Vérification
@@ -73,6 +83,23 @@ export default async function SecurePage({ searchParams }) {
 
 ## Pages Sécurisées
 
+### `/auth/signup-otp`
+
+**Conditions d'Accès Légitime (SÉCURITÉ RENFORCÉE) :**
+
+- **Paramètres URL requis** : `?email=xxx&type=signup`
+- **Session OTP active** : Session Supabase récente pour l'email correspondant
+- **Vérification côté serveur** : `checkSignUpOtpAccess()` avec validation de session
+- **Vérification côté client** : Cohérence localStorage + paramètres URL
+- **Double protection** : Impossible de bypasser en construisant manuellement l'URL
+
+**Redirection si Accès Illégitime :** → `/auth/sign-up`
+
+**Tentatives de Contournement Bloquées :**
+- ❌ URL manuelle : `http://localhost:3000/auth/signup-otp?email=test@test.com&type=signup`
+- ❌ Session expirée ou manquante pour l'email
+- ❌ localStorage incohérent ou manquant
+
 ### `/auth/reset-password-otp`
 
 **Conditions d'Accès Légitime :**
@@ -97,19 +124,26 @@ export default async function SecurePage({ searchParams }) {
 
 **Conditions d'Accès Légitime :**
 
-- Paramètres URL : `?type=signup`, `?confirmed=true`, ou `?from=signup`
-- Confirmation email Supabase
+- Paramètres URL : `?type=signup`, `?confirmed=true`, `?from=signup`, ou `?from=signup-otp`
+- Confirmation OTP réussie depuis le flux d'inscription
 
 **Redirection si Accès Illégitime :** → `/auth/sign-up`
 
-**Modification du Formulaire d'Inscription :**
+**Flux d'Inscription OTP :**
 
 ```typescript
-// Dans sign-up-form.tsx
-router.push("/auth/sign-up-success?from=signup");
+// Dans signup-otp-form.tsx
+router.push('/auth/sign-up-success?from=signup-otp&confirmed=true');
 ```
 
 ## Flux de Sécurité
+
+### Flux d'Inscription OTP (Nouveau - Sécurisé)
+
+1. **`/auth/sign-up`** : Formulaire d'inscription (email seulement) via `signInWithOtp({shouldCreateUser: true})`
+2. **Redirection OTP** : `?email=xxx&type=signup` (flux OTP sécurisé par Supabase)
+3. **`/auth/signup-otp`** : Vérification OTP d'inscription (sécurisée avec validation token)
+4. **`/auth/sign-up-success`** : Page de succès avec paramètre `?from=signup-otp&confirmed=true`
 
 ### Flux de Récupération de Mot de Passe
 
@@ -117,12 +151,6 @@ router.push("/auth/sign-up-success?from=signup");
 2. **Redirection simplifiée** : `?email=xxx` (flux OTP sécurisé par Supabase)
 3. **`/auth/reset-password-otp`** : Vérification OTP (sécurisée avec validation token)
 4. **`/auth/update-password`** : Mise à jour mot de passe (sécurisée)
-
-### Flux d'Inscription
-
-1. **`/auth/sign-up`** : Formulaire d'inscription
-2. **Redirection avec paramètre** : `?from=signup`
-3. **`/auth/sign-up-success`** : Page de succès (sécurisée)
 
 ## Compatibilité Next.js 15
 
@@ -182,7 +210,25 @@ GET /auth/update-password
 # APRÈS : Redirection vers forgot-password
 ```
 
-**Test 3 : Accès Direct Sign-up Success**
+**Test 3 : Accès Direct Sign-up OTP (SÉCURITÉ RENFORCÉE)**
+
+```bash
+# AVANT : Accessible avec URL manuelle
+GET /auth/signup-otp?email=test@test.com&type=signup
+# APRÈS : Redirection vers sign-up (session OTP requise)
+```
+
+**Test 3b : Tentative de Contournement**
+
+```bash
+# Toutes ces tentatives échouent maintenant :
+GET /auth/signup-otp                              # → /auth/sign-up (paramètres manquants)
+GET /auth/signup-otp?email=test@test.com          # → /auth/sign-up (type manquant)
+GET /auth/signup-otp?type=signup                  # → /auth/sign-up (email manquant)
+GET /auth/signup-otp?email=test@test.com&type=signup  # → /auth/sign-up (pas de session OTP)
+```
+
+**Test 4 : Accès Direct Sign-up Success**
 
 ```bash
 # AVANT : Accessible directement
@@ -190,11 +236,18 @@ GET /auth/sign-up-success
 # APRÈS : Redirection vers sign-up
 ```
 
-**Test 4 : Flux Légitime**
+**Test 5 : Flux Inscription OTP Légitime**
+
+```bash
+# Flux complet d'inscription OTP - doit fonctionner
+POST /auth/sign-up → Email → GET /auth/signup-otp?email=xxx&type=signup → POST OTP → GET /auth/sign-up-success
+```
+
+**Test 6 : Flux Récupération Légitime**
 
 ```bash
 # Flux complet de récupération - doit fonctionner
-POST /auth/forgot-password → Email → GET /auth/reset-password-otp?token=xxx&type=recovery
+POST /auth/forgot-password → Email → GET /auth/reset-password-otp?email=xxx → POST OTP → GET /auth/update-password
 ```
 
 ### Validation Manuelle
@@ -204,13 +257,14 @@ POST /auth/forgot-password → Email → GET /auth/reset-password-otp?token=xxx&
 pnpm dev
 
 # Tester les accès directs (doivent échouer)
+curl -I http://localhost:3000/auth/signup-otp
 curl -I http://localhost:3000/auth/reset-password-otp
 curl -I http://localhost:3000/auth/update-password
 curl -I http://localhost:3000/auth/sign-up-success
 
 # Tester les flux légitimes (doivent réussir)
-# 1. Inscription → success page
-# 2. Forgot password → OTP → update
+# 1. Inscription OTP → signup-otp → success page
+# 2. Forgot password → reset-password-otp → update-password
 ```
 
 ## Système de Sécurité Supabase Auth OTP
@@ -218,6 +272,7 @@ curl -I http://localhost:3000/auth/sign-up-success
 ### Approche Native Simplifiée
 
 **Architecture Supabase** :
+
 - Utilise le système intégré `signInWithOtp()` pour l'envoi d'OTP
 - Gestion automatique des tokens par Supabase Auth
 - Sécurité native : validation OTP côté serveur Supabase
@@ -239,22 +294,26 @@ Vérification de session Supabase + email parameter
 → Protection naturelle via système natif
 ```
 
-### Avantages du Système Natif
+### Avantages du Système Natif Unifié
 
-- **Simplicité** : Moins de code custom, plus de fiabilité
-- **Sécurité** : Système éprouvé de Supabase Auth
-- **Maintenance** : Pas de tokens custom à gérer
-- **Compatibilité** : Intégration native avec tous les flux Supabase
+- **Simplicité** : Moins de code custom, plus de fiabilité pour inscription ET récupération
+- **Sécurité** : Système éprouvé de Supabase Auth pour tous les flux OTP
+- **Maintenance** : Pas de tokens custom à gérer, flux unifiés
+- **Compatibilité** : Intégration native avec tous les flux Supabase (inscription + récupération)
+- **Cohérence UX** : Interface utilisateur identique pour inscription et récupération
+- **Configuration centralisée** : OTP expiration 5 minutes pour tous les flux
 
 ### Configuration OTP - 5 Minutes
 
 **Sécurité Renforcée** :
+
 - **MAILER_OTP_EXP** : 300 secondes (5 minutes)
 - **SMS_OTP_EXP** : 300 secondes (5 minutes)
 - **Expiration rapide** : Réduit la fenêtre d'attaque
 - **Rate limiting** : Contrôle des tentatives multiples
 
 **Configuration** :
+
 ```toml
 # supabase/config/auth.toml
 [auth]
@@ -264,6 +323,7 @@ smtp_max_frequency = 300 # 5 minutes entre emails
 ```
 
 **Avantages Sécurité** :
+
 - ✅ Fenêtre d'attaque réduite (5 min vs 1 heure)
 - ✅ Protection contre interception prolongée
 - ✅ Conformité aux bonnes pratiques sécurité
@@ -340,9 +400,18 @@ console.log('Access decision:', { isValidAccess, shouldRedirect });
 
 Cette implémentation offre une protection robuste contre l'accès direct aux pages intermédiaires du flux d'authentification tout en préservant une expérience utilisateur fluide pour les flux légitimes.
 
-**Status : ✅ IMPLÉMENTÉ ET TESTÉ**
+**Status : ✅ IMPLÉMENTÉ ET TESTÉ - INSCRIPTION OTP SÉCURISÉE**
 
-- Toutes les pages sensibles sont protégées
-- Flux légitimes préservés
-- Compatible Next.js 15
-- Build réussi sans erreurs TypeScript
+- **Inscription OTP** : Nouveau flux sécurisé avec `signInWithOtp({shouldCreateUser: true})`
+- **SÉCURITÉ RENFORCÉE** : `/auth/signup-otp` avec double validation (serveur + client)
+- **Protection anti-contournement** : Impossible d'accéder en construisant manuellement l'URL
+- **Validation de session** : Vérification session OTP Supabase active obligatoire
+- **Guards avancés** : `checkSignUpOtpAccess()` avec vérification de session
+- **Sécurité en profondeur** : Protection côté serveur ET côté client
+- **Flux unifiés** : Inscription et récupération utilisent le même système OTP sécurisé
+- **Traductions complètes** : Support trilingue (FR/EN/ES) pour le nouveau flux
+- **Build réussi** : Aucune erreur TypeScript, sécurité validée
+- **Configuration OTP** : 5 minutes pour inscription ET récupération
+- **Compatible Next.js 15** : Toutes les pages respectent les nouveaux patterns
+- **Tests de sécurité** : Toutes les tentatives de contournement bloquées
+- **Documentation complète** : Vulnérabilités corrigées et documentées

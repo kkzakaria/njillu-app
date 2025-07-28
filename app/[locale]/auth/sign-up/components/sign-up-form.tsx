@@ -11,8 +11,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { PasswordInput } from "@/components/password-input";
-import { PasswordRequirements } from "@/components/password-requirements";
 import { Label } from "@/components/ui/label";
 import { Link } from '@/i18n/navigation';
 import { useRouter } from "next/navigation";
@@ -24,8 +22,6 @@ export function SignUpForm({
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -38,23 +34,24 @@ export function SignUpForm({
     setIsLoading(true);
     setError(null);
 
-    if (password !== repeatPassword) {
-      setError(t('signUp.passwordMismatch'));
-      setIsLoading(false);
-      return;
-    }
-
     try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
+      // Utiliser signInWithOtp pour l'inscription avec OTP
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email,
         options: {
-          emailRedirectTo: `${window.location.origin}/protected`,
-        },
+          shouldCreateUser: true, // Créer un utilisateur si il n'existe pas
+          emailRedirectTo: undefined // Pas de redirection automatique par email
+        }
       });
+      
       if (error) throw error;
-      // Redirection avec paramètre de validation du flux
-      router.push("/auth/sign-up-success?from=signup");
+      
+      // Stocker l'email pour le flux OTP et marquer comme inscription
+      localStorage.setItem('signup-email', email);
+      localStorage.setItem('signup-flow', 'true');
+      
+      // Redirection vers la page OTP avec paramètres d'inscription
+      router.push(`/auth/signup-otp?email=${encodeURIComponent(email)}&type=signup`);
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : t('signUp.error'));
     } finally {
@@ -82,29 +79,9 @@ export function SignUpForm({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">{t('signUp.password')}</Label>
-                </div>
-                <PasswordInput
-                  id="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <PasswordRequirements password={password} />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="repeat-password">{t('signUp.confirmPassword')}</Label>
-                </div>
-                <PasswordInput
-                  id="repeat-password"
-                  required
-                  value={repeatPassword}
-                  onChange={(e) => setRepeatPassword(e.target.value)}
-                />
+                <p className="text-sm text-muted-foreground">
+                  {t('signUp.otpDescription')}
+                </p>
               </div>
               {error && <p className="text-sm text-red-500">{error}</p>}
               <Button type="submit" className="w-full" disabled={isLoading}>

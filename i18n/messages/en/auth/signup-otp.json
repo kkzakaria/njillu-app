@@ -1,0 +1,17 @@
+{
+  "title": "Confirm your registration",
+  "description": "Enter the verification code sent to",
+  "otpLabel": "Verification code",
+  "otpHelp": "Enter the 6-digit code received by email",
+  "verifyButton": "Confirm registration",
+  "verifying": "Verifying...",
+  "resendButton": "Resend code",
+  "resending": "Sending...",
+  "resendCooldown": "Resend in {seconds}s",
+  "resendSuccess": "New code sent!",
+  "resendError": "Error sending code",
+  "backToSignUp": "Back to sign up",
+  "signUpLink": "Sign Up",
+  "invalidOtpLength": "Code must be 6 digits",
+  "error": "Invalid or expired code"
+}

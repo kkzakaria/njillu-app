@@ -1,0 +1,35 @@
+🎉 BIENVENUE - CONFIRMEZ VOTRE INSCRIPTION
+
+Bonjour,
+
+Nous sommes ravis de vous accueillir ! Pour finaliser votre inscription, veuillez utiliser le code de vérification ci-dessous :
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VOTRE CODE DE VÉRIFICATION :
+
+                {{ .Token }}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏰ IMPORTANT : Ce code expire dans 5 minutes pour votre sécurité.
+
+🔒 SÉCURITÉ : Si vous n'avez pas demandé ce code, ignorez cet email en toute sécurité.
+
+ÉTAPES SUIVANTES :
+1. Retournez sur la page d'inscription
+2. Entrez le code à 6 chiffres ci-dessus
+3. Cliquez sur "Confirmer l'inscription"
+
+Vous pouvez aussi cliquer directement sur ce lien :
+{{ .ConfirmationURL }}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+{{ .SiteName }}
+Support : {{ .SupportEmail }}
+Site web : {{ .SiteURL }}
+
+Vous recevez cet email car une inscription a été demandée avec cette adresse email.
+Si ce n'est pas vous, vous pouvez ignorer cet email en toute sécurité.
+
+© {{ .SiteName }} - Tous droits réservés

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification Code - Sign Up</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            line-height: 1.6;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            color: #e2e8f0;
+            margin: 10px 0 0 0;
+            font-size: 16px;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .welcome-message {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .welcome-message h2 {
+            color: #1e293b;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .welcome-message p {
+            color: #64748b;
+            font-size: 16px;
+            margin: 0;
+        }
+        
+        .otp-container {
+            background-color: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .otp-code {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: 8px;
+            color: #6366f1;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 10px;
+            background-color: #ffffff;
+            border-radius: 6px;
+            display: inline-block;
+            min-width: 240px;
+        }
+        
+        .otp-instructions {
+            margin-top: 15px;
+            color: #64748b;
+            font-size: 14px;
+        }
+        
+        .expiry-notice {
+            background-color: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px 20px;
+            margin: 25px 0;
+            border-radius: 4px;
+        }
+        
+        .expiry-notice .icon {
+            color: #f59e0b;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .expiry-notice p {
+            margin: 0;
+            color: #92400e;
+            font-size: 14px;
+        }
+        
+        .security-info {
+            background-color: #ecfdf5;
+            border-left: 4px solid #10b981;
+            padding: 15px 20px;
+            margin: 25px 0;
+            border-radius: 4px;
+        }
+        
+        .security-info .icon {
+            color: #10b981;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .security-info p {
+            margin: 0;
+            color: #065f46;
+            font-size: 14px;
+        }
+        
+        .button-container {
+            text-align: center;
+            margin: 35px 0;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: transform 0.2s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .footer {
+            background-color: #f8fafc;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .footer p {
+            color: #64748b;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+        
+        .footer a {
+            color: #6366f1;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .divider {
+            height: 1px;
+            background-color: #e2e8f0;
+            margin: 30px 0;
+        }
+        
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            .header, .content, .footer {
+                padding: 30px 20px;
+            }
+            
+            .otp-code {
+                font-size: 28px;
+                letter-spacing: 4px;
+                min-width: 200px;
+            }
+            
+            .welcome-message h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎉 Welcome!</h1>
+            <p>Confirm your registration</p>
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <div class="welcome-message">
+                <h2>Your verification code</h2>
+                <p>We're excited to welcome you! Use the code below to confirm your registration.</p>
+            </div>
+            
+            <!-- OTP Code -->
+            <div class="otp-container">
+                <div class="otp-code">{{ .Token }}</div>
+                <div class="otp-instructions">
+                    Enter this code on the sign-up page
+                </div>
+            </div>
+            
+            <!-- Expiry Notice -->
+            <div class="expiry-notice">
+                <p><span class="icon">⏰</span><strong>Important:</strong> This code expires in <strong>5 minutes</strong> for your security.</p>
+            </div>
+            
+            <!-- Security Info -->
+            <div class="security-info">
+                <p><span class="icon">🔒</span><strong>Secure:</strong> If you didn't request this code, you can safely ignore this email.</p>
+            </div>
+            
+            <!-- Call to Action -->
+            <div class="button-container">
+                <a href="{{ .ConfirmationURL }}" class="cta-button">
+                    Confirm my registration
+                </a>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <!-- Additional Info -->
+            <p style="color: #64748b; font-size: 14px; text-align: center;">
+                You're receiving this email because a registration was requested with this email address.<br>
+                If this wasn't you, you can safely ignore this email.
+            </p>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>{{ .SiteName }}</strong></p>
+            <p>
+                Need help? <a href="mailto:{{ .SupportEmail }}">Contact our support</a>
+            </p>
+            <p>
+                <a href="{{ .SiteURL }}">Visit website</a> | 
+                <a href="{{ .SiteURL }}/privacy">Privacy</a> | 
+                <a href="{{ .SiteURL }}/terms">Terms</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
