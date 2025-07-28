@@ -62,7 +62,7 @@ export function ResetPasswordOtpForm({
       const { error } = await supabase.auth.verifyOtp({
         email,
         token: otp,
-        type: 'recovery'
+        type: 'email'
       });
 
       if (error) throw error;
@@ -86,7 +86,8 @@ export function ResetPasswordOtpForm({
       const { error } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
-          shouldCreateUser: false
+          shouldCreateUser: false,
+          emailRedirectTo: undefined
         }
       });
       if (error) throw error;

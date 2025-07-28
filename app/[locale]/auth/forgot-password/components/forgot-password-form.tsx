@@ -34,11 +34,13 @@ export function ForgotPasswordForm({
     setError(null);
 
     try {
-      // Send OTP for password reset
+      // Send numeric OTP code for password reset
       const { error } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
-          shouldCreateUser: false // Don't create user if they don't exist
+          shouldCreateUser: false,
+          // Force OTP instead of magic link
+          emailRedirectTo: undefined
         }
       });
       if (error) throw error;
