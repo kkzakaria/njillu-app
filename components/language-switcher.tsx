@@ -38,12 +38,12 @@ export function LanguageSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm">
-          <Globe className="h-4 w-4 mr-2" />
+        <Button variant="ghost" size="sm" className="h-8 px-2 text-xs font-medium">
+          <Globe className="h-4 w-4 mr-1" />
           {languageCodes[locale as keyof typeof languageCodes]}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" className="min-w-[120px]">
         {routing.locales.map((lang) => (
           <DropdownMenuItem
             key={lang}

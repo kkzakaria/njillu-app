@@ -31,18 +31,19 @@ const ThemeSwitcher = () => {
       size="sm" 
       onClick={toggleTheme}
       aria-label={`Basculer vers le thème ${theme === "dark" ? "clair" : "sombre"}`}
+      className="h-8 w-8 p-0"
     >
       {theme === "dark" ? (
         <Sun
           key="light"
           size={ICON_SIZE}
-          className="text-muted-foreground"
+          className="text-muted-foreground hover:text-foreground transition-colors"
         />
       ) : (
         <Moon
           key="dark"
           size={ICON_SIZE}
-          className="text-muted-foreground"
+          className="text-muted-foreground hover:text-foreground transition-colors"
         />
       )}
     </Button>
