@@ -10,5 +10,7 @@
   "next": "Suivant",
   "previous": "Précédent",
   "close": "Fermer",
-  "login": "Connexion"
+  "login": "Connexion",
+  "showPassword": "Afficher le mot de passe",
+  "hidePassword": "Masquer le mot de passe"
 }

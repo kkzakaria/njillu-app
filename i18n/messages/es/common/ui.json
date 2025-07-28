@@ -10,5 +10,7 @@
   "next": "Siguiente",
   "previous": "Anterior",
   "close": "Cerrar",
-  "login": "Iniciar Sesión"
+  "login": "Iniciar Sesión",
+  "showPassword": "Mostrar contraseña",
+  "hidePassword": "Ocultar contraseña"
 }

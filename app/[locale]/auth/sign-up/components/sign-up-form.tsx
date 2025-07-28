@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/password-input";
 import { Label } from "@/components/ui/label";
 import { Link } from '@/i18n/navigation';
 import { useRouter } from "next/navigation";
@@ -84,9 +85,8 @@ export function SignUpForm({
                 <div className="flex items-center">
                   <Label htmlFor="password">{t('signUp.password')}</Label>
                 </div>
-                <Input
+                <PasswordInput
                   id="password"
-                  type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -96,9 +96,8 @@ export function SignUpForm({
                 <div className="flex items-center">
                   <Label htmlFor="repeat-password">{t('signUp.confirmPassword')}</Label>
                 </div>
-                <Input
+                <PasswordInput
                   id="repeat-password"
-                  type="password"
                   required
                   value={repeatPassword}
                   onChange={(e) => setRepeatPassword(e.target.value)}
