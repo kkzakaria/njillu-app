@@ -12,5 +12,13 @@
   "close": "Close",
   "login": "Login",
   "showPassword": "Show password",
-  "hidePassword": "Hide password"
+  "hidePassword": "Hide password",
+  "passwordRequirements": {
+    "title": "Password does not meet requirements:",
+    "allMet": "All requirements are met",
+    "minLength": "Minimum 8 characters",
+    "hasSpecialChar": "Include a special character",
+    "hasNumber": "Include a number",
+    "hasUppercase": "Include an uppercase letter"
+  }
 }

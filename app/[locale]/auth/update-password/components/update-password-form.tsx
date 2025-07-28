@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/password-input";
+import { PasswordRequirements } from "@/components/password-requirements";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -64,6 +65,7 @@ export function UpdatePasswordForm({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                <PasswordRequirements password={password} />
               </div>
               {error && <p className="text-sm text-red-500">{error}</p>}
               <Button type="submit" className="w-full" disabled={isLoading}>

@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/password-input";
+import { PasswordRequirements } from "@/components/password-requirements";
 import { Label } from "@/components/ui/label";
 import { Link } from '@/i18n/navigation';
 import { useRouter } from "next/navigation";
@@ -91,6 +92,7 @@ export function SignUpForm({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                <PasswordRequirements password={password} />
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">

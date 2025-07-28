@@ -12,5 +12,13 @@
   "close": "Fermer",
   "login": "Connexion",
   "showPassword": "Afficher le mot de passe",
-  "hidePassword": "Masquer le mot de passe"
+  "hidePassword": "Masquer le mot de passe",
+  "passwordRequirements": {
+    "title": "Le mot de passe ne respecte pas les exigences :",
+    "allMet": "Toutes les exigences sont respectées",
+    "minLength": "Minimum 8 caractères",
+    "hasSpecialChar": "Inclure un caractère spécial",
+    "hasNumber": "Inclure un chiffre",
+    "hasUppercase": "Inclure une lettre majuscule"
+  }
 }

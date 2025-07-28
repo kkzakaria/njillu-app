@@ -12,5 +12,13 @@
   "close": "Cerrar",
   "login": "Iniciar Sesión",
   "showPassword": "Mostrar contraseña",
-  "hidePassword": "Ocultar contraseña"
+  "hidePassword": "Ocultar contraseña",
+  "passwordRequirements": {
+    "title": "La contraseña no cumple los requisitos:",
+    "allMet": "Todos los requisitos se cumplen",
+    "minLength": "Mínimo 8 caracteres",
+    "hasSpecialChar": "Incluir un carácter especial",
+    "hasNumber": "Incluir un número",
+    "hasUppercase": "Incluir una letra mayúscula"
+  }
 }
