@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Link } from '@/i18n/navigation';
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from 'next-intl';
 
 export function ResetPasswordOtpForm({
@@ -26,9 +26,16 @@ export function ResetPasswordOtpForm({
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
+  const [cooldownSeconds, setCooldownSeconds] = useState(0);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslations('auth.resetPasswordOtp');
+
+  // Function to start cooldown
+  const startCooldown = useCallback(() => {
+    setCooldownSeconds(60); // 1 minute cooldown
+  }, []);
 
   useEffect(() => {
     // Get email from URL parameters or localStorage
@@ -38,13 +45,27 @@ export function ResetPasswordOtpForm({
     if (emailParam) {
       setEmail(emailParam);
       localStorage.setItem('reset-email', emailParam);
+      // Start cooldown immediately since we just sent an OTP to get here
+      startCooldown();
     } else if (storedEmail) {
       setEmail(storedEmail);
+      // Start cooldown immediately since we just sent an OTP to get here
+      startCooldown();
     } else {
       // Redirect to forgot password if no email is found
       router.push('/auth/forgot-password');
     }
-  }, [searchParams, router]);
+  }, [searchParams, router, startCooldown]);
+
+  // Cooldown timer effect
+  useEffect(() => {
+    if (cooldownSeconds > 0) {
+      const timer = setTimeout(() => {
+        setCooldownSeconds(cooldownSeconds - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [cooldownSeconds]);
 
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,9 +99,12 @@ export function ResetPasswordOtpForm({
   };
 
   const handleResendOtp = async () => {
+    if (cooldownSeconds > 0) return; // Prevent resend during cooldown
+    
     const supabase = createClient();
     setIsResending(true);
     setError(null);
+    setSuccessMessage(null);
 
     try {
       const { error } = await supabase.auth.signInWithOtp({
@@ -92,9 +116,15 @@ export function ResetPasswordOtpForm({
       });
       if (error) throw error;
       
-      // Clear current OTP
+      // Clear current OTP and show success message
       setOtp("");
-      // Could show a success message here
+      setSuccessMessage(t('resendSuccess'));
+      
+      // Start cooldown timer
+      startCooldown();
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccessMessage(null), 3000);
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : t('resendError'));
     } finally {
@@ -140,6 +170,7 @@ export function ResetPasswordOtpForm({
               </div>
               
               {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+              {successMessage && <p className="text-sm text-green-500 text-center">{successMessage}</p>}
               
               <Button type="submit" className="w-full" disabled={isLoading || otp.length !== 6}>
                 {isLoading ? t('verifying') : t('verifyButton')}
@@ -150,11 +181,26 @@ export function ResetPasswordOtpForm({
                   type="button"
                   variant="ghost"
                   onClick={handleResendOtp}
-                  disabled={isResending}
+                  disabled={isResending || cooldownSeconds > 0}
                   className="text-sm"
                 >
-                  {isResending ? t('resending') : t('resendButton')}
+                  {isResending 
+                    ? t('resending') 
+                    : cooldownSeconds > 0 
+                      ? t('resendCooldown', { seconds: cooldownSeconds })
+                      : t('resendButton')
+                  }
                 </Button>
+                {cooldownSeconds > 0 && (
+                  <div className="mt-2">
+                    <div className="w-full bg-gray-200 rounded-full h-1.5">
+                      <div 
+                        className="bg-blue-600 h-1.5 rounded-full transition-all duration-1000 ease-linear" 
+                        style={{ width: `${((60 - cooldownSeconds) / 60) * 100}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             

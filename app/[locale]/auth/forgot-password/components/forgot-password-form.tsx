@@ -39,7 +39,6 @@ export function ForgotPasswordForm({
         email: email,
         options: {
           shouldCreateUser: false,
-          // Force OTP instead of magic link
           emailRedirectTo: undefined
         }
       });
