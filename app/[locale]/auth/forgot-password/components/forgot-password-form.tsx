@@ -34,7 +34,7 @@ export function ForgotPasswordForm({
     setError(null);
 
     try {
-      // Send numeric OTP code for password reset
+      // Send numeric OTP code for password reset using Supabase native system
       const { error } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
@@ -44,24 +44,10 @@ export function ForgotPasswordForm({
       });
       if (error) throw error;
       
-      // Générer un token de validation sécurisé côté serveur
-      const tokenResponse = await fetch('/api/auth/generate-otp-token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-      
-      if (!tokenResponse.ok) {
-        throw new Error('Failed to generate security token');
-      }
-      
-      const { otpToken } = await tokenResponse.json();
-      
-      // Store email and redirect to OTP verification with security token
+      // Store email and redirect to OTP verification
+      // La sécurité est assurée par Supabase : l'OTP code doit être correct
       localStorage.setItem('reset-email', email);
-      router.push(`/auth/reset-password-otp?email=${encodeURIComponent(email)}&otpToken=${otpToken}`);
+      router.push(`/auth/reset-password-otp?email=${encodeURIComponent(email)}`);
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {

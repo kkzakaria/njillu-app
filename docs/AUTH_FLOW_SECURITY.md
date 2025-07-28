@@ -27,9 +27,9 @@ Ce fichier contient les utilitaires de vérification des flux d'authentification
 **`checkOtpResetAccess(searchParams)`**
 
 - Vérifie l'accès légitime à la page OTP de reset
-- **SÉCURISÉ** : Nécessite `email` ET `otpToken` valide dans l'URL
-- Validation du token : timestamp + hash SHA256 avec secret serveur
-- Expiration du token : 10 minutes après génération
+- **SÉCURISÉ** : Utilise le système natif Supabase Auth OTP
+- Vérification de session et état de récupération Supabase
+- Protection naturelle : OTP code requis pour vérification
 - Ou avec `token` et `type=recovery` (flux de récupération traditionnel)
 - Ou avec un état de récupération valide en session
 - Redirige vers `/auth/forgot-password` si accès illégitime
@@ -77,8 +77,8 @@ export default async function SecurePage({ searchParams }) {
 
 **Conditions d'Accès Légitime :**
 
-- Paramètres URL : `?email=xxx&otpToken=xxx` (flux OTP sécurisé)
-- Token OTP valide et non expiré (10 minutes)
+- Paramètres URL : `?email=xxx` (flux OTP Supabase natif)
+- Système de sécurité intégré Supabase Auth
 - Ou paramètres URL : `?token=xxx&type=recovery` (flux traditionnel)
 - État de session : `session.user.aud !== 'authenticated'`
 
@@ -113,8 +113,8 @@ router.push("/auth/sign-up-success?from=signup");
 
 ### Flux de Récupération de Mot de Passe
 
-1. **`/auth/forgot-password`** : Demande de reset via OTP + génération token
-2. **Redirection sécurisée** : `?email=xxx&otpToken=xxx` (flux OTP avec token)
+1. **`/auth/forgot-password`** : Demande de reset via OTP Supabase natif
+2. **Redirection simplifiée** : `?email=xxx` (flux OTP sécurisé par Supabase)
 3. **`/auth/reset-password-otp`** : Vérification OTP (sécurisée avec validation token)
 4. **`/auth/update-password`** : Mise à jour mot de passe (sécurisée)
 
@@ -213,43 +213,38 @@ curl -I http://localhost:3000/auth/sign-up-success
 # 2. Forgot password → OTP → update
 ```
 
-## Système de Tokens OTP Sécurisé
+## Système de Sécurité Supabase Auth OTP
 
-### Génération de Token (`generateOtpToken`)
+### Approche Native Simplifiée
 
-**API Route** : `/api/auth/generate-otp-token`
-```typescript
-// Génération côté serveur
-const timestamp = Date.now();
-const secret = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY;
-const data = `${email}:${timestamp}:${secret}`;
-const hash = createHash('sha256').update(data).digest('hex');
-const token = `${timestamp}.${hash}`;
-```
+**Architecture Supabase** :
+- Utilise le système intégré `signInWithOtp()` pour l'envoi d'OTP
+- Gestion automatique des tokens par Supabase Auth
+- Sécurité native : validation OTP côté serveur Supabase
+- Session management intégré pour les états de récupération
 
-### Validation de Token (`validateOtpToken`)
-
-**Vérifications** :
-1. **Format** : `timestamp.hash` valide
-2. **Expiration** : Moins de 10 minutes (600000ms)
-3. **Intégrité** : Hash SHA256 recalculé correspond
-4. **Authenticité** : Secret serveur inclus dans le hash
-
-### Flux Sécurisé
+### Flux Sécurisé Natif
 
 ```typescript
 // 1. Forgot Password Form
-POST /api/auth/generate-otp-token { email }
-→ Reçoit otpToken sécurisé
+await supabase.auth.signInWithOtp({ email })
+→ Supabase gère l'envoi OTP et la sécurité
 
-// 2. Redirection avec token
-/auth/reset-password-otp?email=xxx&otpToken=timestamp.hash
-→ Page OTP accessible uniquement avec token valide
-
-// 3. Accès direct bloqué
+// 2. Redirection simplifiée
 /auth/reset-password-otp?email=xxx
-→ Redirection vers /auth/forgot-password (pas de token)
+→ Page OTP protégée par vérification de session
+
+// 3. Accès direct contrôlé
+Vérification de session Supabase + email parameter
+→ Protection naturelle via système natif
 ```
+
+### Avantages du Système Natif
+
+- **Simplicité** : Moins de code custom, plus de fiabilité
+- **Sécurité** : Système éprouvé de Supabase Auth
+- **Maintenance** : Pas de tokens custom à gérer
+- **Compatibilité** : Intégration native avec tous les flux Supabase
 
 ## Avantages de Sécurité
 

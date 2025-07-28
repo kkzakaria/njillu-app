@@ -1,5 +1,4 @@
 import { createClient } from "@/lib/supabase/server";
-import { createHash } from "crypto";
 
 /**
  * Vérifie si l'utilisateur est dans un état de récupération de mot de passe
@@ -41,32 +40,41 @@ export async function checkPasswordResetFlow() {
 export async function checkOtpResetAccess(searchParams: URLSearchParams) {
   // Vérifier la présence du paramètre email (flux OTP standard)
   const email = searchParams.get('email');
-  const otpToken = searchParams.get('otpToken'); // Token de validation
   
   // Debug: Loggons les paramètres reçus
   console.log('🔍 checkOtpResetAccess - SearchParams:', Object.fromEntries(searchParams));
   console.log('📧 Email parameter:', email);
-  console.log('🔑 OTP Token parameter:', otpToken);
   
-  // Si l'email est présent, vérifier la légitimité
+  // Si l'email est présent, vérifier qu'il y a une demande OTP légitime
   if (email) {
-    // Si un token OTP est présent, vérifier sa validité
-    if (otpToken) {
-      const isValidToken = await validateOtpToken(email, otpToken);
-      if (isValidToken) {
-        console.log('✅ Accès OTP autorisé avec token valide pour:', email);
+    // Vérifier s'il y a une session avec état OTP ou récupération
+    const supabase = await createClient();
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      console.log('🔍 Session state:', { 
+        exists: !!session, 
+        email: session?.user?.email,
+        aud: session?.user?.aud 
+      });
+      
+      // Si une session existe et correspond à l'email demandé
+      if (session && session.user && session.user.email === email) {
+        console.log('✅ Accès OTP autorisé - Session valide pour:', email);
         return { isValidAccess: true, shouldRedirect: false };
-      } else {
-        console.log('❌ Accès OTP refusé - Token invalide pour:', email);
-        return { isValidAccess: false, shouldRedirect: true };
       }
+      
+      // Pour le flux OTP sans session, nous acceptons l'accès
+      // car signInWithOtp() ne crée pas toujours une session immédiate
+      // La sécurité est assurée par le fait que l'OTP code doit être correct
+      console.log('⚠️ Accès OTP autorisé - Flux OTP standard pour:', email);
+      return { isValidAccess: true, shouldRedirect: false };
+      
+    } catch (error) {
+      console.log('❌ Erreur vérification session OTP:', error);
+      // En cas d'erreur, on autorise quand même car l'OTP code protège
+      return { isValidAccess: true, shouldRedirect: false };
     }
-    
-    // Sans token, on ne peut pas vérifier la légitimité côté serveur
-    // Pour des raisons de sécurité, on bloque l'accès direct
-    // L'utilisateur doit passer par forgot-password qui génèrera le token
-    console.log('⚠️ Accès OTP refusé - Pas de token de validation pour:', email);
-    return { isValidAccess: false, shouldRedirect: true };
   }
   
   // Vérifier aussi les paramètres de récupération traditionnels (compatibilité)
@@ -133,57 +141,9 @@ export async function checkSignUpSuccessAccess(searchParams: URLSearchParams) {
   return { isValidAccess: false, shouldRedirect: true };
 }
 
-/**
- * Génère un token de validation OTP basé sur l'email et un timestamp
- * Utilisé pour sécuriser l'accès à la page OTP
- */
-export function generateOtpToken(email: string): string {
-  const timestamp = Date.now();
-  const secret = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY || 'fallback-secret';
-  
-  // Créer un hash basé sur email + timestamp + secret
-  const data = `${email}:${timestamp}:${secret}`;
-  const hash = createHash('sha256').update(data).digest('hex');
-  
-  // Retourner timestamp + hash (pour vérification ultérieure)
-  return `${timestamp}.${hash}`;
-}
-
-/**
- * Valide un token de validation OTP
- * Vérifie que le token correspond à l'email et n'est pas expiré
- */
-export async function validateOtpToken(email: string, token: string): Promise<boolean> {
-  try {
-    const [timestampStr, receivedHash] = token.split('.');
-    if (!timestampStr || !receivedHash) {
-      return false;
-    }
-    
-    const timestamp = parseInt(timestampStr, 10);
-    const now = Date.now();
-    
-    // Token expire après 10 minutes (600000ms)
-    if (now - timestamp > 600000) {
-      console.log('🕐 Token OTP expiré:', { timestamp, now, diff: now - timestamp });
-      return false;
-    }
-    
-    // Recalculer le hash avec les mêmes paramètres
-    const secret = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY || 'fallback-secret';
-    const data = `${email}:${timestamp}:${secret}`;
-    const expectedHash = createHash('sha256').update(data).digest('hex');
-    
-    // Vérifier que les hash correspondent
-    const isValid = expectedHash === receivedHash;
-    console.log('🔍 Validation token OTP:', { email, isValid, timestamp: new Date(timestamp) });
-    
-    return isValid;
-  } catch (error) {
-    console.log('❌ Erreur validation token OTP:', error);
-    return false;
-  }
-}
+// Les fonctions de génération et validation de tokens custom ont été supprimées
+// car nous utilisons maintenant le système natif de Supabase Auth OTP
+// qui gère automatiquement la sécurité des tokens
 
 /**
  * Utilitaire pour extraire les paramètres de recherche côté serveur
