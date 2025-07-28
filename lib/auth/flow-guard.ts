@@ -41,21 +41,16 @@ export async function checkOtpResetAccess(searchParams: URLSearchParams) {
   // Vérifier la présence du paramètre email (flux OTP standard)
   const email = searchParams.get('email');
   
-  console.log('🔍 checkOtpResetAccess - SearchParams:', Object.fromEntries(searchParams));
-  console.log('📧 Email parameter:', email);
-  
   // Vérifier aussi les paramètres de récupération traditionnels en premier (compatibilité)
   const token = searchParams.get('token');
   const type = searchParams.get('type');
   
   if (token && type === 'recovery') {
-    console.log('✅ Accès OTP reset autorisé - Token recovery traditionnel valide');
     return { isValidAccess: true, shouldRedirect: false };
   }
   
   // Pour le flux OTP moderne, email obligatoire
   if (!email) {
-    console.log('❌ Accès OTP reset refusé - Email parameter manquant');
     return { isValidAccess: false, shouldRedirect: true };
   }
   
@@ -64,34 +59,22 @@ export async function checkOtpResetAccess(searchParams: URLSearchParams) {
   try {
     const { data: { session } } = await supabase.auth.getSession();
     
-    console.log('🔍 Session state for reset OTP:', { 
-      exists: !!session, 
-      email: session?.user?.email,
-      aud: session?.user?.aud,
-      requestedEmail: email
-    });
-    
     // Si une session existe et correspond à l'email demandé
     if (session && session.user && session.user.email === email) {
-      console.log('✅ Accès OTP reset autorisé - Session OTP valide pour:', email);
       return { isValidAccess: true, shouldRedirect: false };
     }
     
     // Vérifier l'état de récupération de session (fallback pour autres flux)
     const resetFlowCheck = await checkPasswordResetFlow();
     if (resetFlowCheck.isValidResetFlow) {
-      console.log('✅ Accès OTP reset autorisé - État de récupération valide');
       return { isValidAccess: true, shouldRedirect: false };
     }
     
     // SÉCURITÉ : Sans session OTP récente = accès refusé
     // Ceci empêche l'accès direct en construisant manuellement l'URL
-    console.log('❌ Accès OTP reset refusé - Aucune session OTP/recovery récente trouvée pour:', email);
-    console.log('🛡️ Sécurité : Accès direct bloqué, redirection vers forgot-password');
     return { isValidAccess: false, shouldRedirect: true };
     
-  } catch (error) {
-    console.log('❌ Erreur vérification session OTP reset:', error);
+  } catch {
     // En cas d'erreur, refuser l'accès par sécurité
     return { isValidAccess: false, shouldRedirect: true };
   }
@@ -129,12 +112,8 @@ export async function checkSignUpOtpAccess(searchParams: URLSearchParams) {
   const email = searchParams.get('email');
   const type = searchParams.get('type');
   
-  console.log('🔍 checkSignUpOtpAccess - SearchParams:', Object.fromEntries(searchParams));
-  console.log('📧 Email parameter:', email, 'Type:', type);
-  
   // Paramètres requis manquants
   if (!email || type !== 'signup') {
-    console.log('❌ Accès OTP inscription refusé - Paramètres manquants');
     return { isValidAccess: false, shouldRedirect: true };
   }
   
@@ -143,27 +122,16 @@ export async function checkSignUpOtpAccess(searchParams: URLSearchParams) {
   try {
     const { data: { session } } = await supabase.auth.getSession();
     
-    console.log('🔍 Session state for signup OTP:', { 
-      exists: !!session, 
-      email: session?.user?.email,
-      aud: session?.user?.aud,
-      requestedEmail: email
-    });
-    
     // Si une session existe et correspond à l'email demandé
     if (session && session.user && session.user.email === email) {
-      console.log('✅ Accès OTP inscription autorisé - Session OTP valide pour:', email);
       return { isValidAccess: true, shouldRedirect: false };
     }
     
     // SÉCURITÉ : Même avec les bons paramètres, sans session OTP récente = accès refusé
     // Ceci empêche l'accès direct en construisant manuellement l'URL
-    console.log('❌ Accès OTP inscription refusé - Aucune session OTP récente trouvée pour:', email);
-    console.log('🛡️ Sécurité : Accès direct bloqué, redirection vers inscription');
     return { isValidAccess: false, shouldRedirect: true };
     
-  } catch (error) {
-    console.log('❌ Erreur vérification session OTP inscription:', error);
+  } catch {
     // En cas d'erreur, refuser l'accès par sécurité
     return { isValidAccess: false, shouldRedirect: true };
   }

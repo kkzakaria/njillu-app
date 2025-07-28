@@ -44,24 +44,14 @@ export function SignUpOtpForm({
     const storedEmail = localStorage.getItem('signup-email');
     const signupFlow = localStorage.getItem('signup-flow');
     
-    console.log('🔍 Client-side signup OTP security check:', {
-      emailParam,
-      typeParam,
-      storedEmail,
-      signupFlow
-    });
-    
     // Vérification 1: Paramètres URL requis
     if (!emailParam || typeParam !== 'signup') {
-      console.log('❌ Paramètres URL invalides pour OTP inscription');
       router.push('/auth/sign-up');
       return;
     }
     
     // Vérification 2: Cohérence avec localStorage (flux légitime)
     if (!storedEmail || !signupFlow || storedEmail !== emailParam) {
-      console.log('❌ Incohérence localStorage - Accès direct détecté');
-      console.log('🛡️ Redirection vers inscription pour sécurité');
       // Nettoyer le localStorage pour éviter les états incohérents
       localStorage.removeItem('signup-email');
       localStorage.removeItem('signup-flow');
@@ -70,7 +60,6 @@ export function SignUpOtpForm({
     }
     
     // Si toutes les vérifications passent
-    console.log('✅ Accès OTP inscription validé côté client');
     setEmail(emailParam);
     // Start cooldown immediately since we just sent an OTP to get here
     startCooldown();
