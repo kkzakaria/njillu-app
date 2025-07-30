@@ -1,0 +1,12 @@
+# Configuration des templates d'email
+[auth.email.template.signup]
+subject = "🔐 Votre code d'inscription - {{ .SiteName }}"
+content_path = "./templates/email/signup-otp.html"
+
+# Configuration OTP - 5 minutes
+[auth]
+mailer_otp_exp = 300     # Durée de validité des OTP email (5 minutes)
+smtp_max_frequency = 300 # Temps minimum entre emails (5 minutes)
+jwt_exp = 3600           # Expiration JWT (1 heure)
+enable_signup = true
+enable_confirmations = false

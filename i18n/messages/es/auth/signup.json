@@ -1,12 +1,12 @@
 {
   "title": "Registrarse",
-  "description": "Cree su nueva cuenta",
+  "description": "Cree su nueva cuenta con verificación OTP",
   "email": "Email",
-  "password": "Contraseña",
-  "confirmPassword": "Confirmar contraseña",
-  "signUpButton": "Registrarse",
-  "signingUp": "Registrándose...",
+  "otpDescription": "Le enviaremos un código de verificación de 6 dígitos por email",
+  "signUpButton": "Enviar código OTP",
+  "signingUp": "Enviando código...",
   "haveAccount": "¿Ya tiene una cuenta?",
   "login": "Iniciar sesión",
-  "success": "Revise su email para confirmar su cuenta"
+  "success": "¡Código OTP enviado! Revise su email",
+  "error": "Ocurrió un error al enviar el código"
 }

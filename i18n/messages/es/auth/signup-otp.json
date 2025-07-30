@@ -1,0 +1,17 @@
+{
+  "title": "Confirme su registro",
+  "description": "Ingrese el código de verificación enviado a",
+  "otpLabel": "Código de verificación",
+  "otpHelp": "Ingrese el código de 6 dígitos recibido por email",
+  "verifyButton": "Confirmar registro",
+  "verifying": "Verificando...",
+  "resendButton": "Reenviar código",
+  "resending": "Enviando...",
+  "resendCooldown": "Reenviar en {seconds}s",
+  "resendSuccess": "¡Nuevo código enviado!",
+  "resendError": "Error al enviar el código",
+  "backToSignUp": "Volver al registro",
+  "signUpLink": "Registrarse",
+  "invalidOtpLength": "El código debe tener 6 dígitos",
+  "error": "Código inválido o expirado"
+}

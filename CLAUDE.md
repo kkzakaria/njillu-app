@@ -6,25 +6,33 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a clean Next.js application with Supabase integration, based on the official Supabase starter template. It provides a foundation for building applications with authentication, protected routes, and modern React patterns. The project has been cleaned of tutorial components while preserving reference implementations.
 
+## Package Manager
+
+**IMPORTANT**: This project uses **pnpm** as the package manager. Always use `pnpm` commands, not `npm` or `yarn`.
+
 ## Key Development Commands
 
 ### Development
-- `pnpm dev` or `npm run dev` - Start development server with Turbopack
-- `pnpm build` or `npm run build` - Build production application  
-- `pnpm start` or `npm start` - Start production server
-- `pnpm lint` or `npm run lint` - Run ESLint
+- `pnpm dev` - Start development server with Turbopack
+- `pnpm build` - Build production application  
+- `pnpm start` - Start production server
+- `pnpm lint` - Run ESLint
 
 ### Supabase Local Development
 - `supabase start` - Start local Supabase services (requires Docker)
 - `supabase stop` - Stop local Supabase services
 - `supabase status` - Check status of local services
 - `supabase db reset` - Reset local database with migrations
+- `supabase functions deploy [function-name]` - Deploy Edge Functions
+- `supabase functions logs [function-name]` - View Edge Function logs
 
 ### Environment Setup
 
 The application requires these environment variables in `.env.local`:
 - `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
-- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY` - Supabase anonymous key
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous key (renamed from PUBLISHABLE_OR_ANON_KEY)
+- `SUPABASE_SERVICE_ROLE_KEY` - Supabase service role key (for Edge Functions)
+- `NEXTAUTH_SECRET` - Secret key for token generation (minimum 32 characters)
 
 ## Architecture Overview
 
@@ -48,6 +56,7 @@ The application uses a three-client pattern for Supabase integration:
 1. **Client-side** (`/lib/supabase/client.ts`): Browser client for client components
 2. **Server-side** (`/lib/supabase/server.ts`): Server client for server components and API routes  
 3. **Middleware** (`/lib/supabase/middleware.ts`): Session management and route protection
+4. **Edge Functions** (`/supabase/functions/`): Secure server-side operations with admin privileges
 
 ### Internationalization Architecture
 
@@ -68,7 +77,33 @@ The application uses a three-client pattern for Supabase integration:
 - Middleware automatically handles session refresh and route protection
 - Authentication pages: login, sign-up, forgot password, update password (all localized)
 - Protected routes redirect unauthenticated users to localized `/auth/login`
+- **Session Guard System**: Prevents authenticated users from accessing auth pages
+  - **Primary method**: `supabase.auth.getClaims()` for JWT Signing Keys (modern, fast)
+  - **Fallback method**: `supabase.auth.getUser()` for compatibility
+  - **Auto-redirection**: Authenticated users → `/protected`
 - Server-side authentication pattern: `supabase.auth.getClaims()` for protected pages
+
+### **🔐 Secure Password Reset System**
+
+**New Implementation (Juillet 2025)** : Système de réinitialisation sécurisé avec tokens cryptographiques
+
+**Architecture de Sécurité**:
+- **Génération cryptographique** : Tokens SHA-256 avec salt aléatoire de 16 bytes
+- **Protection multi-niveaux** : Session guards + Flow guards + validation tokens
+- **Edge Functions Supabase** : Traitement serveur avec SERVICE_ROLE_KEY
+- **Cookies sécurisés** : HttpOnly, Secure, SameSite avec expiration 10 minutes
+- **Redirection immédiate** : Tokens temporaires pour éviter délais de propagation
+
+**Flux Utilisateur**:
+1. Email saisi → Edge Function `request-password-reset`
+2. Token sécurisé généré → Cookies + URL avec temp_token
+3. Redirection immédiate → Accès validé par flow-guard  
+4. Code OTP saisi → Validation Supabase native
+
+**Fichiers Clés**:
+- `lib/auth/flow-guard.ts` - Validation des flux d'accès
+- `lib/auth/reset-token.ts` - Gestion des tokens sécurisés
+- `supabase/functions/request-password-reset/` - Edge Function principale
 
 ### Project Structure
 
@@ -113,6 +148,11 @@ hooks/
 └── useTranslation.ts     # Domain-specific translation hooks
 
 lib/
+├── auth/                 # Authentication security system  
+│   ├── flow-guard.ts     # Flow validation and access control
+│   ├── reset-token.ts    # Secure token generation and validation
+│   ├── reset-actions.ts  # Server Actions for password reset
+│   └── session-guard.ts  # Session management guards
 ├── supabase/             # Supabase client configurations
 │   ├── client.ts         # Browser client
 │   ├── middleware.ts     # Session management
@@ -125,15 +165,23 @@ types/
 supabase/
 ├── config.toml           # Local Supabase configuration
 ├── MIGRATION_RULES.md    # Migration best practices and security rules
+├── functions/            # Edge Functions for secure server operations
+│   ├── _shared/
+│   │   └── cors.ts       # Shared CORS configuration
+│   └── request-password-reset/
+│       └── index.ts      # Secure password reset Edge Function
 └── migrations/           # Database migrations
     ├── 20250727095022_create_basic_users_table.sql
     ├── 20250727095145_basic_users_rls_policies.sql
     └── 20250727101129_fix_functions_search_path.sql
 
 docs/
-├── DATABASE_SCHEMA.md            # Current database schema documentation
-├── POSTGRESQL_SECURITY_GUIDE.md  # PostgreSQL function security guide
-└── INTERNATIONALIZATION.md       # i18n implementation guide
+├── DATABASE_SCHEMA.md                  # Current database schema documentation
+├── POSTGRESQL_SECURITY_GUIDE.md        # PostgreSQL function security guide
+├── INTERNATIONALIZATION.md             # i18n implementation guide
+├── PASSWORD_RESET_SECURITY.md          # Security architecture documentation
+├── DEVELOPER_GUIDE_PASSWORD_RESET.md   # Developer integration guide
+└── EDGE_FUNCTIONS_GUIDE.md             # Edge Functions configuration guide
 
 scripts/
 └── generate-migration.sh # Script de génération de migrations avec timestamp
@@ -299,11 +347,17 @@ The `lib/utils.ts` includes `hasEnvVars` check that prevents middleware from run
 - `docs/INTERNATIONALIZATION.md` - Comprehensive i18n implementation guide
 - `DEVELOPMENT_GUIDE/` - Detailed development guidelines and best practices
 
+**Security Documentation**:
+- `docs/PASSWORD_RESET_SECURITY.md` - Complete security architecture with defense in depth
+- `docs/DEVELOPER_GUIDE_PASSWORD_RESET.md` - Integration guide for developers
+- `docs/EDGE_FUNCTIONS_GUIDE.md` - Configuration and deployment guide
+
 **Key References**:
-- Authentication component implementations
+- Authentication component implementations with secure flow guards
 - Translation system architecture and usage patterns
 - Component structure and naming conventions
 - Project-specific business domain patterns (FDI, RFCV)
+- Cryptographic token generation and validation patterns
 
 ## Key Implementation Patterns
 
@@ -332,7 +386,7 @@ The `users` table automatically syncs with Supabase Auth:
 
 ## Project Context
 
-This is an enhanced version of the official Supabase Next.js starter template with comprehensive internationalization. The project has been cleaned of tutorial components while adding:
+This is an enhanced version of the official Supabase Next.js starter template with comprehensive internationalization and enterprise-grade security. The project has been cleaned of tutorial components while adding:
 
 - **Full i18n Support**: Three-language system with localized routing
 - **Enhanced UI**: 3D Globe component using COBE and Motion animations  
@@ -340,5 +394,8 @@ This is an enhanced version of the official Supabase Next.js starter template wi
 - **Type Safety**: Complete TypeScript support for translations and routing
 - **Production Ready**: Hybrid middleware, fallback systems, and comprehensive documentation
 - **Security First**: PostgreSQL function security patterns and RLS policies
+- **🔐 Cryptographic Security**: SHA-256 token generation with defense in depth architecture
+- **Edge Functions**: Secure server-side operations with Supabase SERVICE_ROLE_KEY
+- **Flow Guards**: Multi-layered access control preventing unauthorized access
 
-The project serves as a production-ready foundation for building multilingual Next.js applications with Supabase integration.
+The project serves as a production-ready foundation for building secure, multilingual Next.js applications with Supabase integration and enterprise-grade authentication flows.
