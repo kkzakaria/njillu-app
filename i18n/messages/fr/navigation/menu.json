@@ -1,8 +1,13 @@
 {
   "home": "Accueil",
-  "documentation": "Documentation",
-  "invoicing": "Facturation",
-  "settings": "Paramètres",
+  "dashboard": "Tableau de bord",
   "profile": "Profil",
-  "logout": "Déconnexion"
+  "documents": "Documents",
+  "analytics": "Analyses",
+  "security": "Sécurité",
+  "settings": "Paramètres",
+  "help": "Aide",
+  "logout": "Déconnexion",
+  "documentation": "Documentation",
+  "invoicing": "Facturation"
 }

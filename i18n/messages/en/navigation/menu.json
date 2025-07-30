@@ -1,8 +1,13 @@
 {
   "home": "Home",
-  "documentation": "Documentation",
-  "invoicing": "Invoicing",
-  "settings": "Settings",
+  "dashboard": "Dashboard",
   "profile": "Profile",
-  "logout": "Logout"
+  "documents": "Documents",
+  "analytics": "Analytics",
+  "security": "Security",
+  "settings": "Settings",
+  "help": "Help",
+  "logout": "Logout",
+  "documentation": "Documentation",
+  "invoicing": "Invoicing"
 }

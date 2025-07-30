@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AppLayout } from "@/components/app-layout";
 import { LogoutButton } from "./components/logout-button";
 
 export default async function ProtectedPage() {
@@ -15,7 +16,8 @@ export default async function ProtectedPage() {
   const claims = data.claims;
 
   return (
-    <div className="container mx-auto max-w-4xl p-6 space-y-6">
+    <AppLayout>
+      <div className="container mx-auto max-w-4xl space-y-6">
       {/* Header avec bouton de déconnexion */}
       <div className="flex justify-between items-start">
         <div>
@@ -96,6 +98,7 @@ export default async function ProtectedPage() {
           </div>
         </CardContent>
       </Card>
-    </div>
+      </div>
+    </AppLayout>
   );
 }
