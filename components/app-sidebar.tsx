@@ -14,6 +14,52 @@ import {
   X
 } from 'lucide-react';
 import { useNavigation } from "@/hooks/useTranslation"
+import { CurrentUserAvatar } from "@/components/current-user-avatar"
+import { useCurrentUserName } from "@/hooks/use-current-user-name"
+import { createClient } from "@/lib/supabase/client"
+
+// Composant UserInfo pour afficher les informations utilisateur
+const UserInfo = ({ isExpanded }: { isExpanded: boolean }) => {
+  const userName = useCurrentUserName()
+  const [userEmail, setUserEmail] = React.useState<string | null>(null)
+
+  React.useEffect(() => {
+    const fetchUserEmail = async () => {
+      const { data } = await createClient().auth.getSession()
+      setUserEmail(data.session?.user.email ?? null)
+    }
+    fetchUserEmail()
+  }, [])
+
+  return (
+    <>
+      <p 
+        className={`
+          text-sm font-medium text-gray-900 dark:text-gray-100 whitespace-nowrap
+          transition-all duration-300 ease-in-out
+          ${isExpanded 
+            ? 'opacity-100 w-auto' 
+            : 'opacity-0 w-0'
+          }
+        `}
+      >
+        {userName}
+      </p>
+      <p 
+        className={`
+          text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap
+          transition-all duration-300 ease-in-out
+          ${isExpanded 
+            ? 'opacity-100 w-auto' 
+            : 'opacity-0 w-0'
+          }
+        `}
+      >
+        {userEmail}
+      </p>
+    </>
+  )
+}
 
 export function AppSidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -175,32 +221,9 @@ export function AppSidebar() {
           {/* Footer */}
           <div className="absolute bottom-4 left-0 right-0 px-2">
             <div className="flex items-center p-2 rounded-lg bg-gray-50 dark:bg-gray-800">
-              <div className="w-8 h-8 bg-gray-300 dark:bg-gray-600 rounded-full flex-shrink-0"></div>
+              <CurrentUserAvatar />
               <div className="ml-3 overflow-hidden">
-                <p 
-                  className={`
-                    text-sm font-medium text-gray-900 dark:text-gray-100 whitespace-nowrap
-                    transition-all duration-300 ease-in-out
-                    ${isExpanded 
-                      ? 'opacity-100 w-auto' 
-                      : 'opacity-0 w-0'
-                    }
-                  `}
-                >
-                  John Doe
-                </p>
-                <p 
-                  className={`
-                    text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap
-                    transition-all duration-300 ease-in-out
-                    ${isExpanded 
-                      ? 'opacity-100 w-auto' 
-                      : 'opacity-0 w-0'
-                    }
-                  `}
-                >
-                  john@example.com
-                </p>
+                <UserInfo isExpanded={isExpanded} />
               </div>
             </div>
           </div>
@@ -224,10 +247,9 @@ export function AppSidebar() {
         {/* Footer Mobile */}
         <div className="absolute bottom-4 left-4 right-4">
           <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-            <div className="w-8 h-8 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
+            <CurrentUserAvatar />
             <div>
-              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">John Doe</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">john@example.com</p>
+              <UserInfo isExpanded={true} />
             </div>
           </div>
         </div>
