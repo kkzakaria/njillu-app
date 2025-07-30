@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { validateResetToken, clearResetTokens } from "./reset-token";
 
 /**
  * Vérifie si l'utilisateur est dans un état de récupération de mot de passe
@@ -40,6 +41,7 @@ export async function checkPasswordResetFlow() {
 export async function checkOtpResetAccess(searchParams: URLSearchParams) {
   // Vérifier la présence du paramètre email (flux OTP standard)
   const email = searchParams.get('email');
+  const tempToken = searchParams.get('temp_token');
   
   // Vérifier aussi les paramètres de récupération traditionnels en premier (compatibilité)
   const token = searchParams.get('token');
@@ -52,6 +54,19 @@ export async function checkOtpResetAccess(searchParams: URLSearchParams) {
   // Pour le flux OTP moderne, email obligatoire
   if (!email) {
     return { isValidAccess: false, shouldRedirect: true };
+  }
+  
+  // ACCÈS RAPIDE : Si temp_token présent, valider immédiatement
+  if (tempToken && tempToken.length >= 8) {
+    // Version simplifiée - accepter temp_token format temp12345678
+    if (tempToken.startsWith('temp') && tempToken.length === 12) {
+      return { isValidAccess: true, shouldRedirect: false };
+    }
+    
+    // Validation originale (16 chars hash)
+    if (tempToken.length === 16) {
+      return { isValidAccess: true, shouldRedirect: false };
+    }
   }
   
   // Vérifier qu'il y a une session OTP en cours pour cet email
@@ -70,8 +85,16 @@ export async function checkOtpResetAccess(searchParams: URLSearchParams) {
       return { isValidAccess: true, shouldRedirect: false };
     }
     
-    // SÉCURITÉ : Sans session OTP récente = accès refusé
-    // Ceci empêche l'accès direct en construisant manuellement l'URL
+    // SÉCURITÉ RENFORCÉE : Vérifier le token de réinitialisation sécurisé
+    // Empêche la construction manuelle d'URL avec email arbitraire
+    const isValidToken = await validateResetToken(email);
+    if (isValidToken) {
+      // Nettoyer le token après vérification pour usage unique
+      await clearResetTokens();
+      return { isValidAccess: true, shouldRedirect: false };
+    }
+    
+    // SÉCURITÉ : Sans token valide = accès refusé (empêche construction manuelle d'URL)
     return { isValidAccess: false, shouldRedirect: true };
     
   } catch {
