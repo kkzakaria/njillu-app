@@ -1,4 +1,4 @@
-import { AppLayout } from "@/components/app-layout";
+import { MainLayout } from "@/components/main-layout";
 
 export default function ProtectedLayout({
   children,
@@ -6,13 +6,11 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <AppLayout 
-      debugMode={true}
-      showHeader={true}
-      showFooter={true}
+    <MainLayout 
+      debugMode={false}
       appTitle="Mon Application"
     >
       {children}
-    </AppLayout>
+    </MainLayout>
   );
 }

@@ -294,22 +294,20 @@ const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
 
 ## Guide d'utilisation
 
-### 1. Utilisation Basique avec AppLayout
+### 1. Utilisation Basique avec MainLayout
 
 ```typescript
 // app/[locale]/protected/layout.tsx
-import { AppLayout } from "@/components/app-layout"
+import { MainLayout } from "@/components/main-layout"
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return (
-    <AppLayout 
+    <MainLayout 
       debugMode={false}
-      showHeader={true}
-      showFooter={true}
       appTitle="Mon Application"
     >
       {children}
-    </AppLayout>
+    </MainLayout>
   )
 }
 ```

@@ -43,8 +43,8 @@ export const SidebarContainer: React.FC<SidebarContainerProps> = ({
 
   // Classes CSS dynamiques basées sur la configuration
   const containerClasses = [
-    'fixed top-0 h-full bg-white dark:bg-gray-900',
-    'border-gray-200 dark:border-gray-700 z-30',
+    'fixed top-14 h-[calc(100vh-3.5rem)] bg-white dark:bg-gray-900',
+    'border-gray-200 dark:border-gray-700 z-50',
     'transition-all ease-in-out',
     position === 'left' ? 'left-0 border-r' : 'right-0 border-l',
     isVisible ? 'translate-x-0' : position === 'left' ? '-translate-x-full' : 'translate-x-full',
@@ -103,7 +103,7 @@ export const SidebarOverlay: React.FC<SidebarOverlayProps> = ({
   return (
     <div 
       className={`
-        fixed inset-0 bg-black/50 z-40 lg:hidden
+        fixed inset-0 bg-black/50 z-[55] lg:hidden
         transition-opacity duration-300
         ${className}
       `}
@@ -136,7 +136,7 @@ export const SidebarSheet: React.FC<SidebarSheetProps> = ({
   const { position, expandedWidth, animationDuration } = config
 
   const sheetClasses = [
-    'fixed top-0 h-full bg-white dark:bg-gray-900 shadow-xl z-50',
+    'fixed top-0 h-full bg-white dark:bg-gray-900 shadow-xl z-[60]',
     'transform transition-transform ease-in-out lg:hidden',
     position === 'left' ? 'left-0' : 'right-0',
     isOpen ? 'translate-x-0' : position === 'left' ? '-translate-x-full' : 'translate-x-full',

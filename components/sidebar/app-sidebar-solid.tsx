@@ -130,9 +130,9 @@ export const AppSidebarSOLID: React.FC<SidebarProps> = ({
       {showMobileButton && (
         <button
           onClick={() => sidebarState.setSheetOpen(true)}
-          className="fixed top-4 left-4 z-30 p-2 bg-white dark:bg-gray-900 rounded-lg shadow-md lg:hidden border border-gray-200 dark:border-gray-700"
+          className="fixed top-2 left-4 z-50 p-2 bg-background border border-border rounded-lg shadow-md lg:hidden hover:bg-accent transition-colors"
         >
-          <Menu className="w-6 h-6 text-gray-700 dark:text-gray-300" />
+          <Menu className="w-6 h-6 text-foreground" />
         </button>
       )}
 
