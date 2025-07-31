@@ -1,8 +1,7 @@
 "use client"
 
 import { DynamicSidebar } from "@/components/sidebar"
-import { ThemeSwitcher } from "@/components/theme-switcher"
-import Link from "next/link"
+import { AppBar } from "@/components/appbar"
 
 interface AppLayoutProps {
   children: React.ReactNode
@@ -27,7 +26,7 @@ export function AppLayout({
   showHeader = true,
   showFooter = true,
   appTitle = "Mon App",
-  footerText
+  footerText = "Copyright © 2025"
 }: AppLayoutProps) {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -60,9 +59,16 @@ export function AppLayout({
       
       {/* Content with responsive margin */}
       <div className="lg:ml-16 min-h-screen">
+        {showHeader && <AppBar />}
         <main className="p-4">
           {children}
         </main>
+        
+        {showFooter && (
+          <footer className="mt-8 p-4 text-center text-sm text-gray-600 dark:text-gray-400">
+            {footerText}
+          </footer>
+        )}
         
         {/* Demo controls */}
         {demoMode && (
@@ -71,7 +77,7 @@ export function AppLayout({
               🎭 Mode Démonstration
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              La sidebar s'adapte selon l'utilisateur connecté via Supabase.
+              La sidebar s&apos;adapte selon l&apos;utilisateur connecté via Supabase.
               <br />
               <strong>Mode Debug:</strong> {debugMode ? 'Activé' : 'Désactivé'}
             </p>
