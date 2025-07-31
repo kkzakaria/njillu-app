@@ -84,6 +84,29 @@ export {
   createSidebarVariant 
 } from './app-sidebar-solid'
 
+// Composants de navigation dynamique
+export { 
+  DynamicSidebar,
+  useDynamicNavigation,
+  createDynamicSidebarVariant
+} from './dynamic-sidebar.component'
+
+// Démo et tests
+export { DynamicSidebarDemo } from './dynamic-sidebar-demo'
+
+// Services et providers pour navigation dynamique
+export { 
+  SupabaseDynamicNavigationProvider,
+  createDynamicNavigationProvider 
+} from '@/lib/sidebar/providers/dynamic-navigation.provider'
+
+export { 
+  PermissionService,
+  permissionService,
+  createPermissionService 
+} from '@/lib/sidebar/services/permission.service'
+
 // Aliases pour compatibilité descendante
 export { AppSidebar as Sidebar } from './app-sidebar-solid'
 export { AppSidebarSOLID as SidebarSOLID } from './app-sidebar-solid'
+export { DynamicSidebar as AdaptiveSidebar } from './dynamic-sidebar.component'

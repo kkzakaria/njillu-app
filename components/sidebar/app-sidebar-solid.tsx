@@ -34,6 +34,7 @@ import { SidebarContainer, SidebarSheet } from './sidebar-container.component'
 import { SidebarHeader } from './sidebar-header.component'
 import { NavigationList } from './navigation-list.component'
 import { UserInfo } from './user-info.component'
+import { CurrentUserAvatar } from '@/components/current-user-avatar'
 
 // Hooks
 import { useNavigation } from '@/hooks/useTranslation'
@@ -151,6 +152,7 @@ export const AppSidebarSOLID: React.FC<SidebarProps> = ({
             navigationItems={navigationItems}
             userDataProvider={userDataProvider}
             onItemClick={handleItemClick}
+            config={config}
           />
         </SidebarContainer>
       )}
@@ -168,6 +170,7 @@ export const AppSidebarSOLID: React.FC<SidebarProps> = ({
           userDataProvider={userDataProvider}
           onItemClick={handleItemClick}
           isSheet={true}
+          config={config}
         />
       </SidebarSheet>
 
@@ -188,6 +191,7 @@ interface SidebarContentProps {
   userDataProvider: ReturnType<typeof createUserDataProvider>
   onItemClick: (item: INavigationItem) => void
   isSheet?: boolean
+  config: SidebarConfig
 }
 
 const SidebarContent: React.FC<SidebarContentProps> = function SidebarContent({
@@ -195,19 +199,22 @@ const SidebarContent: React.FC<SidebarContentProps> = function SidebarContent({
   navigationItems,
   userDataProvider,
   onItemClick,
-  isSheet = false
+  isSheet = false,
+  config
 }) {
   return (
     <div className="flex flex-col h-full">
-      {/* Header */}
-      <SidebarHeader
-        title="Mon App"
-        isExpanded={isExpanded}
-        onClick={() => {
-          // Navigation vers l'accueil
-          window.location.href = '/'
-        }}
-      />
+      {/* Header optionnel */}
+      {config.showHeader && (
+        <SidebarHeader
+          title={config.headerTitle || "Mon App"}
+          isExpanded={isExpanded}
+          onClick={config.headerClickable ? () => {
+            // Navigation vers l'accueil
+            window.location.href = '/'
+          } : undefined}
+        />
+      )}
 
       {/* Navigation */}
       <div className="flex-1 p-4">
@@ -218,19 +225,30 @@ const SidebarContent: React.FC<SidebarContentProps> = function SidebarContent({
         />
       </div>
 
-      {/* Footer utilisateur */}
-      <div className={`p-4 ${isSheet ? '' : 'absolute bottom-0 left-0 right-0'}`}>
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <UserInfo
-            isExpanded={isExpanded}
-            userDataProvider={userDataProvider}
+      {/* Footer utilisateur optionnel */}
+      {config.showFooter && (
+        <div className={`
+          ${isSheet ? 'p-4' : 'absolute bottom-4 left-0 right-0 px-2'}
+        `}>
+          <div 
+            className="flex items-center p-2 rounded-lg bg-gray-50 dark:bg-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             onClick={() => {
               // Navigation vers le profil
               window.location.href = '/profile'
             }}
-          />
+          >
+            <CurrentUserAvatar />
+            <div className={`ml-3 overflow-hidden ${isExpanded ? '' : 'hidden'}`}>
+              <UserInfo
+                isExpanded={isExpanded}
+                userDataProvider={userDataProvider}
+                showAvatar={false}
+                onClick={undefined}
+              />
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

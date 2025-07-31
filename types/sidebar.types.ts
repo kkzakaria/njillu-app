@@ -108,6 +108,10 @@ export interface SidebarConfig {
   animationDuration: number
   hoverDelay: number
   autoCollapse: boolean
+  showHeader: boolean
+  showFooter: boolean
+  headerTitle?: string
+  headerClickable?: boolean
 }
 
 /**
@@ -137,6 +141,10 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
   animationDuration: 300,
   hoverDelay: 100,
   autoCollapse: true,
+  showHeader: true,
+  showFooter: true,
+  headerTitle: 'Mon App',
+  headerClickable: true,
 }
 
 // ========== FACTORY TYPES ==========

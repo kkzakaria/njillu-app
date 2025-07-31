@@ -71,17 +71,22 @@ export const UserInfo: React.FC<UserInfoProps> = ({
 
   if (loading) {
     return (
-      <div className={`flex items-center p-2 rounded-lg ${isExpanded ? '' : 'justify-center'} ${className}`}>
+      <div className={`
+        flex items-center rounded-lg
+        ${showAvatar ? 'p-2' : ''}
+        ${isExpanded ? '' : 'justify-center'} 
+        ${className}
+      `}>
         {showAvatar && (
-          <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
+          <div className="w-8 h-8 bg-gray-200 dark:bg-gray-600 rounded-full animate-pulse" />
         )}
         {isExpanded && (
-          <div className="ml-3 space-y-1">
+          <div className={`space-y-1 ${showAvatar ? 'ml-3' : ''}`}>
             {showName && (
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-24" />
+              <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded animate-pulse w-24" />
             )}
             {showEmail && (
-              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-32" />
+              <div className="h-3 bg-gray-200 dark:bg-gray-600 rounded animate-pulse w-32" />
             )}
           </div>
         )}
@@ -92,8 +97,9 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   return (
     <div 
       className={`
-        flex items-center p-2 rounded-lg cursor-pointer
-        hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors
+        flex items-center rounded-lg cursor-pointer
+        hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors
+        ${showAvatar ? 'p-2' : ''}
         ${isExpanded ? '' : 'justify-center'}
         ${className}
       `}
@@ -102,7 +108,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
       {showAvatar && <CurrentUserAvatar />}
       
       {isExpanded && (
-        <div className="ml-3 overflow-hidden min-w-0 flex-1">
+        <div className={`overflow-hidden min-w-0 flex-1 ${showAvatar ? 'ml-3' : ''}`}>
           {showName && userName && (
             <p className="text-sm font-medium text-gray-900 dark:text-gray-100 whitespace-nowrap overflow-hidden text-ellipsis">
               {userName}
