@@ -91,8 +91,6 @@ export {
   createDynamicSidebarVariant
 } from './dynamic-sidebar.component'
 
-// Démo et tests
-export { DynamicSidebarDemo } from './dynamic-sidebar-demo'
 
 // Services et providers pour navigation dynamique
 export { 

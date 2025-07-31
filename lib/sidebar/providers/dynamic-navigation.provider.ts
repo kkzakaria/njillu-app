@@ -110,7 +110,7 @@ export class SupabaseDynamicNavigationProvider implements IDynamicNavigationProv
     const applicableConfig = this.findApplicableConfiguration(configurations, context)
     
     if (!applicableConfig) {
-      return this.getFallbackMenu(context)
+      return this.getFallbackMenu()
     }
 
     // Filtrer les éléments selon les permissions
@@ -236,7 +236,7 @@ export class SupabaseDynamicNavigationProvider implements IDynamicNavigationProv
   /**
    * Menu de fallback en cas d'erreur
    */
-  private getFallbackMenu(context: UserContext): ConditionalNavigationItem[] {
+  private getFallbackMenu(): ConditionalNavigationItem[] {
     return [
       {
         id: 'dashboard',

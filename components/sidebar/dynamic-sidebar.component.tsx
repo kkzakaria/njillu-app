@@ -215,7 +215,7 @@ function convertConditionalToNavigationItems(
 /**
  * Hook pour utiliser facilement la navigation dynamique
  */
-export const useDynamicNavigation = (debugMode = false) => {
+export const useDynamicNavigation = () => {
   const [dynamicProvider] = useState(() => createDynamicNavigationProvider())
   const [userContext, setUserContext] = useState<UserContext | null>(null)
   const [navigationItems, setNavigationItems] = useState<INavigationItem[]>([])
@@ -246,12 +246,16 @@ export const useDynamicNavigation = (debugMode = false) => {
 export const createDynamicSidebarVariant = (
   defaultProps: Partial<DynamicSidebarProps>
 ) => {
-  return (props: Partial<DynamicSidebarProps>) => (
+  const SidebarVariant = (props: Partial<DynamicSidebarProps>) => (
     <DynamicSidebar
       {...defaultProps}
       {...props}
     />
-  )
+  );
+  
+  SidebarVariant.displayName = 'DynamicSidebarVariant';
+  
+  return SidebarVariant;
 }
 
 // Export par défaut pour compatibilité

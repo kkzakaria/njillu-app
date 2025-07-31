@@ -21,7 +21,7 @@ export default async function ResetPasswordOtpPage({
   });
   
   // Vérification de session - redirige vers /protected si déjà connecté
-  const { shouldRedirect, isAuthenticated, user } = await checkAuthenticationStatus();
+  const { shouldRedirect, isAuthenticated } = await checkAuthenticationStatus();
   
   // Pour le reset password, on accepte les sessions temporaires OTP
   // Ne rediriger que si c'est une vraie session authentifiée (pas OTP)
