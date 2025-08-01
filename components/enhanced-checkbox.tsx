@@ -21,10 +21,10 @@ interface EnhancedCheckboxProps {
 
 const colorVariants = {
   default: "",
-  primary: "[--primary:hsl(var(--primary))] [--ring:hsl(var(--ring))]",
-  success: "[--primary:hsl(142_76%_36%)] [--ring:hsl(142_85%_96%)] dark:[--primary:hsl(142_76%_36%)] dark:[--ring:hsl(142_84%_10%)]",
-  warning: "[--primary:hsl(45_93%_47%)] [--ring:hsl(48_96%_89%)] dark:[--primary:hsl(45_93%_47%)] dark:[--ring:hsl(45_100%_9%)]",
-  destructive: "[--primary:hsl(var(--destructive))] [--ring:hsl(var(--destructive-foreground))]"
+  primary: "[&_[data-state=checked]]:bg-primary [&_[data-state=checked]]:border-primary [&_[data-state=checked]]:text-primary-foreground",
+  success: "[&_[data-state=checked]]:bg-emerald-600 [&_[data-state=checked]]:border-emerald-600 [&_[data-state=checked]]:text-white",
+  warning: "[&_[data-state=checked]]:bg-amber-500 [&_[data-state=checked]]:border-amber-500 [&_[data-state=checked]]:text-white",
+  destructive: "[&_[data-state=checked]]:bg-destructive [&_[data-state=checked]]:border-destructive [&_[data-state=checked]]:text-destructive-foreground"
 }
 
 const sizeVariants = {
@@ -95,21 +95,12 @@ export function EnhancedCheckbox({
   return (
     <div className={cn(
       "flex items-start gap-2", 
-      position === "right" && "flex-row-reverse",
+      position === "right" ? "flex-row-reverse" : "flex-row",
       colorVariants[color], 
       className
     )}>
-      {position === "left" ? (
-        <>
-          {checkboxElement}
-          {textElement}
-        </>
-      ) : (
-        <>
-          {textElement}
-          {checkboxElement}
-        </>
-      )}
+      {checkboxElement}
+      {textElement}
     </div>
   )
 }
