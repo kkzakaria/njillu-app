@@ -3,6 +3,7 @@
 import * as React from "react"
 import { useState } from "react"
 import { ArrowRightIcon, ArrowLeftIcon } from "lucide-react"
+import Image from "next/image"
 import { cn } from "@/lib/utils"
 
 import { Button } from "@/components/ui/button"
@@ -84,11 +85,16 @@ export const OnboardingDialog = React.forwardRef<
         {/* Image Section */}
         {currentStep.image && (
           <div className="p-2">
-            <img
-              className="w-full rounded-md"
-              src={currentStep.image}
-              alt={`Étape ${step}`}
-            />
+            <div className="relative w-full h-48 rounded-md overflow-hidden">
+              <Image
+                src={currentStep.image}
+                alt={`Étape ${step}`}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                priority={step === 1} // Priorité pour la première image
+              />
+            </div>
           </div>
         )}
 
