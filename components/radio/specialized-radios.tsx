@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Palette, Shield } from "lucide-react"
+import { Palette, Shield, FileType } from "lucide-react"
 import { EnhancedRadioGroup } from "./enhanced-radio"
 import { CardRadioGroup } from "./card-radio"
 import { ChipRadioGroup } from "./chip-radio"
