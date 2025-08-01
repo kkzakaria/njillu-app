@@ -8,7 +8,8 @@ import {
   ChevronDown,
   AlertTriangle,
   Palette,
-  ExternalLink
+  ExternalLink,
+  Navigation
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -78,6 +79,14 @@ export default function DemosPage() {
       icon: AlertTriangle,
       status: 'Stable',
       color: 'bg-red-500'
+    },
+    {
+      title: 'Stepper Améliorés',
+      description: 'Composants Stepper avec contrôles, validation et cas d\'usage spécialisés',
+      href: '/demo-steppers',
+      icon: Navigation,
+      status: 'Nouveau',
+      color: 'bg-cyan-500'
     }
   ]
 
