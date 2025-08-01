@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { EnhancedSelect, SimpleSelect, GroupedSelect, SelectOption } from "@/components/enhanced-select"
+import { SimpleSelectAlternative } from "@/components/simple-select-alternative"
 
 // Options de base
 const frameworks: SelectOption[] = [
@@ -83,9 +84,37 @@ export function SelectDemo() {
         </p>
       </div>
 
+      {/* Alternative sans cmdk (pour React 19) */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">🚀 Alternative sans cmdk (React 19 compatible)</h3>
+        <div className="p-4 border rounded-lg bg-green-50 dark:bg-green-950/20">
+          <p className="text-sm text-muted-foreground mb-4">
+            Version alternative qui n&apos;utilise pas le package cmdk pour éviter les problèmes React 19
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <SimpleSelectAlternative
+              options={frameworks}
+              value={selectedFramework}
+              onChange={setSelectedFramework}
+              label="Framework (Alternative)"
+              placeholder="Choisir un framework"
+              clearable
+            />
+            <SimpleSelectAlternative
+              options={countryOptions}
+              value={selectedCountry}
+              onChange={setSelectedCountry}
+              label="Pays (Alternative)"
+              placeholder="Choisir un pays"
+              clearable
+            />
+          </div>
+        </div>
+      </div>
+
       {/* Variantes de base */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Variantes de base</h3>
+        <h3 className="text-lg font-semibold">Variantes de base (avec cmdk)</h3>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
           <div className="space-y-4 p-4 border rounded-lg">
