@@ -1,5 +1,6 @@
 // Export du composant principal
 export { EnhancedAlertDialog } from "./enhanced-alert-dialog"
+export { ConfirmationDeleteDialog } from "./confirmation-delete-dialog"
 
 // Export des composants spécialisés
 export {
@@ -11,8 +12,15 @@ export {
   SuccessDialog,
   ErrorDialog,
   WarningDialog,
+  CriticalDeleteDialog,
 } from "./specialized-dialogs"
 
 // Export des variants et types
 export { alertDialogVariants } from "./variants"
-export type { BaseAlertDialogProps, AlertDialogType, ScrollableMode } from "./types"
+export type { 
+  BaseAlertDialogProps, 
+  ConfirmationDeleteDialogProps,
+  AlertDialogType, 
+  ScrollableMode,
+  ButtonVariant 
+} from "./types"

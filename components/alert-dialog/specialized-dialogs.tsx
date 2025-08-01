@@ -3,7 +3,8 @@
 import * as React from "react"
 import { TrashIcon, LogOutIcon, SaveIcon } from "lucide-react"
 import { EnhancedAlertDialog } from "./enhanced-alert-dialog"
-import { type BaseAlertDialogProps } from "./types"
+import { ConfirmationDeleteDialog } from "./confirmation-delete-dialog"
+import { type BaseAlertDialogProps, type ConfirmationDeleteDialogProps } from "./types"
 
 // Composants spécialisés prédéfinis
 export const ConfirmDialog = React.forwardRef<
@@ -169,3 +170,34 @@ export const WarningDialog = React.forwardRef<
 })
 
 WarningDialog.displayName = "WarningDialog"
+
+export const CriticalDeleteDialog = React.forwardRef<
+  React.ComponentRef<typeof ConfirmationDeleteDialog>,
+  Omit<ConfirmationDeleteDialogProps, "actionText" | "title">
+>(({ 
+  confirmationText,
+  description,
+  actionText = "Supprimer définitivement",
+  title = "Suppression critique",
+  ...props 
+}, ref) => {
+  const defaultDescription = description || (
+    <>
+      Cette action supprimera définitivement <strong>{confirmationText}</strong> et toutes ses données associées. 
+      Cette opération est irréversible et ne peut pas être annulée.
+    </>
+  )
+
+  return (
+    <ConfirmationDeleteDialog
+      ref={ref}
+      title={title}
+      description={defaultDescription}
+      actionText={actionText}
+      confirmationText={confirmationText}
+      {...props}
+    />
+  )
+})
+
+CriticalDeleteDialog.displayName = "CriticalDeleteDialog"

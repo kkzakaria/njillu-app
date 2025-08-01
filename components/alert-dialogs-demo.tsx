@@ -25,6 +25,8 @@ import {
   SuccessDialog,
   ErrorDialog,
   WarningDialog,
+  ConfirmationDeleteDialog,
+  CriticalDeleteDialog,
 } from "@/components/alert-dialog"
 
 export function AlertDialogsDemo() {
@@ -397,6 +399,87 @@ export function AlertDialogsDemo() {
         </div>
       </div>
 
+      {/* Suppressions avec confirmation */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">🔒 Suppressions avec confirmation</h3>
+        <p className="text-muted-foreground">
+          Variantes de suppression qui nécessitent une confirmation explicite par saisie de texte
+        </p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <div className="space-y-3 p-4 border rounded-lg">
+            <h4 className="font-medium">Confirmation basique</h4>
+            <p className="text-sm text-muted-foreground">
+              L&apos;utilisateur doit taper le texte exact pour confirmer
+            </p>
+            <ConfirmationDeleteDialog
+              title="Supprimer le projet"
+              confirmationText="MonProjet"
+              confirmationLabel="Nom du projet"
+              trigger={<Button variant="outline" size="sm">Supprimer projet</Button>}
+              onAction={() => simulateAsyncAction("Suppression projet avec confirmation")}
+            />
+          </div>
+          
+          <div className="space-y-3 p-4 border rounded-lg">
+            <h4 className="font-medium">Suppression critique</h4>
+            <p className="text-sm text-muted-foreground">
+              Variante spécialisée pour les suppressions dangereuses
+            </p>
+            <CriticalDeleteDialog
+              confirmationText="SUPPRIMER"
+              confirmationLabel="Tapez SUPPRIMER pour confirmer"
+              trigger={<Button variant="destructive" size="sm">Suppression critique</Button>}
+              onAction={() => simulateAsyncAction("Suppression critique confirmée")}
+            />
+          </div>
+          
+          <div className="space-y-3 p-4 border rounded-lg">
+            <h4 className="font-medium">Suppression d&apos;utilisateur</h4>
+            <p className="text-sm text-muted-foreground">
+              Confirmation avec nom d&apos;utilisateur
+            </p>
+            <CriticalDeleteDialog
+              title="Supprimer l'utilisateur"
+              confirmationText="john.doe@example.com"
+              confirmationLabel="Email de l'utilisateur"
+              description={
+                <>
+                  Cette action supprimera définitivement le compte utilisateur{" "}
+                  <strong>john.doe@example.com</strong> et toutes ses données associées. 
+                  Cette opération est irréversible.
+                </>
+              }
+              trigger={<Button variant="destructive" size="sm">Supprimer utilisateur</Button>}
+              onAction={() => simulateAsyncAction("Suppression utilisateur john.doe@example.com")}
+            />
+          </div>
+          
+          <div className="space-y-3 p-4 border rounded-lg">
+            <h4 className="font-medium">Suppression d&apos;organisation</h4>
+            <p className="text-sm text-muted-foreground">
+              Confirmation avec nom d&apos;organisation sensible à la casse
+            </p>
+            <ConfirmationDeleteDialog
+              title="Supprimer l'organisation"
+              description={
+                <>
+                  Cette action supprimera définitivement l&apos;organisation{" "}
+                  <strong>MonEntreprise Corp</strong>, tous ses projets, utilisateurs et données. 
+                  Cette opération ne peut pas être annulée.
+                </>
+              }
+              confirmationText="MonEntreprise Corp"
+              confirmationLabel="Nom de l'organisation (sensible à la casse)"
+              actionText="Supprimer l'organisation"
+              trigger={<Button variant="destructive" size="sm">Supprimer organisation</Button>}
+              onAction={() => simulateAsyncAction("Suppression organisation MonEntreprise Corp")}
+            />
+          </div>
+        </div>
+      </div>
+
       {/* États et options */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">⚙️ États et options</h3>
@@ -545,6 +628,8 @@ export function AlertDialogsDemo() {
             <ul className="list-disc list-inside space-y-1 text-sm">
               <li><code>ConfirmDialog</code> - Confirmations générales</li>
               <li><code>DeleteDialog</code> - Suppressions avec style destructif</li>
+              <li><code>ConfirmationDeleteDialog</code> - Suppressions avec confirmation textuelle</li>
+              <li><code>CriticalDeleteDialog</code> - Suppressions critiques avec confirmation</li>
               <li><code>LogoutDialog</code> - Déconnexions</li>
               <li><code>SaveDialog</code> - Sauvegardes</li>
               <li><code>InfoDialog, SuccessDialog, ErrorDialog, WarningDialog</code></li>

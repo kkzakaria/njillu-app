@@ -21,6 +21,22 @@ export interface BaseAlertDialogProps extends VariantProps<typeof alertDialogVar
   disabled?: boolean
 }
 
+export interface ConfirmationDeleteDialogProps {
+  title?: string
+  description?: string | React.ReactNode
+  trigger?: React.ReactNode
+  cancelText?: string
+  actionText?: string
+  onAction?: () => void | Promise<void>
+  onCancel?: () => void
+  confirmationText: string
+  confirmationLabel?: string
+  confirmationPlaceholder?: string
+  className?: string
+  actionLoading?: boolean
+  disabled?: boolean
+}
+
 export type AlertDialogType = "default" | "info" | "success" | "warning" | "error" | "question"
 export type ScrollableMode = "none" | "native" | "stickyHeader" | "stickyFooter" | "stickyBoth"
 export type ButtonVariant = "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
