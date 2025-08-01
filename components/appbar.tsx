@@ -3,6 +3,7 @@
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { CurrentUserAvatar } from '@/components/current-user-avatar';
+import Notifications from '@/components/notifications';
 import { Separator } from '@/components/ui/separator';
 
 export function AppBar() {
@@ -35,6 +36,7 @@ export function AppBar() {
           <div className="flex items-center space-x-1">
             <LanguageSwitcher />
             <ThemeSwitcher />
+            <Notifications />
           </div>
           
           {/* Séparateur visuel - masqué sur mobile */}
