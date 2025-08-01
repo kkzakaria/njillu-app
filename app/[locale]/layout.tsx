@@ -6,6 +6,7 @@ import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { Messages } from '@/types/i18n.types';
+import { AlertProvider } from '@/components/alert-system';
 import "../globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -64,7 +65,9 @@ export default async function LocaleLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <AlertProvider>
+              {children}
+            </AlertProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

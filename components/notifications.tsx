@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { BellIcon } from "lucide-react"
+import { BellIcon, Plus, InfoIcon, TriangleAlert, CircleAlert, CircleCheckIcon } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -10,6 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { useAlertHelpers } from "@/components/alert-system"
 
 interface Notification {
   id: number
@@ -18,6 +19,7 @@ interface Notification {
   target: string
   timestamp: string
   unread: boolean
+  type?: "info" | "success" | "warning" | "error"
 }
 
 const initialNotifications: Notification[] = [
@@ -28,6 +30,7 @@ const initialNotifications: Notification[] = [
     target: "Maintenance prévue ce weekend",
     timestamp: "il y a 15 minutes",
     unread: true,
+    type: "warning",
   },
   {
     id: 2,
@@ -36,6 +39,7 @@ const initialNotifications: Notification[] = [
     target: "mis à jour avec succès",
     timestamp: "il y a 45 minutes",
     unread: true,
+    type: "success",
   },
   {
     id: 3,
@@ -44,6 +48,7 @@ const initialNotifications: Notification[] = [
     target: "Problème de connexion",
     timestamp: "il y a 4 heures",
     unread: false,
+    type: "error",
   },
   {
     id: 4,
@@ -52,6 +57,7 @@ const initialNotifications: Notification[] = [
     target: "Réunion hebdomadaire",
     timestamp: "il y a 12 heures",
     unread: false,
+    type: "info",
   },
 ]
 
@@ -71,9 +77,23 @@ function Dot({ className }: { className?: string }) {
   )
 }
 
+function getTypeIcon(type?: string) {
+  switch (type) {
+    case "success":
+      return <CircleCheckIcon size={14} className="text-emerald-600" />
+    case "warning":
+      return <TriangleAlert size={14} className="text-amber-600" />
+    case "error":
+      return <CircleAlert size={14} className="text-red-600" />
+    default:
+      return <InfoIcon size={14} className="text-blue-600" />
+  }
+}
+
 export default function Notifications() {
   const [notifications, setNotifications] = useState<Notification[]>(initialNotifications)
   const unreadCount = notifications.filter((n) => n.unread).length
+  const { showInfo, showSuccess, showWarning, showError } = useAlertHelpers()
 
   const handleMarkAllAsRead = () => {
     setNotifications(
@@ -82,9 +102,30 @@ export default function Notifications() {
         unread: false,
       }))
     )
+    showSuccess("Toutes les notifications ont été marquées comme lues")
   }
 
   const handleNotificationClick = (id: number) => {
+    const notification = notifications.find(n => n.id === id)
+    if (notification && notification.unread) {
+      // Déclencher une alerte basée sur le type de notification
+      const message = `${notification.user} ${notification.action} ${notification.target}`
+      
+      switch (notification.type) {
+        case "success":
+          showSuccess(message)
+          break
+        case "warning":
+          showWarning(message)
+          break
+        case "error":
+          showError(message)
+          break
+        default:
+          showInfo(message)
+      }
+    }
+    
     setNotifications(
       notifications.map((notification) =>
         notification.id === id
@@ -92,6 +133,14 @@ export default function Notifications() {
           : notification
       )
     )
+  }
+
+  // Fonction pour tester les alertes
+  const handleTestAlerts = () => {
+    showInfo("Ceci est une notification d'information")
+    setTimeout(() => showSuccess("Opération réussie !"), 500)
+    setTimeout(() => showWarning("Attention: action requise"), 1000)
+    setTimeout(() => showError("Une erreur s'est produite"), 1500)
   }
 
   return (
@@ -114,14 +163,25 @@ export default function Notifications() {
       <PopoverContent className="w-80 p-1" align="end">
         <div className="flex items-baseline justify-between gap-4 px-3 py-2">
           <div className="text-sm font-semibold">Notifications</div>
-          {unreadCount > 0 && (
-            <button
-              className="text-xs font-medium hover:underline text-muted-foreground hover:text-foreground transition-colors"
-              onClick={handleMarkAllAsRead}
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={handleTestAlerts}
+              className="h-6 px-2 text-xs"
             >
-              Tout marquer comme lu
-            </button>
-          )}
+              <Plus size={12} className="mr-1" />
+              Test
+            </Button>
+            {unreadCount > 0 && (
+              <button
+                className="text-xs font-medium hover:underline text-muted-foreground hover:text-foreground transition-colors"
+                onClick={handleMarkAllAsRead}
+              >
+                Tout marquer comme lu
+              </button>
+            )}
+          </div>
         </div>
         <div
           role="separator"
@@ -140,7 +200,10 @@ export default function Notifications() {
                 className="hover:bg-accent rounded-md px-3 py-2 text-sm transition-colors cursor-pointer"
                 onClick={() => handleNotificationClick(notification.id)}
               >
-                <div className="relative flex items-start pe-3">
+                <div className="relative flex items-start gap-3">
+                  <div className="flex-shrink-0 mt-1">
+                    {getTypeIcon(notification.type)}
+                  </div>
                   <div className="flex-1 space-y-1">
                     <div className="text-foreground/80">
                       <span className="text-foreground font-medium">
@@ -157,7 +220,7 @@ export default function Notifications() {
                     </div>
                   </div>
                   {notification.unread && (
-                    <div className="absolute end-0 self-center">
+                    <div className="flex-shrink-0 self-center">
                       <span className="sr-only">Non lu</span>
                       <Dot className="text-destructive" />
                     </div>
