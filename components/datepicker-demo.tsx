@@ -2,14 +2,8 @@
 
 import { useState } from "react"
 import { format } from "date-fns"
-import { fr, enUS, es } from "date-fns/locale"
 import { EnhancedDatePicker, SimpleDatePicker, InlineDatePicker } from "@/components/enhanced-datepicker"
-
-const locales = {
-  fr: fr,
-  en: enUS,
-  es: es
-}
+import { fr } from "date-fns/locale"
 
 export function DatePickerDemo() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
@@ -109,7 +103,7 @@ export function DatePickerDemo() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
           <div className="space-y-4 p-4 border rounded-lg">
-            <h4 className="font-medium">Plage d'années personnalisée</h4>
+            <h4 className="font-medium">Plage d&apos;années personnalisée</h4>
             <p className="text-sm text-muted-foreground mb-3">
               Années : 1990 - 2010 (pour date de naissance)
             </p>
@@ -123,7 +117,7 @@ export function DatePickerDemo() {
           </div>
 
           <div className="space-y-4 p-4 border rounded-lg">
-            <h4 className="font-medium">Sans bouton "Effacer"</h4>
+            <h4 className="font-medium">Sans bouton &quot;Effacer&quot;</h4>
             <SimpleDatePicker
               value={meetingDate}
               onChange={setMeetingDate}
@@ -186,14 +180,14 @@ export function DatePickerDemo() {
 
       {/* Exemples d'usage */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Exemples d'usage</h3>
+        <h3 className="text-lg font-semibold">Exemples d&apos;usage</h3>
         <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
               <h4 className="font-medium">Formulaire de réservation</h4>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Date d'arrivée</label>
+                <label className="text-sm font-medium">Date d&apos;arrivée</label>
                 <SimpleDatePicker
                   placeholder="Sélectionner la date d'arrivée"
                   startYear={new Date().getFullYear()}
@@ -221,7 +215,7 @@ export function DatePickerDemo() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Date d'embauche</label>
+                <label className="text-sm font-medium">Date d&apos;embauche</label>
                 <SimpleDatePicker
                   placeholder="Date d'embauche"
                   startYear={2000}
@@ -244,8 +238,8 @@ export function DatePickerDemo() {
               <li><code>onChange</code>: (date) =&gt; void - Callback de changement</li>
               <li><code>placeholder</code>: string - Texte placeholder</li>
               <li><code>disabled</code>: boolean - État désactivé</li>
-              <li><code>locale</code>: "fr" | "en" | "es" - Langue</li>
-              <li><code>variant</code>: "input" | "inline" - Mode d'affichage</li>
+              <li><code>locale</code>: &quot;fr&quot; | &quot;en&quot; | &quot;es&quot; - Langue</li>
+              <li><code>variant</code>: &quot;input&quot; | &quot;inline&quot; - Mode d&apos;affichage</li>
             </ul>
           </div>
           <div>
@@ -255,7 +249,7 @@ export function DatePickerDemo() {
               <li><code>showMonthSelect</code>: boolean - Dropdown mois</li>
               <li><code>startYear</code>: number - Année minimum</li>
               <li><code>endYear</code>: number - Année maximum</li>
-              <li><code>formatString</code>: string - Format d'affichage</li>
+              <li><code>formatString</code>: string - Format d&apos;affichage</li>
               <li><code>clearable</code>: boolean - Bouton effacer</li>
             </ul>
           </div>
