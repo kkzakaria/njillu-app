@@ -124,7 +124,7 @@ export function EnhancedSelect({
           <div
             role="button"
             tabIndex={-1}
-            className="flex h-4 w-4 items-center justify-center rounded hover:bg-accent cursor-pointer"
+            className="flex h-5 w-5 items-center justify-center rounded-sm hover:bg-accent cursor-pointer transition-colors border border-transparent hover:border-border"
             onClick={handleClear}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
@@ -132,8 +132,9 @@ export function EnhancedSelect({
                 handleClear(e as any)
               }
             }}
+            title="Effacer la sélection"
           >
-            <XIcon size={12} className="text-muted-foreground/80" />
+            <XIcon size={14} className="text-muted-foreground hover:text-foreground transition-colors" />
           </div>
         )}
         <ChevronDownIcon
@@ -166,12 +167,15 @@ export function EnhancedSelect({
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="border-input w-full min-w-[var(--radix-popper-anchor-width)] p-0"
+          className="border-input w-full min-w-[var(--radix-popper-anchor-width)] max-w-[400px] p-0"
           align="start"
         >
-          <Command>
+          <Command className="max-w-none">
             {searchable && (
-              <CommandInput placeholder={searchPlaceholder} />
+              <CommandInput 
+                placeholder={searchPlaceholder}
+                className="h-9"
+              />
             )}
             <CommandList>
               <CommandEmpty>{emptyMessage}</CommandEmpty>

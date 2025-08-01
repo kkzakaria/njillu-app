@@ -72,7 +72,7 @@ export function SelectDemo() {
   const [selectedStatus, setSelectedStatus] = useState<string | undefined>()
   const [selectedCountry, setSelectedCountry] = useState<string | undefined>("fr")
   const [userPreference, setUserPreference] = useState<string | undefined>()
-  const [projectType, setProjectType] = useState<string | undefined>()
+  const [projectType, setProjectType] = useState<string | undefined>("react")
 
   return (
     <div className="space-y-8 p-6">
@@ -227,7 +227,10 @@ export function SelectDemo() {
           </div>
 
           <div className="space-y-4 p-4 border rounded-lg">
-            <h4 className="font-medium">Avec bouton clear</h4>
+            <h4 className="font-medium">Avec bouton clear ❌</h4>
+            <p className="text-sm text-muted-foreground">
+              Le bouton X apparaît quand une valeur est sélectionnée
+            </p>
             <EnhancedSelect
               options={frameworks}
               value={projectType}
@@ -236,6 +239,9 @@ export function SelectDemo() {
               placeholder="Sélectionner le type"
               clearable
             />
+            <p className="text-xs text-muted-foreground">
+              Valeur actuelle : {projectType || "Aucune"}
+            </p>
           </div>
 
           <div className="space-y-4 p-4 border rounded-lg">
