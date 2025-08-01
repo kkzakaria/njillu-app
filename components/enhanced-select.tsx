@@ -170,11 +170,11 @@ export function EnhancedSelect({
           className="border-input w-full min-w-[var(--radix-popper-anchor-width)] max-w-[400px] p-0"
           align="start"
         >
-          <Command className="max-w-none">
+          <Command className="max-w-none [&_[cmdk-input-wrapper]]:border-b-0 [&_[cmdk-input]]:ring-0 [&_[cmdk-input]]:focus:ring-0 [&_[cmdk-input]]:outline-none">
             {searchable && (
               <CommandInput 
                 placeholder={searchPlaceholder}
-                className="h-9"
+                className="h-9 border-0 focus:ring-0 focus:outline-none [&>div]:border-b-0 [&_input]:focus:ring-0 [&_input]:focus:outline-none"
               />
             )}
             <CommandList>
