@@ -241,7 +241,7 @@ export function DatePickerDemo() {
             <h4 className="font-medium mb-2">Configuration de base :</h4>
             <ul className="list-disc list-inside space-y-1 text-sm">
               <li><code>value</code>: Date | undefined - Date sélectionnée</li>
-              <li><code>onChange</code>: (date) => void - Callback de changement</li>
+              <li><code>onChange</code>: (date) =&gt; void - Callback de changement</li>
               <li><code>placeholder</code>: string - Texte placeholder</li>
               <li><code>disabled</code>: boolean - État désactivé</li>
               <li><code>locale</code>: "fr" | "en" | "es" - Langue</li>
