@@ -121,16 +121,20 @@ export function EnhancedSelect({
       </span>
       <div className="flex items-center gap-1 shrink-0">
         {clearable && value && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="h-4 w-4 p-0 hover:bg-transparent"
-            onClick={handleClear}
+          <div
+            role="button"
             tabIndex={-1}
+            className="flex h-4 w-4 items-center justify-center rounded hover:bg-accent cursor-pointer"
+            onClick={handleClear}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                handleClear(e as any)
+              }
+            }}
           >
             <XIcon size={12} className="text-muted-foreground/80" />
-          </Button>
+          </div>
         )}
         <ChevronDownIcon
           size={16}
