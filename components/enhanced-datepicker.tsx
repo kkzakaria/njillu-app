@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { format, isValid } from "date-fns"
-import { fr, enUS, es } from "date-fns/locale"
 import { CalendarIcon } from "lucide-react"
 import { DropdownNavProps, DropdownProps } from "react-day-picker"
 
@@ -38,10 +37,21 @@ interface EnhancedDatePickerProps {
   clearable?: boolean
 }
 
-const locales = {
-  fr: fr,
-  en: enUS,
-  es: es
+// Import dynamique des locales pour éviter les problèmes SSR
+const getLocale = async (locale: "fr" | "en" | "es") => {
+  switch (locale) {
+    case "fr":
+      const { fr } = await import("date-fns/locale")
+      return fr
+    case "en":
+      const { enUS } = await import("date-fns/locale") 
+      return enUS
+    case "es":
+      const { es } = await import("date-fns/locale")
+      return es
+    default:
+      return undefined
+  }
 }
 
 const defaultPlaceholders = {
