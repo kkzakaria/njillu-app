@@ -147,13 +147,15 @@ export function SimpleSelectAlternative({
         >
           {/* Simple search input */}
           <div className="flex items-center border-b border-border px-3 py-2">
-            <input
-              type="text"
-              placeholder="Rechercher..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-            />
+            <div className="flex items-center w-full border border-input rounded-md px-3 py-1.5 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+              <input
+                type="text"
+                placeholder="Rechercher..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+              />
+            </div>
           </div>
           
           {/* Options list */}
