@@ -4,7 +4,8 @@ import * as React from "react"
 import { TrashIcon, LogOutIcon, SaveIcon } from "lucide-react"
 import { EnhancedAlertDialog } from "./enhanced-alert-dialog"
 import { ConfirmationDeleteDialog } from "./confirmation-delete-dialog"
-import { type BaseAlertDialogProps, type ConfirmationDeleteDialogProps } from "./types"
+import { OnboardingDialog } from "./onboarding-dialog"
+import { type BaseAlertDialogProps, type ConfirmationDeleteDialogProps, type OnboardingDialogProps } from "./types"
 
 // Composants spécialisés prédéfinis
 export const ConfirmDialog = React.forwardRef<
@@ -201,3 +202,105 @@ export const CriticalDeleteDialog = React.forwardRef<
 })
 
 CriticalDeleteDialog.displayName = "CriticalDeleteDialog"
+
+// Composants d'onboarding spécialisés
+export const WelcomeOnboardingDialog = React.forwardRef<
+  React.ComponentRef<typeof OnboardingDialog>,
+  Omit<OnboardingDialogProps, "steps">
+>(({ 
+  trigger,
+  onComplete,
+  onSkip,
+  ...props 
+}, ref) => {
+  const defaultSteps = [
+    {
+      title: "Bienvenue !",
+      description: "Découvrez notre plateforme et ses fonctionnalités conçues pour simplifier votre workflow de développement.",
+      image: "/dialog-content.png"
+    },
+    {
+      title: "Interface intuitive",
+      description: "Une interface moderne et intuitive qui s'adapte à vos besoins et améliore votre productivité au quotidien.",
+    },
+    {
+      title: "Composants avancés",
+      description: "Une bibliothèque complète de composants personnalisables et accessible, conçue avec les meilleures pratiques.",
+    },
+    {
+      title: "Prêt à commencer ?",
+      description: "Vous avez maintenant toutes les clés en main pour créer des interfaces exceptionnelles. Bon développement !",
+    }
+  ]
+
+  return (
+    <OnboardingDialog
+      ref={ref}
+      steps={defaultSteps}
+      trigger={trigger}
+      onComplete={onComplete}
+      onSkip={onSkip}
+      {...props}
+    />
+  )
+})
+
+WelcomeOnboardingDialog.displayName = "WelcomeOnboardingDialog"
+
+export const FeatureOnboardingDialog = React.forwardRef<
+  React.ComponentRef<typeof OnboardingDialog>,
+  Omit<OnboardingDialogProps, "steps"> & { featureName?: string }
+>(({ 
+  featureName = "nouvelle fonctionnalité",
+  trigger,
+  onComplete,
+  onSkip,
+  ...props 
+}, ref) => {
+  const defaultSteps = [
+    {
+      title: `Découvrez ${featureName}`,
+      description: `Une ${featureName} puissante qui va transformer votre façon de travailler et améliorer votre efficacité.`,
+    },
+    {
+      title: "Comment ça fonctionne",
+      description: "Suivez ces étapes simples pour maîtriser cette fonctionnalité et l'intégrer dans votre workflow quotidien.",
+      content: (
+        <ul className="list-disc list-inside space-y-1">
+          <li>Accédez à la fonctionnalité depuis le menu principal</li>
+          <li>Configurez les paramètres selon vos besoins</li>
+          <li>Explorez les options avancées</li>
+        </ul>
+      )
+    },
+    {
+      title: "Conseils d'utilisation",
+      description: "Quelques astuces pour tirer le meilleur parti de cette fonctionnalité et optimiser votre productivité.",
+      content: (
+        <div className="p-3 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-md">
+          <p className="text-blue-800 dark:text-blue-200 text-sm">
+            💡 <strong>Astuce :</strong> Utilisez les raccourcis clavier pour accéder rapidement aux fonctions principales.
+          </p>
+        </div>
+      )
+    },
+    {
+      title: "Vous êtes prêt !",
+      description: `Félicitations ! Vous maîtrisez maintenant ${featureName}. N'hésitez pas à explorer et expérimenter.`,
+    }
+  ]
+
+  return (
+    <OnboardingDialog
+      ref={ref}
+      steps={defaultSteps}
+      trigger={trigger}
+      onComplete={onComplete}
+      onSkip={onSkip}
+      completeText="C'est parti !"
+      {...props}
+    />
+  )
+})
+
+FeatureOnboardingDialog.displayName = "FeatureOnboardingDialog"

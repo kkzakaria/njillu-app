@@ -37,6 +37,27 @@ export interface ConfirmationDeleteDialogProps {
   disabled?: boolean
 }
 
+export interface OnboardingStep {
+  title: string
+  description: string
+  image?: string
+  content?: React.ReactNode
+}
+
+export interface OnboardingDialogProps {
+  steps: OnboardingStep[]
+  trigger?: React.ReactNode
+  onComplete?: () => void
+  onSkip?: () => void
+  onStepChange?: (step: number) => void
+  className?: string
+  skipText?: string
+  nextText?: string
+  completeText?: string
+  showProgressDots?: boolean
+  autoReset?: boolean
+}
+
 export type AlertDialogType = "default" | "info" | "success" | "warning" | "error" | "question"
 export type ScrollableMode = "none" | "native" | "stickyHeader" | "stickyFooter" | "stickyBoth"
 export type ButtonVariant = "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"

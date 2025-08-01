@@ -27,6 +27,9 @@ import {
   WarningDialog,
   ConfirmationDeleteDialog,
   CriticalDeleteDialog,
+  OnboardingDialog,
+  WelcomeOnboardingDialog,
+  FeatureOnboardingDialog,
 } from "@/components/alert-dialog"
 
 export function AlertDialogsDemo() {
@@ -480,6 +483,87 @@ export function AlertDialogsDemo() {
         </div>
       </div>
 
+      {/* Dialogs d'onboarding */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">🚀 Dialogs d&apos;Onboarding</h3>
+        <p className="text-muted-foreground">
+          Dialogs multi-étapes pour accueillir les utilisateurs et présenter les fonctionnalités
+        </p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          
+          <div className="space-y-3 p-4 border rounded-lg">
+            <h4 className="font-medium">Onboarding personnalisé</h4>
+            <p className="text-sm text-muted-foreground">
+              Dialog d&apos;onboarding avec étapes personnalisées
+            </p>
+            <OnboardingDialog
+              steps={[
+                {
+                  title: "Étape personnalisée 1",
+                  description: "Première étape de votre onboarding personnalisé avec du contenu spécifique.",
+                  content: (
+                    <div className="p-3 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-md">
+                      <p className="text-green-800 dark:text-green-200 text-sm">
+                        ✨ Contenu personnalisé pour cette étape
+                      </p>
+                    </div>
+                  )
+                },
+                {
+                  title: "Configuration",
+                  description: "Configurez vos préférences selon vos besoins.",
+                },
+                {
+                  title: "Terminé !",
+                  description: "Vous êtes maintenant prêt à utiliser l'application.",
+                }
+              ]}
+              trigger={<Button variant="outline" size="sm">Onboarding Custom</Button>}
+              onComplete={() => handleAction("Onboarding personnalisé terminé")}
+              onSkip={() => handleAction("Onboarding personnalisé ignoré")}
+            />
+          </div>
+          
+          <div className="space-y-3 p-4 border rounded-lg">
+            <h4 className="font-medium">Accueil général</h4>
+            <p className="text-sm text-muted-foreground">
+              Dialog d&apos;accueil prédéfini pour nouveaux utilisateurs
+            </p>
+            <WelcomeOnboardingDialog
+              trigger={<Button variant="outline" size="sm">Accueil</Button>}
+              onComplete={() => handleAction("Accueil terminé")}
+              onSkip={() => handleAction("Accueil ignoré")}
+            />
+          </div>
+          
+          <div className="space-y-3 p-4 border rounded-lg">
+            <h4 className="font-medium">Nouvelle fonctionnalité</h4>
+            <p className="text-sm text-muted-foreground">
+              Présentation d&apos;une fonctionnalité spécifique
+            </p>
+            <FeatureOnboardingDialog
+              featureName="Alert Dialog System"
+              trigger={<Button variant="outline" size="sm">Découvrir Feature</Button>}
+              onComplete={() => handleAction("Présentation fonctionnalité terminée")}
+              onSkip={() => handleAction("Présentation fonctionnalité ignorée")}
+            />
+          </div>
+        </div>
+        
+        <div className="p-4 bg-muted/50 rounded-lg">
+          <h4 className="font-medium mb-2">💡 Fonctionnalités des dialogs d&apos;onboarding :</h4>
+          <ul className="text-sm text-muted-foreground space-y-1">
+            <li>• Navigation séquentielle avec boutons Précédent/Suivant</li>
+            <li>• Indicateurs de progression visuels</li>
+            <li>• Possibilité d&apos;ignorer l&apos;onboarding</li>
+            <li>• Contenu personnalisé par étape (texte, images, composants)</li>
+            <li>• Reset automatique à chaque ouverture</li>
+            <li>• Callbacks pour tracking et analytics</li>
+          </ul>
+        </div>
+      </div>
+
       {/* États et options */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">⚙️ États et options</h3>
@@ -630,6 +714,9 @@ export function AlertDialogsDemo() {
               <li><code>DeleteDialog</code> - Suppressions avec style destructif</li>
               <li><code>ConfirmationDeleteDialog</code> - Suppressions avec confirmation textuelle</li>
               <li><code>CriticalDeleteDialog</code> - Suppressions critiques avec confirmation</li>
+              <li><code>OnboardingDialog</code> - Onboarding multi-étapes personnalisable</li>
+              <li><code>WelcomeOnboardingDialog</code> - Accueil prédéfini</li>
+              <li><code>FeatureOnboardingDialog</code> - Présentation de fonctionnalités</li>
               <li><code>LogoutDialog</code> - Déconnexions</li>
               <li><code>SaveDialog</code> - Sauvegardes</li>
               <li><code>InfoDialog, SuccessDialog, ErrorDialog, WarningDialog</code></li>
