@@ -88,6 +88,50 @@ export type PaidBy = 'shipper' | 'consignee' | 'third_party';
 export type PaymentStatus = 'pending' | 'paid' | 'overdue' | 'disputed' | 'waived';
 
 // ============================================================================
+// Enums pour le système de suivi des arrivées de conteneurs
+// ============================================================================
+
+export type ContainerArrivalStatus = 
+  | 'scheduled'    // Arrivée programmée
+  | 'delayed'      // Retard confirmé
+  | 'arrived'      // Arrivé à destination
+  | 'early'        // Arrivé en avance
+  | 'cancelled';   // Arrivée annulée
+
+export type ArrivalUrgency = 
+  | 'Arrivé'
+  | 'Pas d\'ETA'
+  | 'En retard'
+  | 'Aujourd\'hui'
+  | 'Imminent'
+  | 'Programmé';
+
+export type DelaySeverity = 
+  | 'Critique'     // >= 7 jours
+  | 'Élevé'        // >= 3 jours
+  | 'Modéré'       // >= 1 jour
+  | 'Faible';      // < 1 jour
+
+export type ContainerUrgencyLevel = 
+  | 'Arrivé'
+  | 'Pas d\'ETA'
+  | 'Retard critique'
+  | 'Retard élevé'
+  | 'En retard'
+  | 'Arrive demain'
+  | 'Arrive bientôt'
+  | 'Programmé';
+
+export type ContainerHealthStatus = 
+  | 'Pas de conteneurs'
+  | 'Conteneurs en retard'
+  | 'Préparation urgente'
+  | 'Tous arrivés'
+  | 'Sous contrôle'
+  | 'ETA manquants'
+  | 'À vérifier';
+
+// ============================================================================
 // Enums pour le système de numérotation de dossiers
 // ============================================================================
 
@@ -322,6 +366,15 @@ export interface BLContainer {
   
   // Informations de chargement
   shipper_load_stow_count: boolean;
+  
+  // Suivi des arrivées (nouvelles colonnes)
+  estimated_arrival_date?: string;      // Date d'arrivée estimée
+  actual_arrival_date?: string;         // Date d'arrivée réelle confirmée
+  arrival_status: ContainerArrivalStatus; // Statut d'arrivée
+  arrival_notes?: string;               // Notes sur l'arrivée
+  arrival_location?: string;            // Terminal/port d'arrivée spécifique
+  customs_clearance_date?: string;      // Date de dédouanement
+  delivery_ready_date?: string;         // Date de mise à disposition
   
   // Timestamps
   created_at: string;
@@ -612,7 +665,7 @@ export interface ExecutiveDashboard {
 }
 
 /**
- * Dossier nécessitant attention
+ * Dossier nécessitant attention (v2 avec suivi conteneurs)
  */
 export interface FolderRequiringAttention {
   folder_id: string;
@@ -626,8 +679,17 @@ export interface FolderRequiringAttention {
   priority: FolderPriority;
   assigned_to?: string;
   assignee_email?: string;
-  issues: string[];
-  attention_score: number;
+  
+  // Nouvelles statistiques de conteneurs
+  total_containers?: number;
+  overdue_containers?: number;
+  no_eta_containers?: number;
+  arriving_soon_containers?: number;
+  max_container_delay_days?: number;
+  avg_container_delay_days?: number;
+  
+  issues: string[];                    // Problèmes incluant conteneurs
+  attention_score: number;             // Score enrichi avec conteneurs
   days_since_creation: number;
   days_overdue?: number;
 }
@@ -702,7 +764,7 @@ export interface CreateBLData {
 }
 
 /**
- * Données pour créer un conteneur
+ * Données pour créer un conteneur (avec suivi d'arrivée)
  */
 export interface CreateContainerData {
   bl_id: string;
@@ -713,6 +775,11 @@ export interface CreateContainerData {
   loading_method: LoadingMethod;
   marks_and_numbers?: string;
   shipper_load_stow_count?: boolean;
+  
+  // Nouvelles données d'arrivée (optionnelles à la création)
+  estimated_arrival_date?: string;
+  arrival_location?: string;
+  arrival_notes?: string;
 }
 
 /**
@@ -1031,7 +1098,9 @@ export interface ActiveBillOfLading extends Omit<BillOfLading, 'deleted_at' | 'd
 /**
  * Types pour les vues actives
  */
-export interface ActiveBLContainer extends Omit<BLContainer, 'deleted_at' | 'deleted_by'> {}
+export interface ActiveBLContainer extends Omit<BLContainer, 'deleted_at' | 'deleted_by'> {
+  // Les conteneurs actifs incluent toutes les colonnes d'arrivée
+}
 export interface ActiveBLCargoDetail extends Omit<BLCargoDetail, 'deleted_at' | 'deleted_by'> {}
 export interface ActiveBLFreightCharge extends Omit<BLFreightCharge, 'deleted_at' | 'deleted_by'> {}
 export interface ActiveShippingCompany extends Omit<ShippingCompany, 'deleted_at' | 'deleted_by'> {}
@@ -1103,6 +1172,223 @@ export interface BLWithFolder {
   folder_status?: FolderStatus;
   folder_title?: string;
   relationship_status: string;
+}
+
+// ============================================================================
+// Types pour le système de suivi des arrivées de conteneurs
+// ============================================================================
+
+/**
+ * Dashboard des arrivées de conteneurs
+ */
+export interface ContainerArrivalsDashboard {
+  container_id: string;
+  container_number: string;
+  bl_id: string;
+  bl_number: string;
+  port_of_discharge: string;
+  arrival_location?: string;
+  shipping_company_name: string;
+  shipping_company_short?: string;
+  
+  // Dates clés
+  estimated_arrival_date?: string;
+  actual_arrival_date?: string;
+  customs_clearance_date?: string;
+  delivery_ready_date?: string;
+  
+  // Statut et délais
+  arrival_status: ContainerArrivalStatus;
+  delay_days?: number;
+  days_until_arrival?: number;
+  
+  // Indicateurs business
+  arrival_urgency: ArrivalUrgency;
+  
+  // Informations du conteneur
+  container_type: string; // ISO code
+  gross_weight_kg?: number;
+  volume_cbm?: number;
+  arrival_notes?: string;
+  
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Conteneurs en retard
+ */
+export interface OverdueContainer {
+  container_id: string;
+  container_number: string;
+  bl_id: string;
+  bl_number: string;
+  port_of_discharge: string;
+  arrival_location?: string;
+  shipping_company_name: string;
+  
+  // Retards et dates
+  estimated_arrival_date: string;
+  actual_arrival_date?: string;
+  days_overdue: number;
+  arrival_status: ContainerArrivalStatus;
+  
+  // Criticité
+  delay_severity: DelaySeverity;
+  priority_score: number;
+  
+  arrival_notes?: string;
+  created_at: string;
+}
+
+/**
+ * Arrivées prochaines (7 jours)
+ */
+export interface UpcomingArrival {
+  container_id: string;
+  container_number: string;
+  bl_id: string;
+  bl_number: string;
+  port_of_discharge: string;
+  arrival_location?: string;
+  shipping_company_name: string;
+  shipping_company_short?: string;
+  
+  // Timing
+  estimated_arrival_date: string;
+  days_until_arrival: number;
+  arrival_timing: 'Aujourd\'hui' | 'Demain' | 'Cette semaine' | 'Semaine prochaine';
+  
+  // Statut
+  arrival_status: ContainerArrivalStatus;
+  arrival_notes?: string;
+  
+  // Informations du conteneur
+  container_type: string;
+  gross_weight_kg?: number;
+  volume_cbm?: number;
+  
+  created_at: string;
+}
+
+/**
+ * Conteneurs nécessitant attention
+ */
+export interface ContainerRequiringAttention {
+  container_id: string;
+  container_number: string;
+  bl_id: string;
+  bl_number: string;
+  folder_id?: string;
+  folder_number?: string;
+  transport_type?: TransportType;
+  assigned_to?: string;
+  assignee_email?: string;
+  
+  // Informations de base
+  port_of_discharge: string;
+  arrival_location?: string;
+  shipping_company_name: string;
+  container_type: string;
+  
+  // Dates et statuts
+  estimated_arrival_date?: string;
+  actual_arrival_date?: string;
+  arrival_status: ContainerArrivalStatus;
+  
+  // Calculs de délais
+  delay_days?: number;
+  days_until_arrival?: number;
+  
+  // Problèmes et priorité
+  container_issues: string[];
+  container_priority_score: number;
+  urgency_level: ContainerUrgencyLevel;
+  
+  arrival_notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Résumé de santé des dossiers avec conteneurs
+ */
+export interface FolderContainerSummary {
+  folder_id: string;
+  folder_number: string;
+  transport_type: TransportType;
+  folder_status: FolderStatus;
+  priority: FolderPriority;
+  title?: string;
+  assigned_to?: string;
+  assignee_email?: string;
+  
+  // Statistiques des conteneurs
+  total_containers: number;
+  containers_with_eta: number;
+  overdue_containers: number;
+  arrived_containers: number;
+  arriving_soon: number;
+  
+  // Dates importantes
+  folder_date: string;
+  expected_delivery_date?: string;
+  earliest_arrival?: string;
+  latest_arrival?: string;
+  max_delay_days?: number;
+  
+  // Indicateurs de santé
+  container_health_status: ContainerHealthStatus;
+  container_health_score: number;  // 0-100
+}
+
+/**
+ * Compteur d'alertes par utilisateur
+ */
+export interface UserAlertCount {
+  folder_alerts: number;
+  container_alerts: number;
+  total_alerts: number;
+  high_priority_alerts: number;
+}
+
+/**
+ * Paramètres pour les fonctions de calcul de retard
+ */
+export interface ContainerDelayParams {
+  container_uuid: string;
+}
+
+/**
+ * Paramètres pour mise à jour des dates d'arrivée
+ */
+export interface UpdateContainerArrivalData {
+  estimated_arrival_date?: string;
+  actual_arrival_date?: string;
+  arrival_status?: ContainerArrivalStatus;
+  arrival_notes?: string;
+  arrival_location?: string;
+  customs_clearance_date?: string;
+  delivery_ready_date?: string;
+}
+
+/**
+ * Options de recherche pour conteneurs avec dates d'arrivée
+ */
+export interface ContainerArrivalSearchOptions {
+  bl_id?: string;
+  container_number?: string;
+  estimated_arrival_from?: string;
+  estimated_arrival_to?: string;
+  arrival_status?: ContainerArrivalStatus;
+  arrival_location?: string;
+  overdue_only?: boolean;
+  arriving_soon_only?: boolean;  // Prochains 3 jours
+  no_eta_only?: boolean;
+  limit?: number;
+  offset?: number;
+  sort_by?: 'estimated_arrival_date' | 'actual_arrival_date' | 'delay_days' | 'priority_score';
+  sort_order?: 'asc' | 'desc';
 }
 
 // ============================================================================
