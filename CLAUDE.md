@@ -159,8 +159,38 @@ lib/
 │   └── server.ts         # Server client
 └── utils.ts              # Utility functions and helpers
 
-types/
-└── i18n.types.ts         # TypeScript definitions for translations
+types/                      # Modular TypeScript definitions system (v2.0)
+├── index.ts               # Main entry point for all types
+├── bl/                    # Bills of Lading types
+│   ├── index.ts           # BL module exports
+│   ├── enums.ts           # BL statuses, freight terms, charge types
+│   ├── core.ts            # Main interfaces (BillOfLading, BLContainer, etc.)
+│   ├── charges.ts         # Freight charges and cost management
+│   ├── views.ts           # Dashboard views and search types
+│   └── operations.ts      # CRUD, validation, workflows
+├── folders/               # Folder management types
+│   ├── index.ts           # Folder module exports
+│   ├── enums.ts           # Folder statuses, priorities, processing stages
+│   ├── core.ts            # Main interfaces (Folder, ClientInfo, etc.)
+│   ├── alerts.ts          # Alert system and notifications
+│   └── operations.ts      # Folder operations and workflows
+├── containers/            # Container arrival tracking types
+│   ├── index.ts           # Container module exports
+│   ├── enums.ts           # Arrival statuses, urgency levels
+│   ├── arrival-tracking.ts # Tracking, metrics, notifications
+│   ├── dashboard.ts       # Analytics dashboards and views
+│   └── operations.ts      # Integrations, automation, validation
+├── shared/                # Common utility types
+│   ├── index.ts           # Shared module exports
+│   ├── common.ts          # Base types, pagination, validation
+│   ├── soft-delete.ts     # Logical deletion system
+│   └── search.ts          # Advanced search and indexing
+├── i18n.types.ts          # Internationalization types
+├── sidebar.types.ts       # UI sidebar types
+├── user-roles.types.ts    # User role management
+├── bl.types.legacy.ts     # Legacy compatibility wrapper (DEPRECATED)
+├── MIGRATION_GUIDE.md     # Migration guide from v1.0 to v2.0
+└── README.md              # Type system documentation
 
 supabase/
 ├── config.toml           # Local Supabase configuration
@@ -228,6 +258,46 @@ export default async function ProtectedPage() {
 - `@/i18n` → `./i18n`
 - `@/hooks` → `./hooks`
 - `@/types` → `./types`
+
+### TypeScript Types System (v2.0)
+
+**Modular Type Architecture**: The project uses a modular TypeScript system organized by business domains.
+
+**Primary Import (Recommended)**:
+```typescript
+import type {
+  BillOfLading,
+  Folder,
+  ContainerArrivalTracking,
+  AuditMetadata
+} from '@/types';
+```
+
+**Module-Specific Imports**:
+```typescript
+import type * as BL from '@/types/bl';
+import type * as Folders from '@/types/folders';
+import type * as Containers from '@/types/containers';
+```
+
+**Specialized Imports**:
+```typescript
+import type { BLStatus } from '@/types/bl/enums';
+import type { CreateBLData } from '@/types/bl/operations';
+import type { FolderAlert } from '@/types/folders/alerts';
+```
+
+**Type Modules Overview**:
+- **BL Types** (`@/types/bl/`): Bills of Lading, containers, shipping companies, freight charges
+- **Folder Types** (`@/types/folders/`): Folder management, alerts, client info, processing stages
+- **Container Types** (`@/types/containers/`): Arrival tracking, dashboards, performance metrics
+- **Shared Types** (`@/types/shared/`): Common utilities, pagination, validation, soft delete
+
+**Key Conventions**:
+- Always use the main entry point `@/types` for common types
+- Use module-specific imports for specialized operations
+- Follow the hierarchical export structure
+- Refer to `types/README.md` and `types/MIGRATION_GUIDE.md` for detailed guidance
 
 ### shadcn/ui Integration
 
