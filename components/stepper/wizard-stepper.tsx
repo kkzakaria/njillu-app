@@ -14,7 +14,7 @@ import {
   StepperTrigger,
 } from "@/components/ui/stepper"
 import { stepperVariants, stepContentVariants } from "./variants"
-import { type FormStepperProps } from "./types"
+import { type FormStepperProps, type StepDefinition } from "./types"
 
 export const WizardStepper = React.forwardRef<
   React.ComponentRef<typeof Stepper>,
@@ -53,7 +53,10 @@ export const WizardStepper = React.forwardRef<
       step: i + 1,
       title: `Step ${i + 1}`,
       description: `Configure step ${i + 1}`,
-      content: `Content for step ${i + 1}`
+      content: `Content for step ${i + 1}`,
+      completed: false,
+      disabled: false,
+      loading: false
     }))
   }, [steps])
 
@@ -139,10 +142,13 @@ export const WizardStepper = React.forwardRef<
                       className={cn(
                         hasError && stepDef.step === actualCurrentStep && "bg-destructive text-destructive-foreground"
                       )}
-                      asChild={!!stepDef.icon}
+                      asChild={!!(stepDef as StepDefinition).icon}
                     >
-                      {stepDef.icon ? (
-                        <stepDef.icon size={14} className="text-current" />
+                      {(stepDef as StepDefinition).icon ? (
+                        React.createElement((stepDef as StepDefinition).icon!, {
+                          size: 14,
+                          className: "text-current"
+                        })
                       ) : (
                         stepDef.step
                       )}

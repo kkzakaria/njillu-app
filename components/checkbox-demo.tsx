@@ -24,7 +24,7 @@ export function CheckboxDemo() {
               description="Cette checkbox est placée avant le label (comportement par défaut)"
               position="left"
               color="primary"
-              defaultChecked
+              checked
             />
           </div>
           
@@ -35,7 +35,7 @@ export function CheckboxDemo() {
               description="Cette checkbox est placée après le label - utile pour certains designs"
               position="right"
               color="success"
-              defaultChecked
+              checked
             />
           </div>
           
@@ -49,7 +49,7 @@ export function CheckboxDemo() {
                   description="Checkbox avant le texte"
                   position="left"
                   color="primary"
-                  defaultChecked
+                  checked
                 />
               </div>
               <div className="p-3 border rounded bg-background">
@@ -59,7 +59,7 @@ export function CheckboxDemo() {
                   description="Checkbox après le texte"
                   position="right"
                   color="primary"
-                  defaultChecked
+                  checked
                 />
               </div>
             </div>
@@ -75,19 +75,19 @@ export function CheckboxDemo() {
             label="Petite (sm)"
             description="Checkbox 12px"
             size="sm"
-            defaultChecked
+            checked
           />
           <EnhancedCheckbox
             label="Moyenne (md)"
             description="Checkbox 16px - défaut"
             size="md"
-            defaultChecked
+            checked
           />
           <EnhancedCheckbox
             label="Grande (lg)"
             description="Checkbox 20px"
             size="lg"
-            defaultChecked
+            checked
           />
         </div>
       </div>
@@ -105,7 +105,7 @@ export function CheckboxDemo() {
                 label="Par défaut (thème)"
                 description="Utilise la couleur du thème"
                 color="default"
-                defaultChecked
+                checked
               />
             </div>
             <div className="space-y-2">
@@ -113,7 +113,7 @@ export function CheckboxDemo() {
                 label="Primaire (bleu)"
                 description="Couleur principale du thème"
                 color="primary"
-                defaultChecked
+                checked
               />
             </div>
             <div className="space-y-2">
@@ -121,7 +121,7 @@ export function CheckboxDemo() {
                 label="Succès (vert)"
                 description="Pour les actions positives"
                 color="success"
-                defaultChecked
+                checked
               />
             </div>
             <div className="space-y-2">
@@ -129,7 +129,7 @@ export function CheckboxDemo() {
                 label="Attention (orange)"
                 description="Pour les avertissements"
                 color="warning"
-                defaultChecked
+                checked
               />
             </div>
             <div className="space-y-2">
@@ -137,7 +137,7 @@ export function CheckboxDemo() {
                 label="Destructive (rouge)"
                 description="Pour les actions dangereuses"
                 color="destructive"
-                defaultChecked
+                checked
               />
             </div>
           </div>
@@ -168,7 +168,7 @@ export function CheckboxDemo() {
           <EnhancedCheckbox
             label="Cochée"
             description="État activé"
-            defaultChecked
+            checked
           />
           <EnhancedCheckbox
             label="Indéterminée"
@@ -180,7 +180,7 @@ export function CheckboxDemo() {
             label="Désactivée"
             description="État inactif"
             disabled
-            defaultChecked
+            checked
           />
         </div>
       </div>
@@ -211,12 +211,12 @@ export function CheckboxDemo() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <SimpleCheckbox
             label="Utilisation simple"
-            defaultChecked
+            checked
           />
           <SimpleCheckbox
             label="Avec couleur"
             color="success"
-            defaultChecked
+            checked
           />
         </div>
       </div>
@@ -231,7 +231,7 @@ export function CheckboxDemo() {
               label="Recevoir les notifications par email"
               description="Être informé des nouvelles notifications importantes"
               color="primary"
-              defaultChecked
+              checked
             />
             <EnhancedCheckbox
               label="Activer le mode sombre automatique"

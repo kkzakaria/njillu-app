@@ -15,7 +15,7 @@ import {
   StepperTrigger,
 } from "@/components/ui/stepper"
 import { stepperVariants, stepControlsVariants } from "./variants"
-import { type ControlledStepperProps } from "./types"
+import { type ControlledStepperProps, type StepDefinition } from "./types"
 
 export const ControlledStepper = React.forwardRef<
   React.ComponentRef<typeof Stepper>,
@@ -50,7 +50,10 @@ export const ControlledStepper = React.forwardRef<
     return Array.from({ length: 4 }, (_, i) => ({
       step: i + 1,
       title: `Step ${i + 1}`,
-      description: `Description for step ${i + 1}`
+      description: `Description for step ${i + 1}`,
+      completed: false,
+      disabled: false,
+      loading: false
     }))
   }, [steps])
 
@@ -135,10 +138,13 @@ export const ControlledStepper = React.forwardRef<
               )}
             >
               <StepperIndicator 
-                asChild={!!stepDef.icon}
+                asChild={!!(stepDef as StepDefinition).icon}
               >
-                {stepDef.icon ? (
-                  <stepDef.icon size={14} className="text-current" />
+                {(stepDef as StepDefinition).icon ? (
+                  React.createElement((stepDef as StepDefinition).icon!, {
+                    size: 14,
+                    className: "text-current"
+                  })
                 ) : (
                   stepDef.step
                 )}
