@@ -1,0 +1,32 @@
+{
+  "status": {
+    "open": "Open",
+    "processing": "Processing", 
+    "completed": "Completed",
+    "closed": "Closed",
+    "on_hold": "On Hold",
+    "cancelled": "Cancelled"
+  },
+  "type": {
+    "import": "Import",
+    "export": "Export",
+    "transit": "Transit",
+    "transhipment": "Transhipment",
+    "storage": "Storage",
+    "consolidation": "Consolidation",
+    "distribution": "Distribution"
+  },
+  "priority": {
+    "low": "Low",
+    "normal": "Normal",
+    "high": "High",
+    "urgent": "Urgent",
+    "critical": "Critical"
+  },
+  "health_status": {
+    "healthy": "Healthy",
+    "warning": "Warning",
+    "critical": "Critical",
+    "failed": "Failed"
+  }
+}

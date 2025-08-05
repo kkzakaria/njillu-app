@@ -1,0 +1,341 @@
+{
+  "title": "Détails du dossier",
+  "back_to_list": "Retour à la liste",
+  "folder_number": "Dossier N°",
+  "tabs": {
+    "overview": "Vue d'ensemble",
+    "documents": "Documents",
+    "bills_of_lading": "Bills of Lading",
+    "activities": "Activités",
+    "alerts": "Alertes",
+    "statistics": "Statistiques",
+    "configuration": "Configuration"
+  },
+  "overview": {
+    "basic_info": {
+      "title": "Informations de base",
+      "folder_number": "N° Dossier",
+      "reference_number": "Référence client",
+      "internal_reference": "Référence interne",
+      "status": "Statut",
+      "type": "Type",
+      "category": "Catégorie",
+      "priority": "Priorité",
+      "urgency": "Urgence",
+      "processing_stage": "Étape de traitement",
+      "health_status": "État de santé",
+      "performance_rating": "Note de performance",
+      "created_date": "Date de création",
+      "description": "Description"
+    },
+    "client_info": {
+      "title": "Informations client",
+      "client": "Client principal",
+      "consignee": "Destinataire",
+      "notify_party": "Partie à notifier",
+      "name": "Nom",
+      "company": "Entreprise", 
+      "email": "Email",
+      "phone": "Téléphone",
+      "address": "Adresse",
+      "tax_id": "N° TVA",
+      "client_code": "Code client"
+    },
+    "geography": {
+      "title": "Géographie",
+      "origin": "Origine",
+      "destination": "Destination",
+      "current_location": "Position actuelle",
+      "name": "Lieu",
+      "address": "Adresse",
+      "city": "Ville",
+      "country": "Pays",
+      "port_code": "Code port",
+      "airport_code": "Code aéroport"
+    },
+    "services": {
+      "title": "Services et régime",
+      "customs_regime": "Régime douanier",
+      "compliance_status": "Statut de conformité",
+      "service_type": "Type de service",
+      "operation_type": "Type d'opération"
+    },
+    "timeline": {
+      "title": "Chronologie",
+      "expected_start_date": "Début prévu",
+      "actual_start_date": "Début réel",
+      "expected_completion_date": "Fin prévue",
+      "actual_completion_date": "Fin réelle",
+      "deadline_date": "Date limite",
+      "processing_time_days": "Durée de traitement"
+    },
+    "financial": {
+      "title": "Informations financières",
+      "estimated_cost": "Coût estimé",
+      "actual_cost": "Coût réel",
+      "invoiced_amount": "Montant facturé",
+      "paid_amount": "Montant payé",
+      "currency": "Devise",
+      "cost_breakdown": "Détail des coûts"
+    },
+    "cargo": {
+      "title": "Marchandises",
+      "cargo_description": "Description",
+      "total_weight_kg": "Poids total",
+      "total_volume_cbm": "Volume total",
+      "total_packages": "Nombre de colis",
+      "special_instructions": "Instructions spéciales"
+    },
+    "metrics": {
+      "title": "Métriques de performance",
+      "sla_compliance": "Respect des SLA",
+      "cost_efficiency": "Efficacité des coûts",
+      "completion_percentage": "Pourcentage d'achèvement"
+    }
+  },
+  "documents": {
+    "title": "Documents associés",
+    "add_document": "Ajouter un document",
+    "total_count": "{count} document(s)",
+    "table": {
+      "name": "Nom",
+      "type": "Type",
+      "category": "Catégorie",
+      "status": "Statut",
+      "issued_date": "Date d'émission",
+      "expiry_date": "Date d'expiration",
+      "uploaded_date": "Date d'upload",
+      "file_size": "Taille",
+      "actions": "Actions"
+    },
+    "categories": {
+      "required": "Requis",
+      "optional": "Optionnel",
+      "supporting": "Support"
+    },
+    "status": {
+      "missing": "Manquant",
+      "pending": "En attente",
+      "received": "Reçu",
+      "under_review": "En révision",
+      "approved": "Approuvé",
+      "rejected": "Rejeté",
+      "expired": "Expiré",
+      "archived": "Archivé"
+    },
+    "actions": {
+      "download": "Télécharger",
+      "view": "Voir",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "validate": "Valider",
+      "reject": "Rejeter"
+    }
+  },
+  "bills_of_lading": {
+    "title": "Bills of Lading",
+    "link_bl": "Associer un B/L",
+    "create_bl": "Créer un B/L",
+    "total_count": "{count} B/L associé(s)",
+    "table": {
+      "bl_number": "N° B/L",
+      "relation_type": "Type de relation",
+      "vessel_name": "Navire",
+      "voyage": "Voyage",
+      "loading_port": "Port de chargement",
+      "discharge_port": "Port de déchargement",
+      "etd": "ETD",
+      "eta": "ETA",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "relation_types": {
+      "primary": "Principal",
+      "secondary": "Secondaire", 
+      "reference": "Référence"
+    },
+    "actions": {
+      "view": "Voir",
+      "unlink": "Dissocier",
+      "set_primary": "Définir comme principal"
+    }
+  },
+  "activities": {
+    "title": "Historique des activités",
+    "filter_by_type": "Filtrer par type",
+    "all_activities": "Toutes les activités",
+    "types": {
+      "created": "Création",
+      "status_changed": "Changement de statut",
+      "document_added": "Document ajouté",
+      "document_validated": "Document validé",
+      "bl_linked": "B/L associé",
+      "bl_unlinked": "B/L dissocié",
+      "note_added": "Note ajoutée",
+      "location_updated": "Position mise à jour",
+      "alert_created": "Alerte créée",
+      "alert_resolved": "Alerte résolue",
+      "cost_updated": "Coût mis à jour",
+      "deadline_changed": "Échéance modifiée",
+      "assigned": "Assigné",
+      "completed": "Terminé"
+    },
+    "timeline": {
+      "title": "Titre",
+      "description": "Description",
+      "performed_by": "Par",
+      "performed_at": "Le",
+      "business_impact": "Impact métier"
+    },
+    "business_impact": {
+      "low": "Faible",
+      "medium": "Moyen",
+      "high": "Élevé",
+      "critical": "Critique"
+    }
+  },
+  "alerts": {
+    "title": "Alertes actives",
+    "create_alert": "Créer une alerte",
+    "active_count": "{count} alerte(s) active(s)",
+    "resolved_count": "{count} alerte(s) résolue(s)",
+    "table": {
+      "type": "Type",
+      "severity": "Sévérité",
+      "title": "Titre",
+      "description": "Description",
+      "created_at": "Créée le",
+      "due_date": "Échéance",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "types": {
+      "deadline": "Échéance",
+      "document_missing": "Document manquant",
+      "compliance_issue": "Problème de conformité",
+      "delay": "Retard",
+      "cost_overrun": "Dépassement de coût",
+      "client_request": "Demande client",
+      "system_error": "Erreur système",
+      "customs_hold": "Retenue douanière",
+      "inspection_required": "Inspection requise",
+      "payment_due": "Paiement en attente"
+    },
+    "severity": {
+      "info": "Info",
+      "low": "Faible",
+      "medium": "Moyen",
+      "high": "Élevé",
+      "critical": "Critique"
+    },
+    "status": {
+      "active": "Active",
+      "acknowledged": "Accusée",
+      "in_progress": "En cours",
+      "resolved": "Résolue",
+      "dismissed": "Écartée",
+      "escalated": "Escaladée"
+    },
+    "actions": {
+      "acknowledge": "Accuser réception",
+      "resolve": "Résoudre",
+      "escalate": "Escalader",
+      "dismiss": "Écarter",
+      "view": "Voir"
+    }
+  },
+  "statistics": {
+    "title": "Statistiques du dossier",
+    "metrics": {
+      "total_bls": "Total B/L",
+      "total_containers": "Total conteneurs",
+      "total_documents": "Total documents",
+      "total_activities": "Total activités",
+      "active_alerts": "Alertes actives",
+      "processing_days": "Jours de traitement",
+      "days_until_deadline": "Jours avant échéance",
+      "days_overdue": "Jours de retard"
+    },
+    "financial_metrics": {
+      "title": "Métriques financières",
+      "total_estimated_cost": "Coût total estimé",
+      "total_actual_cost": "Coût total réel",
+      "cost_variance_percentage": "Écart de coût (%)"
+    },
+    "performance_metrics": {
+      "title": "Métriques de performance",
+      "document_completion_rate": "Taux de completion documents",
+      "sla_adherence_rate": "Taux de respect SLA",
+      "efficiency_score": "Score d'efficacité"
+    },
+    "quality_metrics": {
+      "title": "Métriques de qualité",
+      "error_count": "Nombre d'erreurs",
+      "rework_count": "Nombre de reprises",
+      "client_satisfaction_score": "Score satisfaction client"
+    }
+  },
+  "configuration": {
+    "title": "Configuration du dossier",
+    "notifications": {
+      "title": "Paramètres de notification",
+      "email_notifications": "Notifications email",
+      "sms_notifications": "Notifications SMS",
+      "push_notifications": "Notifications push",
+      "notification_frequency": "Fréquence",
+      "recipients": "Destinataires"
+    },
+    "alerts": {
+      "title": "Paramètres d'alerte",
+      "deadline_warning_days": "Alerte échéance (jours)",
+      "cost_overrun_threshold": "Seuil dépassement coût (%)",
+      "auto_escalation_enabled": "Escalade automatique",
+      "escalation_delay_hours": "Délai d'escalade (heures)"
+    },
+    "workflow": {
+      "title": "Paramètres de workflow",
+      "auto_progression_enabled": "Progression automatique",
+      "approval_required_stages": "Étapes nécessitant approbation",
+      "parallel_processing_allowed": "Traitement parallèle autorisé"
+    },
+    "reporting": {
+      "title": "Paramètres de reporting",
+      "generate_daily_reports": "Rapports quotidiens",
+      "include_cost_analysis": "Inclure analyse des coûts",
+      "include_performance_metrics": "Inclure métriques de performance",
+      "report_recipients": "Destinataires des rapports"
+    }
+  },
+  "actions": {
+    "edit": "Modifier",
+    "duplicate": "Dupliquer",
+    "archive": "Archiver",
+    "delete": "Supprimer",
+    "export": "Exporter",
+    "print": "Imprimer",
+    "share": "Partager",
+    "change_status": "Changer le statut",
+    "assign": "Assigner",
+    "add_note": "Ajouter une note"
+  },
+  "status_badge": {
+    "open": "Ouvert",
+    "processing": "En cours",
+    "completed": "Terminé",
+    "closed": "Fermé",
+    "on_hold": "En attente",
+    "cancelled": "Annulé"
+  },
+  "health_badge": {
+    "healthy": "Sain",
+    "warning": "Attention",
+    "critical": "Critique",
+    "failed": "Échec"
+  },
+  "messages": {
+    "loading": "Chargement des détails...",
+    "error": "Erreur lors du chargement",
+    "not_found": "Dossier non trouvé",
+    "access_denied": "Accès refusé"
+  }
+}

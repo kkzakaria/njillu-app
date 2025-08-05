@@ -1,0 +1,197 @@
+{
+  "title": "Folder Management",
+  "subtitle": "Track and manage all your import and export folders",
+  "search": {
+    "placeholder": "Search by number, reference or client...",
+    "clear": "Clear search",
+    "no_results": "No results found",
+    "results_count": "{count} folder(s) found"
+  },
+  "filters": {
+    "title": "Filters",
+    "clear_all": "Clear all filters",
+    "apply": "Apply",
+    "active_count": "{count} active filter(s)",
+    "status": {
+      "label": "Status",
+      "all": "All statuses",
+      "open": "Open",
+      "processing": "Processing",
+      "completed": "Completed",
+      "closed": "Closed",
+      "on_hold": "On Hold",
+      "cancelled": "Cancelled"
+    },
+    "type": {
+      "label": "Type",
+      "all": "All types",
+      "import": "Import",
+      "export": "Export",
+      "transit": "Transit",
+      "transhipment": "Transhipment",
+      "storage": "Storage",
+      "consolidation": "Consolidation",
+      "distribution": "Distribution"
+    },
+    "category": {
+      "label": "Category",
+      "all": "All categories",
+      "commercial": "Commercial",
+      "urgent": "Urgent",
+      "vip": "VIP",
+      "hazmat": "Hazardous Materials",
+      "perishable": "Perishable",
+      "oversized": "Oversized",
+      "fragile": "Fragile",
+      "high_value": "High Value"
+    },
+    "priority": {
+      "label": "Priority",
+      "all": "All priorities",
+      "low": "Low",
+      "normal": "Normal",
+      "high": "High",
+      "urgent": "Urgent",
+      "critical": "Critical"
+    },
+    "urgency": {
+      "label": "Urgency",
+      "all": "All urgencies",
+      "standard": "Standard",
+      "expedited": "Expedited",
+      "rush": "Rush",
+      "emergency": "Emergency"
+    },
+    "processing_stage": {
+      "label": "Stage",
+      "all": "All stages",
+      "intake": "Intake",
+      "documentation": "Documentation",
+      "customs_clearance": "Customs Clearance",
+      "inspection": "Inspection",
+      "storage": "Storage",
+      "preparation": "Preparation",
+      "delivery": "Delivery",
+      "invoicing": "Invoicing",
+      "closure": "Closure"
+    },
+    "health_status": {
+      "label": "Health Status",
+      "all": "All statuses",
+      "healthy": "Healthy",
+      "warning": "Warning",
+      "critical": "Critical",
+      "failed": "Failed"
+    },
+    "client": {
+      "label": "Client",
+      "placeholder": "Client name..."
+    },
+    "geography": {
+      "origin_country": "Origin Country",
+      "destination_country": "Destination Country"
+    },
+    "dates": {
+      "created_from": "Created from",
+      "created_to": "Created to",
+      "deadline_from": "Deadline from",
+      "deadline_to": "Deadline to"
+    },
+    "financial": {
+      "cost_min": "Minimum cost",
+      "cost_max": "Maximum cost",
+      "currency": "Currency"
+    },
+    "relations": {
+      "has_alerts": "With alerts",
+      "is_overdue": "Overdue",
+      "has_bls": "With B/L",
+      "bl_count_min": "Min. B/L",
+      "bl_count_max": "Max. B/L"
+    }
+  },
+  "presets": {
+    "title": "Quick views",
+    "all": "All folders",
+    "active": "Active folders",
+    "urgent": "Urgent",
+    "overdue": "Overdue",
+    "with_alerts": "With alerts",
+    "import_processing": "Imports in progress",
+    "export_processing": "Exports in progress",
+    "vip_clients": "VIP clients",
+    "hazmat": "Hazardous materials",
+    "completed_today": "Completed today"
+  },
+  "table": {
+    "folder_number": "Folder #",
+    "client_name": "Client",
+    "status": "Status",
+    "type": "Type",
+    "priority": "Priority",
+    "processing_stage": "Stage",
+    "origin": "Origin",
+    "destination": "Destination",
+    "deadline_date": "Deadline",
+    "created_date": "Created",
+    "completion_percentage": "Progress",
+    "bl_count": "B/L",
+    "alert_count": "Alerts",
+    "estimated_cost": "Est. Cost",
+    "actions": "Actions"
+  },
+  "actions": {
+    "view": "View",
+    "edit": "Edit",
+    "duplicate": "Duplicate",
+    "archive": "Archive",
+    "delete": "Delete",
+    "export": "Export",
+    "create_new": "New folder",
+    "bulk_actions": "Bulk actions",
+    "select_all": "Select all",
+    "selected_count": "{count} selected"
+  },
+  "pagination": {
+    "showing": "Showing {start} to {end} of {total}",
+    "previous": "Previous",
+    "next": "Next",
+    "first": "First",
+    "last": "Last",
+    "page": "Page {page}",
+    "per_page": "per page"
+  },
+  "view_modes": {
+    "cards": "Cards",
+    "list": "List",
+    "table": "Table"
+  },
+  "sort": {
+    "label": "Sort by",
+    "created_at": "Creation date",
+    "folder_number": "Folder number",
+    "deadline_date": "Deadline date",
+    "status": "Status",
+    "priority": "Priority",
+    "client_name": "Client name",
+    "completion_percentage": "Progress",
+    "asc": "Ascending",
+    "desc": "Descending"
+  },
+  "empty_state": {
+    "title": "No folders found",
+    "description": "There are no folders yet or your filters are too restrictive.",
+    "create_first": "Create the first folder",
+    "clear_filters": "Clear filters"
+  },
+  "loading": {
+    "folders": "Loading folders...",
+    "filters": "Applying filters...",
+    "search": "Searching..."
+  },
+  "error": {
+    "load_failed": "Error loading folders",
+    "search_failed": "Search error",
+    "retry": "Retry"
+  }
+}

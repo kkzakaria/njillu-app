@@ -34,6 +34,26 @@ export const routing = defineRouting({
       fr: '/protege',
       en: '/protected', 
       es: '/protegido'
+    },
+    '/folders': {
+      fr: '/dossiers',
+      en: '/folders',
+      es: '/carpetas'
+    },
+    '/folders/new': {
+      fr: '/dossiers/nouveau',
+      en: '/folders/new',
+      es: '/carpetas/nuevo'
+    },
+    '/folders/[id]': {
+      fr: '/dossiers/[id]',
+      en: '/folders/[id]',
+      es: '/carpetas/[id]'
+    },
+    '/folders/[id]/edit': {
+      fr: '/dossiers/[id]/modifier',
+      en: '/folders/[id]/edit',
+      es: '/carpetas/[id]/editar'
     }
   }
 });

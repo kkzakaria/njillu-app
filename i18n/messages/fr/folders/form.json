@@ -1,0 +1,293 @@
+{
+  "create": {
+    "title": "Créer un nouveau dossier",
+    "subtitle": "Saisissez les informations du dossier à créer"
+  },
+  "edit": {
+    "title": "Modifier le dossier",
+    "subtitle": "Modifiez les informations du dossier {folderNumber}"
+  },
+  "sections": {
+    "basic_info": {
+      "title": "Informations de base",
+      "description": "Classification et identification du dossier"
+    },
+    "client_info": {
+      "title": "Informations client",
+      "description": "Détails du client et des parties impliquées"  
+    },
+    "geography": {
+      "title": "Géographie",
+      "description": "Lieux d'origine et de destination"
+    },
+    "services": {
+      "title": "Services",
+      "description": "Type de service et régime douanier"
+    },
+    "timeline": {
+      "title": "Planification",
+      "description": "Dates importantes et échéances"
+    },
+    "financial": {
+      "title": "Informations financières",
+      "description": "Coûts et informations budgétaires"
+    },
+    "cargo": {
+      "title": "Marchandises",
+      "description": "Description et mesures de la cargaison"
+    },
+    "relations": {
+      "title": "Relations",
+      "description": "Dossiers liés et Bills of Lading"
+    }
+  },
+  "fields": {
+    "reference_number": {
+      "label": "Référence client",
+      "placeholder": "REF-2024-001",
+      "description": "Référence fournie par le client"
+    },
+    "internal_reference": {
+      "label": "Référence interne",
+      "placeholder": "INT-2024-001",
+      "description": "Référence interne de l'entreprise"
+    },
+    "type": {
+      "label": "Type de dossier",
+      "placeholder": "Sélectionnez le type",
+      "required": true
+    },
+    "category": {
+      "label": "Catégorie",
+      "placeholder": "Sélectionnez la catégorie",
+      "required": true
+    },
+    "priority": {
+      "label": "Priorité",
+      "placeholder": "Sélectionnez la priorité"
+    },
+    "urgency": {
+      "label": "Urgence",
+      "placeholder": "Sélectionnez l'urgence"
+    },
+    "description": {
+      "label": "Description",
+      "placeholder": "Description générale du dossier...",
+      "description": "Description générale du dossier et de son objectif"
+    },
+    "cargo_description": {
+      "label": "Description de la marchandise",
+      "placeholder": "Description détaillée de la marchandise...",
+      "description": "Description détaillée des biens transportés"
+    },
+    "special_instructions": {
+      "label": "Instructions spéciales",
+      "placeholder": "Instructions particulières...",
+      "description": "Instructions spéciales pour le traitement"
+    },
+    "client_info": {
+      "name": {
+        "label": "Nom du client",
+        "placeholder": "Nom complet du client",
+        "required": true
+      },
+      "company": {
+        "label": "Entreprise",
+        "placeholder": "Nom de l'entreprise"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "contact@client.com"
+      },
+      "phone": {
+        "label": "Téléphone",
+        "placeholder": "+33 1 23 45 67 89"
+      },
+      "address": {
+        "label": "Adresse",
+        "placeholder": "Adresse complète"
+      },
+      "city": {
+        "label": "Ville",
+        "placeholder": "Ville"
+      },
+      "country": {
+        "label": "Pays",
+        "placeholder": "Sélectionnez le pays"
+      },
+      "tax_id": {
+        "label": "N° TVA",
+        "placeholder": "FR12345678901"
+      },
+      "client_code": {
+        "label": "Code client",
+        "placeholder": "CLI-001"
+      }
+    },
+    "consignee_info": {
+      "title": "Destinataire",
+      "description": "Informations du destinataire final"
+    },
+    "notify_party_info": {
+      "title": "Partie à notifier",
+      "description": "Partie à notifier lors de l'arrivée"
+    },
+    "origin": {
+      "title": "Origine",
+      "name": {
+        "label": "Lieu d'origine",
+        "placeholder": "Port/Aéroport de départ",
+        "required": true
+      },
+      "address": {
+        "label": "Adresse",
+        "placeholder": "Adresse complète"
+      },
+      "city": {
+        "label": "Ville",
+        "placeholder": "Ville de départ"
+      },
+      "country": {
+        "label": "Pays",
+        "placeholder": "Pays d'origine",
+        "required": true
+      },
+      "port_code": {
+        "label": "Code port",
+        "placeholder": "FRLEH"
+      },
+      "airport_code": {
+        "label": "Code aéroport",
+        "placeholder": "CDG"
+      }
+    },
+    "destination": {
+      "title": "Destination",
+      "name": {
+        "label": "Lieu de destination",
+        "placeholder": "Port/Aéroport d'arrivée",
+        "required": true
+      },
+      "address": {
+        "label": "Adresse",
+        "placeholder": "Adresse complète"
+      },
+      "city": {
+        "label": "Ville",
+        "placeholder": "Ville d'arrivée"
+      },
+      "country": {
+        "label": "Pays",
+        "placeholder": "Pays de destination",
+        "required": true
+      },
+      "port_code": {
+        "label": "Code port",
+        "placeholder": "USNYC"
+      },
+      "airport_code": {
+        "label": "Code aéroport",
+        "placeholder": "JFK"
+      }
+    },
+    "customs_regime": {
+      "label": "Régime douanier",
+      "placeholder": "Sélectionnez le régime",
+      "required": true
+    },
+    "service_type": {
+      "label": "Type de service",
+      "placeholder": "Sélectionnez le service",
+      "required": true
+    },
+    "operation_type": {
+      "label": "Type d'opération",
+      "placeholder": "Sélectionnez l'opération",
+      "required": true
+    },
+    "expected_start_date": {
+      "label": "Date de début prévue",
+      "placeholder": "Sélectionnez la date"
+    },
+    "expected_completion_date": {
+      "label": "Date de fin prévue",
+      "placeholder": "Sélectionnez la date"
+    },
+    "deadline_date": {
+      "label": "Date limite",
+      "placeholder": "Sélectionnez la date limite"
+    },
+    "financial_info": {
+      "estimated_cost": {
+        "label": "Coût estimé",
+        "placeholder": "0.00"
+      },
+      "currency": {
+        "label": "Devise",
+        "placeholder": "EUR",
+        "required": true
+      }
+    },
+    "cargo": {
+      "total_weight_kg": {
+        "label": "Poids total (kg)",
+        "placeholder": "0.0"
+      },
+      "total_volume_cbm": {
+        "label": "Volume total (m³)",
+        "placeholder": "0.0"
+      },
+      "total_packages": {
+        "label": "Nombre de colis",
+        "placeholder": "0"
+      }
+    },
+    "relations": {
+      "parent_folder_id": {
+        "label": "Dossier parent",
+        "placeholder": "Sélectionnez un dossier parent"
+      },
+      "related_folder_ids": {
+        "label": "Dossiers liés",
+        "placeholder": "Sélectionnez des dossiers liés"
+      },
+      "initial_bl_ids": {
+        "label": "Bills of Lading initiaux",
+        "placeholder": "Sélectionnez des B/L"
+      }
+    }
+  },
+  "validation": {
+    "required": "Ce champ est obligatoire",
+    "invalid_email": "Adresse email invalide",
+    "invalid_phone": "Numéro de téléphone invalide",
+    "invalid_date": "Date invalide",
+    "date_in_past": "La date ne peut pas être dans le passé",
+    "end_before_start": "La date de fin doit être après la date de début",
+    "invalid_number": "Nombre invalide",
+    "negative_number": "Le nombre ne peut pas être négatif",
+    "invalid_weight": "Poids invalide",
+    "invalid_volume": "Volume invalide"
+  },
+  "actions": {
+    "save": "Enregistrer",
+    "save_and_continue": "Enregistrer et continuer",
+    "save_draft": "Enregistrer le brouillon",
+    "cancel": "Annuler",
+    "reset": "Réinitialiser",
+    "preview": "Aperçu"
+  },
+  "messages": {
+    "save_success": "Dossier enregistré avec succès",
+    "save_error": "Erreur lors de l'enregistrement",
+    "validation_error": "Veuillez corriger les erreurs avant de continuer",
+    "unsaved_changes": "Vous avez des modifications non enregistrées",
+    "confirm_cancel": "Êtes-vous sûr de vouloir annuler ? Les modifications seront perdues.",
+    "confirm_reset": "Êtes-vous sûr de vouloir réinitialiser le formulaire ?"
+  },
+  "tips": {
+    "autosave": "Le formulaire est automatiquement sauvegardé",
+    "required_fields": "Les champs marqués d'un * sont obligatoires",
+    "folder_number": "Le numéro de dossier sera généré automatiquement"
+  }
+}

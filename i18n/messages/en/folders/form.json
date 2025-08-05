@@ -1,0 +1,64 @@
+{
+  "create": {
+    "title": "Create new folder",
+    "subtitle": "Enter the folder information to create"
+  },
+  "edit": {
+    "title": "Edit folder",
+    "subtitle": "Edit folder {folderNumber} information"
+  },
+  "sections": {
+    "basic_info": {
+      "title": "Basic information",
+      "description": "Folder classification and identification"
+    },
+    "client_info": {
+      "title": "Client information",
+      "description": "Client and involved parties details"
+    },
+    "geography": {
+      "title": "Geography",
+      "description": "Origin and destination locations"
+    },
+    "services": {
+      "title": "Services",
+      "description": "Service type and customs regime"
+    },
+    "timeline": {
+      "title": "Timeline",
+      "description": "Important dates and deadlines"
+    },
+    "financial": {
+      "title": "Financial information",
+      "description": "Costs and budget information"
+    },
+    "cargo": {
+      "title": "Cargo",
+      "description": "Cargo description and measurements"
+    },
+    "relations": {
+      "title": "Relations",
+      "description": "Related folders and Bills of Lading"
+    }
+  },
+  "actions": {
+    "save": "Save",
+    "save_and_continue": "Save and continue",
+    "save_draft": "Save draft",
+    "cancel": "Cancel",
+    "reset": "Reset",
+    "preview": "Preview"
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalid_email": "Invalid email address",
+    "invalid_phone": "Invalid phone number",
+    "invalid_date": "Invalid date",
+    "date_in_past": "Date cannot be in the past",
+    "end_before_start": "End date must be after start date",
+    "invalid_number": "Invalid number",
+    "negative_number": "Number cannot be negative",
+    "invalid_weight": "Invalid weight",
+    "invalid_volume": "Invalid volume"
+  }
+}

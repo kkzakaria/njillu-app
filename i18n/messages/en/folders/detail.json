@@ -1,0 +1,47 @@
+{
+  "title": "Folder Details",
+  "back_to_list": "Back to list",
+  "folder_number": "Folder #",
+  "tabs": {
+    "overview": "Overview",
+    "documents": "Documents",
+    "bills_of_lading": "Bills of Lading",
+    "activities": "Activities",
+    "alerts": "Alerts",
+    "statistics": "Statistics",
+    "configuration": "Configuration"
+  },
+  "overview": {
+    "basic_info": {
+      "title": "Basic information",
+      "folder_number": "Folder #",
+      "reference_number": "Client reference",
+      "internal_reference": "Internal reference",
+      "status": "Status",
+      "type": "Type",
+      "category": "Category",
+      "priority": "Priority",
+      "urgency": "Urgency",
+      "processing_stage": "Processing stage",
+      "health_status": "Health status",
+      "performance_rating": "Performance rating",
+      "created_date": "Created date",
+      "description": "Description"
+    }
+  },
+  "actions": {
+    "edit": "Edit",
+    "duplicate": "Duplicate",
+    "archive": "Archive",
+    "delete": "Delete",
+    "export": "Export",
+    "print": "Print",
+    "share": "Share"
+  },
+  "messages": {
+    "loading": "Loading details...",
+    "error": "Error loading",
+    "not_found": "Folder not found",
+    "access_denied": "Access denied"
+  }
+}

@@ -1,0 +1,197 @@
+{
+  "title": "Gestion des dossiers",
+  "subtitle": "Suivez et gérez tous vos dossiers d'importation et d'exportation",
+  "search": {
+    "placeholder": "Rechercher par numéro, référence ou client...",
+    "clear": "Effacer la recherche",
+    "no_results": "Aucun résultat trouvé",
+    "results_count": "{count} dossier(s) trouvé(s)"
+  },
+  "filters": {
+    "title": "Filtres",
+    "clear_all": "Effacer tous les filtres",
+    "apply": "Appliquer",
+    "active_count": "{count} filtre(s) actif(s)",
+    "status": {
+      "label": "Statut",
+      "all": "Tous les statuts",
+      "open": "Ouvert",
+      "processing": "En cours",
+      "completed": "Terminé",
+      "closed": "Fermé",
+      "on_hold": "En attente",
+      "cancelled": "Annulé"
+    },
+    "type": {
+      "label": "Type",
+      "all": "Tous les types",
+      "import": "Import",
+      "export": "Export",
+      "transit": "Transit",
+      "transhipment": "Transbordement",
+      "storage": "Stockage",
+      "consolidation": "Groupage",
+      "distribution": "Distribution"
+    },
+    "category": {
+      "label": "Catégorie",
+      "all": "Toutes les catégories",
+      "commercial": "Commercial",
+      "urgent": "Urgent",
+      "vip": "VIP",
+      "hazmat": "Matières dangereuses",
+      "perishable": "Périssable",
+      "oversized": "Hors dimensions",
+      "fragile": "Fragile",
+      "high_value": "Forte valeur"
+    },
+    "priority": {
+      "label": "Priorité",
+      "all": "Toutes les priorités",
+      "low": "Faible",
+      "normal": "Normale",
+      "high": "Élevée",
+      "urgent": "Urgente",
+      "critical": "Critique"
+    },
+    "urgency": {
+      "label": "Urgence",
+      "all": "Toutes les urgences",
+      "standard": "Standard",
+      "expedited": "Accéléré",
+      "rush": "Urgent",
+      "emergency": "Urgence absolue"
+    },
+    "processing_stage": {
+      "label": "Étape",
+      "all": "Toutes les étapes",
+      "intake": "Prise en charge",
+      "documentation": "Documentation",
+      "customs_clearance": "Dédouanement",
+      "inspection": "Inspection",
+      "storage": "Stockage",
+      "preparation": "Préparation",
+      "delivery": "Livraison",
+      "invoicing": "Facturation",
+      "closure": "Clôture"
+    },
+    "health_status": {
+      "label": "État de santé",
+      "all": "Tous les états",
+      "healthy": "Sain",
+      "warning": "Attention",
+      "critical": "Critique",
+      "failed": "Échec"
+    },
+    "client": {
+      "label": "Client",
+      "placeholder": "Nom du client..."
+    },
+    "geography": {
+      "origin_country": "Pays d'origine",
+      "destination_country": "Pays de destination"
+    },
+    "dates": {
+      "created_from": "Créé depuis",
+      "created_to": "Créé jusqu'au",
+      "deadline_from": "Échéance depuis",
+      "deadline_to": "Échéance jusqu'au"
+    },
+    "financial": {
+      "cost_min": "Coût minimum",
+      "cost_max": "Coût maximum",
+      "currency": "Devise"
+    },
+    "relations": {
+      "has_alerts": "Avec alertes",
+      "is_overdue": "En retard",
+      "has_bls": "Avec B/L",
+      "bl_count_min": "Min. B/L",
+      "bl_count_max": "Max. B/L"
+    }
+  },
+  "presets": {
+    "title": "Vues rapides",
+    "all": "Tous les dossiers",
+    "active": "Dossiers actifs",
+    "urgent": "Urgents",
+    "overdue": "En retard",
+    "with_alerts": "Avec alertes",
+    "import_processing": "Imports en cours",
+    "export_processing": "Exports en cours",
+    "vip_clients": "Clients VIP",
+    "hazmat": "Matières dangereuses",
+    "completed_today": "Terminés aujourd'hui"
+  },
+  "table": {
+    "folder_number": "N° Dossier",
+    "client_name": "Client",
+    "status": "Statut",
+    "type": "Type",
+    "priority": "Priorité",
+    "processing_stage": "Étape",
+    "origin": "Origine",
+    "destination": "Destination",
+    "deadline_date": "Échéance",
+    "created_date": "Créé le",
+    "completion_percentage": "Progression",
+    "bl_count": "B/L",
+    "alert_count": "Alertes",
+    "estimated_cost": "Coût estimé",
+    "actions": "Actions"
+  },
+  "actions": {
+    "view": "Voir",
+    "edit": "Modifier",
+    "duplicate": "Dupliquer",
+    "archive": "Archiver",
+    "delete": "Supprimer",
+    "export": "Exporter",
+    "create_new": "Nouveau dossier",
+    "bulk_actions": "Actions groupées",
+    "select_all": "Tout sélectionner",
+    "selected_count": "{count} sélectionné(s)"
+  },
+  "pagination": {
+    "showing": "Affichage de {start} à {end} sur {total}",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "first": "Premier",
+    "last": "Dernier",
+    "page": "Page {page}",
+    "per_page": "par page"
+  },
+  "view_modes": {
+    "cards": "Cartes",
+    "list": "Liste",
+    "table": "Tableau"
+  },
+  "sort": {
+    "label": "Trier par",
+    "created_at": "Date de création",
+    "folder_number": "Numéro de dossier",
+    "deadline_date": "Date d'échéance",
+    "status": "Statut",
+    "priority": "Priorité",
+    "client_name": "Nom du client",
+    "completion_percentage": "Progression",
+    "asc": "Croissant",
+    "desc": "Décroissant"
+  },
+  "empty_state": {
+    "title": "Aucun dossier trouvé",
+    "description": "Il n'y a pas encore de dossiers ou vos filtres sont trop restrictifs.",
+    "create_first": "Créer le premier dossier",
+    "clear_filters": "Effacer les filtres"
+  },
+  "loading": {
+    "folders": "Chargement des dossiers...",
+    "filters": "Application des filtres...",
+    "search": "Recherche en cours..."
+  },
+  "error": {
+    "load_failed": "Erreur lors du chargement des dossiers",
+    "search_failed": "Erreur lors de la recherche",
+    "retry": "Réessayer"
+  }
+}
