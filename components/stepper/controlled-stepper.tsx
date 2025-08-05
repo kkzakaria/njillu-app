@@ -112,7 +112,6 @@ export const ControlledStepper = React.forwardRef<
       {showControls && (controlsPosition === "top" || controlsPosition === "both") && Controls}
       
       <Stepper
-        ref={ref}
         className={stepperVariants({ orientation })}
         value={actualCurrentStep}
         onValueChange={handleStepChange}

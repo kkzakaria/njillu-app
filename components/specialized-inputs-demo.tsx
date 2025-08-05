@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { CreditCardIcon, PhoneIcon, CalendarIcon, BuildingIcon, MapPinIcon, HashIcon } from "lucide-react"
+import { CreditCardIcon } from "lucide-react"
 import { NumberInput, CurrencyInput, PercentageInput } from "@/components/number-input"
 import { PhoneInput } from "@/components/phone-input"
 import { 

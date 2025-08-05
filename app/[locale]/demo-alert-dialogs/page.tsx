@@ -1,8 +1,6 @@
-import { getTranslations } from 'next-intl/server'
 import { AlertDialogsDemo } from "@/components/alert-dialogs-demo"
 
 export default async function DemoAlertDialogsPage() {
-  const t = await getTranslations('common')
 
   return (
     <div className="container mx-auto py-8">

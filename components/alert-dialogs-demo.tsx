@@ -9,7 +9,6 @@ import {
   CheckCircleIcon, 
   AlertTriangleIcon,
   XCircleIcon,
-  FileTextIcon,
   SettingsIcon,
   UserIcon,
   MessageSquareIcon
@@ -50,7 +49,7 @@ export function AlertDialogsDemo() {
       <div className="space-y-1">
         <p><strong>Gestion de compte</strong></p>
         <p>
-          Naviguez vers la page d'inscription, fournissez les informations requises 
+          Naviguez vers la page d&apos;inscription, fournissez les informations requises 
           et vérifiez votre adresse e-mail. Vous pouvez vous inscrire en utilisant 
           votre e-mail ou via les plateformes de médias sociaux.
         </p>
@@ -59,16 +58,16 @@ export function AlertDialogsDemo() {
         <p><strong>Processus de réinitialisation du mot de passe</strong></p>
         <p>
           Les utilisateurs peuvent réinitialiser leur mot de passe via la page 
-          des paramètres du compte. Cliquez sur "Mot de passe oublié" et suivez 
-          les étapes de vérification par e-mail pour récupérer l'accès au compte 
+          des paramètres du compte. Cliquez sur &quot;Mot de passe oublié&quot; et suivez 
+          les étapes de vérification par e-mail pour récupérer l&apos;accès au compte 
           rapidement et en toute sécurité.
         </p>
       </div>
       <div className="space-y-1">
         <p><strong>Niveaux de tarification des services</strong></p>
         <p>
-          Nous proposons trois niveaux d'abonnement principaux conçus pour répondre 
-          aux besoins d'utilisateurs divers : Basique (gratuit avec fonctionnalités 
+          Nous proposons trois niveaux d&apos;abonnement principaux conçus pour répondre 
+          aux besoins d&apos;utilisateurs divers : Basique (gratuit avec fonctionnalités 
           limitées), Professionnel (frais mensuels avec accès complet), et Entreprise 
           (tarification personnalisée avec toutes les capacités de la plateforme).
         </p>
@@ -87,7 +86,7 @@ export function AlertDialogsDemo() {
         <p>
           Notre plateforme implémente des mesures de sécurité rigoureuses incluant 
           le chiffrement SSL 256 bits, des audits de sécurité complets réguliers, 
-          des contrôles d'accès aux données stricts, et la conformité aux normes 
+          des contrôles d&apos;accès aux données stricts, et la conformité aux normes 
           internationales de protection de la vie privée.
         </p>
       </div>
@@ -118,7 +117,7 @@ export function AlertDialogsDemo() {
           <div className="space-y-3 p-4 border rounded-lg">
             <h4 className="font-medium">Alert Dialog simple</h4>
             <EnhancedAlertDialog
-              title="Confirmer l'action"
+              title="Confirmer l&apos;action"
               description="Êtes-vous sûr de vouloir effectuer cette action ?"
               trigger={<Button variant="outline">Alert simple</Button>}
               onAction={() => handleAction("Alert simple")}
@@ -177,7 +176,7 @@ export function AlertDialogsDemo() {
             </h4>
             <SuccessDialog
               title="Opération réussie"
-              description="L'action a été effectuée avec succès !"
+              description="L&apos;action a été effectuée avec succès !"
               trigger={<Button variant="outline" size="sm">Success Dialog</Button>}
               onAction={() => handleAction("Succès")}
             />
@@ -203,7 +202,7 @@ export function AlertDialogsDemo() {
             </h4>
             <ErrorDialog
               title="Erreur détectée"
-              description="Une erreur s'est produite lors du traitement de votre demande."
+              description="Une erreur s&apos;est produite lors du traitement de votre demande."
               trigger={<Button variant="outline" size="sm">Error Dialog</Button>}
               onAction={() => handleAction("Erreur")}
             />
@@ -227,7 +226,7 @@ export function AlertDialogsDemo() {
               onAction={() => handleAction("Suppression")}
             />
             <DeleteDialog
-              title="Supprimer l'utilisateur"
+              title="Supprimer l&apos;utilisateur"
               description="Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action supprimera définitivement son compte et toutes ses données associées."
               trigger={<Button variant="outline" size="sm">Supprimer utilisateur</Button>}
               onAction={() => simulateAsyncAction("Suppression utilisateur")}
@@ -262,7 +261,7 @@ export function AlertDialogsDemo() {
               Confirmation
             </h4>
             <ConfirmDialog
-              title="Confirmer l'opération"
+              title="Confirmer l&apos;opération"
               description="Cette action modifiera les données existantes. Voulez-vous continuer ?"
               trigger={<Button variant="outline" size="sm">Confirmer</Button>}
               onAction={() => handleAction("Confirmation")}
@@ -293,7 +292,7 @@ export function AlertDialogsDemo() {
             <h4 className="font-medium">Moyenne (md)</h4>
             <EnhancedAlertDialog
               title="Dialog moyenne"
-              description="Taille standard pour la plupart des cas d'usage avec un contenu équilibré."
+              description="Taille standard pour la plupart des cas d&apos;usage avec un contenu équilibré."
               size="md"
               type="success"
               showIcon
@@ -306,7 +305,7 @@ export function AlertDialogsDemo() {
             <h4 className="font-medium">Grande (lg)</h4>
             <EnhancedAlertDialog
               title="Dialog grande"
-              description="Plus d'espace pour du contenu détaillé, des formulaires ou des informations complexes qui nécessitent plus de place pour être présentées clairement."
+              description="Plus d&apos;espace pour du contenu détaillé, des formulaires ou des informations complexes qui nécessitent plus de place pour être présentées clairement."
               size="lg"
               type="warning"
               showIcon
@@ -319,7 +318,7 @@ export function AlertDialogsDemo() {
             <h4 className="font-medium">Extra-large (xl)</h4>
             <EnhancedAlertDialog
               title="Dialog extra-large"
-              description="Espace maximum pour des contenus très détaillés, des présentations complètes ou des interfaces complexes qui demandent beaucoup d'espace d'affichage pour une expérience utilisateur optimale."
+              description="Espace maximum pour des contenus très détaillés, des présentations complètes ou des interfaces complexes qui demandent beaucoup d&apos;espace d&apos;affichage pour une expérience utilisateur optimale."
               size="xl"
               type="error"
               showIcon
@@ -444,9 +443,9 @@ export function AlertDialogsDemo() {
               Confirmation avec nom d&apos;utilisateur
             </p>
             <CriticalDeleteDialog
-              title="Supprimer l'utilisateur"
+              title="Supprimer l&apos;utilisateur"
               confirmationText="john.doe@example.com"
-              confirmationLabel="Email de l'utilisateur"
+              confirmationLabel="Email de l&apos;utilisateur"
               description={
                 <>
                   Cette action supprimera définitivement le compte utilisateur{" "}
@@ -465,7 +464,7 @@ export function AlertDialogsDemo() {
               Confirmation avec nom d&apos;organisation sensible à la casse
             </p>
             <ConfirmationDeleteDialog
-              title="Supprimer l'organisation"
+              title="Supprimer l&apos;organisation"
               description={
                 <>
                   Cette action supprimera définitivement l&apos;organisation{" "}
@@ -474,8 +473,8 @@ export function AlertDialogsDemo() {
                 </>
               }
               confirmationText="MonEntreprise Corp"
-              confirmationLabel="Nom de l'organisation (sensible à la casse)"
-              actionText="Supprimer l'organisation"
+              confirmationLabel="Nom de l&apos;organisation (sensible à la casse)"
+              actionText="Supprimer l&apos;organisation"
               trigger={<Button variant="destructive" size="sm">Supprimer organisation</Button>}
               onAction={() => simulateAsyncAction("Suppression organisation MonEntreprise Corp")}
             />
@@ -483,7 +482,7 @@ export function AlertDialogsDemo() {
         </div>
       </div>
 
-      {/* Dialogs d'onboarding */}
+      {/* Dialogs d&apos;onboarding */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">🚀 Dialogs d&apos;Onboarding</h3>
         <p className="text-muted-foreground">
@@ -516,7 +515,7 @@ export function AlertDialogsDemo() {
                 },
                 {
                   title: "Terminé !",
-                  description: "Vous êtes maintenant prêt à utiliser l'application.",
+                  description: "Vous êtes maintenant prêt à utiliser l&apos;application.",
                 }
               ]}
               trigger={<Button variant="outline" size="sm">Onboarding Custom</Button>}
@@ -574,7 +573,7 @@ export function AlertDialogsDemo() {
             <h4 className="font-medium">Sans bouton Annuler</h4>
             <InfoDialog
               title="Information simple"
-              description="Message informatif sans possibilité d'annulation."
+              description="Message informatif sans possibilité d&apos;annulation."
               hideCancel
               trigger={<Button variant="outline" size="sm">Sans annuler</Button>}
               onAction={() => handleAction("Sans annuler")}
@@ -622,7 +621,7 @@ export function AlertDialogsDemo() {
         </div>
       </div>
 
-      {/* Exemples d'usage */}
+      {/* Exemples d&apos;usage */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">💼 Exemples d&apos;usage</h3>
         
@@ -679,7 +678,7 @@ export function AlertDialogsDemo() {
               />
               <InfoDialog
                 title="Informations système"
-                description="Version de l'application : 2.1.0. Dernière mise à jour : Août 2025. Tous les systèmes fonctionnent normalement."
+                description="Version de l&apos;application : 2.1.0. Dernière mise à jour : Août 2025. Tous les systèmes fonctionnent normalement."
                 trigger={
                   <Button variant="ghost" size="sm" className="w-full">
                     <InfoIcon size={14} className="mr-2" />

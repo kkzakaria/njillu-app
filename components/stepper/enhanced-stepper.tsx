@@ -56,7 +56,6 @@ export const EnhancedStepper = React.forwardRef<
   return (
     <div className={cn("space-y-6", className)}>
       <Stepper
-        ref={ref}
         className={stepperVariants({ 
           orientation, 
           size, 

@@ -105,7 +105,6 @@ export const WizardStepper = React.forwardRef<
       )}>
         <div className={contentPosition === "side" ? "flex-shrink-0" : ""}>
           <Stepper
-            ref={ref}
             className={stepperVariants({ orientation })}
             value={actualCurrentStep}
             onValueChange={handleStepChange}
