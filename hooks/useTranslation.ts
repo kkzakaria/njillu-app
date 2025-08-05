@@ -21,5 +21,17 @@ export function useLanguage() {
 }
 
 export function useFolders() {
-  return useTranslations('folders');
+  return useTranslations('folders.list');
+}
+
+export function useFoldersDetail() {
+  return useTranslations('folders.detail');
+}
+
+export function useFoldersForm() {
+  return useTranslations('folders.form');
+}
+
+export function useFoldersStatus() {
+  return useTranslations('folders.status');
 }

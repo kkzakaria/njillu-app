@@ -6,9 +6,9 @@ import { FolderForm } from '@/components/folders/folder-form'
 import { Link } from '@/i18n/navigation'
 
 export default async function NewFolderPage() {
-  const t = await getTranslations('folders')
+  const t = await getTranslations('folders.form')
 
-  const handleSave = async (data: any) => {
+  const handleSave = async (data: unknown) => {
     'use server'
     // Ici vous implémenteriez la logique de sauvegarde
     console.log('Creating folder:', data)
@@ -22,7 +22,7 @@ export default async function NewFolderPage() {
         <Link href="/folders">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            {t('detail.back_to_list')}
+            {t('actions.back_to_list')}
           </Button>
         </Link>
       </div>
@@ -40,10 +40,10 @@ export async function generateMetadata({
   params: Promise<{ locale: string }> 
 }) {
   const { locale } = await params
-  const t = await getTranslations({ locale, namespace: 'folders' })
+  const t = await getTranslations({ locale, namespace: 'folders.form' })
 
   return {
-    title: t('form.create.title'),
-    description: t('form.create.subtitle'),
+    title: t('create.title'),
+    description: t('create.subtitle'),
   }
 }

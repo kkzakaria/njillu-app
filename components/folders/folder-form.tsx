@@ -15,7 +15,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 
-import { useFolders } from '@/hooks/useTranslation'
+import { useFoldersForm } from '@/hooks/useTranslation'
 import type { 
   CreateFolderData, 
   UpdateFolderData, 
@@ -37,7 +37,7 @@ interface FolderFormProps {
 }
 
 export function FolderForm({ folder, onSave, onCancel, className }: FolderFormProps) {
-  const t = useFolders()
+  const t = useFoldersForm()
   const router = useRouter()
   const isEditing = Boolean(folder)
   

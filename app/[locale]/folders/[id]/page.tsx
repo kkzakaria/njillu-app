@@ -75,8 +75,8 @@ interface FolderDetailPageProps {
 }
 
 export default async function FolderDetailPage({ params }: FolderDetailPageProps) {
-  const { id, locale } = await params
-  const t = await getTranslations('folders')
+  const { id: _, locale: __ } = await params
+  const t = await getTranslations('folders.detail')
 
   // Dans un vrai projet, vous feriez un appel API ici
   const folder = MOCK_FOLDER
@@ -92,7 +92,7 @@ export default async function FolderDetailPage({ params }: FolderDetailPageProps
         <Link href="/folders">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            {t('detail.back_to_list')}
+            {t('back_to_list')}
           </Button>
         </Link>
       </div>
@@ -109,14 +109,14 @@ export async function generateMetadata({
 }: { 
   params: Promise<{ id: string; locale: string }> 
 }) {
-  const { id, locale } = await params
-  const t = await getTranslations({ locale, namespace: 'folders' })
+  const { id: _, locale } = await params
+  const t = await getTranslations({ locale, namespace: 'folders.detail' })
 
   // Dans un vrai projet, vous récupéreriez les infos du dossier
   const folderNumber = MOCK_FOLDER.folder_number
 
   return {
-    title: `${t('detail.title')} - ${folderNumber}`,
+    title: `${t('title')} - ${folderNumber}`,
     description: `Détails du dossier ${folderNumber}`,
   }
 }

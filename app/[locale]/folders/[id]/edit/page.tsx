@@ -71,8 +71,8 @@ interface EditFolderPageProps {
 }
 
 export default async function EditFolderPage({ params }: EditFolderPageProps) {
-  const { id, locale } = await params
-  const t = await getTranslations('folders')
+  const { id: _, locale: __ } = await params
+  const t = await getTranslations('folders.form')
 
   // Dans un vrai projet, vous feriez un appel API ici
   const folder = MOCK_FOLDER
@@ -81,10 +81,10 @@ export default async function EditFolderPage({ params }: EditFolderPageProps) {
     notFound()
   }
 
-  const handleSave = async (data: any) => {
+  const handleSave = async (data: unknown) => {
     'use server'
     // Ici vous implémenteriez la logique de mise à jour
-    console.log('Updating folder:', id, data)
+    console.log('Updating folder:', _, data)
     // Redirection après mise à jour
   }
 
@@ -92,10 +92,10 @@ export default async function EditFolderPage({ params }: EditFolderPageProps) {
     <div className="container mx-auto py-6 space-y-6">
       {/* Navigation */}
       <div className="flex items-center space-x-4">
-        <Link href={`/folders/${id}`}>
+        <Link href={`/folders/${_}`}>
           <Button variant="ghost" size="sm">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Retour au dossier
+            {t('actions.back_to_folder')}
           </Button>
         </Link>
       </div>
@@ -115,14 +115,14 @@ export async function generateMetadata({
 }: { 
   params: Promise<{ id: string; locale: string }> 
 }) {
-  const { id, locale } = await params
-  const t = await getTranslations({ locale, namespace: 'folders' })
+  const { id: _, locale } = await params
+  const t = await getTranslations({ locale, namespace: 'folders.form' })
 
   // Dans un vrai projet, vous récupéreriez les infos du dossier
   const folderNumber = MOCK_FOLDER.folder_number
 
   return {
-    title: `${t('form.edit.title')} - ${folderNumber}`,
+    title: `${t('edit.title')} - ${folderNumber}`,
     description: `Modifier le dossier ${folderNumber}`,
   }
 }

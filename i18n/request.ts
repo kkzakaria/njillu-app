@@ -19,7 +19,11 @@ async function loadMessages(locale: string) {
       navigationMenu,
       customsFdi,
       customsRfcv,
-      languageSwitcher
+      languageSwitcher,
+      foldersList,
+      foldersDetail,
+      foldersForm,
+      foldersStatus
     ] = await Promise.all([
       import(`./messages/${locale}/metadata/app.json`),
       import(`./messages/${locale}/home/page.json`),
@@ -34,7 +38,11 @@ async function loadMessages(locale: string) {
       import(`./messages/${locale}/navigation/menu.json`),
       import(`./messages/${locale}/customs/fdi.json`),
       import(`./messages/${locale}/customs/rfcv.json`),
-      import(`./messages/${locale}/language/switcher.json`)
+      import(`./messages/${locale}/language/switcher.json`),
+      import(`./messages/${locale}/folders/list.json`),
+      import(`./messages/${locale}/folders/detail.json`),
+      import(`./messages/${locale}/folders/form.json`),
+      import(`./messages/${locale}/folders/status.json`)
     ]);
 
     // Combine all modules into the expected namespace structure
@@ -56,7 +64,13 @@ async function loadMessages(locale: string) {
         fdi: customsFdi.default,
         rfcv: customsRfcv.default
       },
-      language: languageSwitcher.default
+      language: languageSwitcher.default,
+      folders: {
+        list: foldersList.default,
+        detail: foldersDetail.default,
+        form: foldersForm.default,
+        status: foldersStatus.default
+      }
     };
   } catch (error) {
     console.error(`Failed to load messages for locale ${locale}:`, error);

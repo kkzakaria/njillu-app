@@ -1,0 +1,8 @@
+{
+  "open": "Abierto",
+  "processing": "En proceso",
+  "completed": "Completado",
+  "closed": "Cerrado",
+  "on_hold": "En espera",
+  "cancelled": "Cancelado"
+}

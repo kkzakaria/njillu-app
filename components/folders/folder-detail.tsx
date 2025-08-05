@@ -27,7 +27,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Separator } from '@/components/ui/separator'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
-import { useFolders } from '@/hooks/useTranslation'
+import { useFoldersDetail } from '@/hooks/useTranslation'
 import type { Folder } from '@/types/folders'
 
 interface FolderDetailProps {
@@ -41,7 +41,7 @@ interface FolderDetailProps {
 }
 
 export function FolderDetail({ folder, className }: FolderDetailProps) {
-  const t = useFolders()
+  const t = useFoldersDetail()
   const locale = useLocale()
   const [activeTab, setActiveTab] = useState('overview')
   
@@ -103,7 +103,7 @@ export function FolderDetail({ folder, className }: FolderDetailProps) {
                 </span>
                 <span className="flex items-center">
                   <Package className="h-4 w-4 mr-1" />
-                  {t(`list.filters.type.${folder.type}`)}
+                  {t(`filters.type.${folder.type}`)}
                 </span>
                 {folder.deadline_date && (
                   <span className="flex items-center">
@@ -240,19 +240,19 @@ export function FolderDetail({ folder, className }: FolderDetailProps) {
                     <span className="text-muted-foreground">
                       {t('detail.overview.basic_info.priority')}:
                     </span>
-                    <div className="font-medium">{t(`list.filters.priority.${folder.priority}`)}</div>
+                    <div className="font-medium">{t(`filters.priority.${folder.priority}`)}</div>
                   </div>
                   <div>
                     <span className="text-muted-foreground">
                       {t('detail.overview.basic_info.urgency')}:
                     </span>
-                    <div className="font-medium">{t(`list.filters.urgency.${folder.urgency}`)}</div>
+                    <div className="font-medium">{t(`filters.urgency.${folder.urgency}`)}</div>
                   </div>
                   <div>
                     <span className="text-muted-foreground">
                       {t('detail.overview.basic_info.processing_stage')}:
                     </span>
-                    <div className="font-medium">{t(`list.filters.processing_stage.${folder.processing_stage}`)}</div>
+                    <div className="font-medium">{t(`filters.processing_stage.${folder.processing_stage}`)}</div>
                   </div>
                   <div>
                     <span className="text-muted-foreground">

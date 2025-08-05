@@ -1,0 +1,21 @@
+{
+  "create": {
+    "title": "Crear nueva carpeta",
+    "subtitle": "Complete la información para crear una nueva carpeta"
+  },
+  "edit": {
+    "title": "Editar carpeta",
+    "subtitle": "Modifique la información de la carpeta"
+  },
+  "fields": {
+    "folder_number": "Número de carpeta",
+    "reference": "Referencia",
+    "client": "Cliente",
+    "description": "Descripción"
+  },
+  "buttons": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "create": "Crear"
+  }
+}

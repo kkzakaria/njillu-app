@@ -10,18 +10,15 @@ import { Separator } from '@/components/ui/separator'
 import { FolderFilters } from '@/components/folders/folder-filters'
 import { FolderSearch } from '@/components/folders/folder-search'
 import { FolderList } from '@/components/folders/folder-list'
-import { folderSearchParamsCache } from '@/lib/search-params/folder-params'
+// import { parseServerSearchParams } from '@/lib/search-params/folder-params'
 import { Link } from '@/i18n/navigation'
 
 interface FoldersPageProps {
   searchParams: Promise<Record<string, string | string[]>>
 }
 
-export default async function FoldersPage({ searchParams }: FoldersPageProps) {
-  const t = await getTranslations('folders')
-  
-  // Parser les paramètres de recherche pour SSR
-  const parsedParams = folderSearchParamsCache.parse(await searchParams)
+export default async function FoldersPage({ searchParams: _ }: FoldersPageProps) {
+  const t = await getTranslations('folders.list')
   
   return (
     <div className="container mx-auto py-6 space-y-6">
@@ -29,17 +26,17 @@ export default async function FoldersPage({ searchParams }: FoldersPageProps) {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            {t('list.title')}
+            {t('title')}
           </h1>
           <p className="text-muted-foreground">
-            {t('list.subtitle')}
+            {t('subtitle')}
           </p>
         </div>
         
         <Link href="/folders/new">
           <Button>
             <Plus className="h-4 w-4 mr-2" />
-            {t('list.actions.create_new')}
+            {t('actions.create_new')}
           </Button>
         </Link>
       </div>
@@ -124,10 +121,10 @@ export async function generateMetadata({
   params: Promise<{ locale: string }> 
 }) {
   const { locale } = await params
-  const t = await getTranslations({ locale, namespace: 'folders' })
+  const t = await getTranslations({ locale, namespace: 'folders.list' })
 
   return {
-    title: t('list.title'),
-    description: t('list.subtitle'),
+    title: t('title'),
+    description: t('subtitle'),
   }
 }

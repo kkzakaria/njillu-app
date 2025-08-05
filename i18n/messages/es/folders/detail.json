@@ -1,0 +1,10 @@
+{
+  "title": "Detalles de la carpeta",
+  "back_to_list": "Volver a la lista",
+  "tabs": {
+    "overview": "Resumen",
+    "documents": "Documentos",
+    "timeline": "Cronología",
+    "financial": "Financiero"
+  }
+}

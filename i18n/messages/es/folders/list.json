@@ -1,0 +1,63 @@
+{
+  "title": "Gestión de carpetas",
+  "subtitle": "Seguimiento y gestión de todas sus carpetas de importación y exportación",
+  "search": {
+    "placeholder": "Buscar por número, referencia o cliente...",
+    "clear": "Limpiar búsqueda",
+    "no_results": "No se encontraron resultados",
+    "results_count": "{count} carpeta(s) encontrada(s)"
+  },
+  "filters": {
+    "title": "Filtros",
+    "clear_all": "Limpiar todos los filtros",
+    "apply": "Aplicar",
+    "active_count": "{count} filtro(s) activo(s)",
+    "status": {
+      "label": "Estado",
+      "all": "Todos los estados",
+      "open": "Abierto",
+      "processing": "En proceso",
+      "completed": "Completado",
+      "closed": "Cerrado",
+      "on_hold": "En espera",
+      "cancelled": "Cancelado"
+    },
+    "type": {
+      "label": "Tipo",
+      "all": "Todos los tipos",
+      "import": "Importación",
+      "export": "Exportación",
+      "transit": "Tránsito",
+      "transhipment": "Transbordo",
+      "storage": "Almacenaje",
+      "consolidation": "Consolidación",
+      "distribution": "Distribución"
+    },
+    "category": {
+      "label": "Categoría",
+      "all": "Todas las categorías",
+      "commercial": "Comercial",
+      "urgent": "Urgente",
+      "vip": "VIP",
+      "hazmat": "Materiales peligrosos",
+      "perishable": "Perecedero",
+      "oversized": "Sobredimensionado",
+      "fragile": "Frágil",
+      "high_value": "Alto valor"
+    },
+    "priority": {
+      "label": "Prioridad",
+      "all": "Todas las prioridades",
+      "low": "Baja",
+      "normal": "Normal",
+      "high": "Alta",
+      "urgent": "Urgente",
+      "critical": "Crítica"
+    }
+  },
+  "actions": {
+    "view": "Ver",
+    "edit": "Editar",
+    "create_new": "Nueva carpeta"
+  }
+}
