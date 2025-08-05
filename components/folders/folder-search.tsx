@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 
-import { folderSearchParams } from '@/lib/search-params/folder-params'
+import { folderSearchParsers } from '@/lib/search-params/folder-params'
 import { useFolders } from '@/hooks/useTranslation'
 
 interface FolderSearchProps {
@@ -29,14 +29,14 @@ export function FolderSearch({
   // État URL pour la recherche
   const [searchQuery, setSearchQuery] = useQueryState(
     'search',
-    folderSearchParams.search.withOptions({
+    folderSearchParsers.search.withOptions({
       shallow: false,
       clearOnDefault: true
     })
   )
 
-  // État local pour l'input (pour le debounce)
-  const [localSearch, setLocalSearch] = useState(searchQuery)
+  // État local pour l'input (pour le debounce) avec vérification null
+  const [localSearch, setLocalSearch] = useState(searchQuery || '')
   const [isSearching, setIsSearching] = useState(false)
 
   // Debounce de la recherche
@@ -57,7 +57,7 @@ export function FolderSearch({
 
   // Synchroniser l'état local avec l'URL quand l'URL change
   useEffect(() => {
-    setLocalSearch(searchQuery)
+    setLocalSearch(searchQuery || '')
   }, [searchQuery])
 
   // Déclencher le debounce quand l'input change
@@ -89,8 +89,8 @@ export function FolderSearch({
         {/* Input de recherche */}
         <Input
           type="text"
-          placeholder={placeholder || t('list.search.placeholder')}
-          value={localSearch}
+          placeholder={placeholder || t('search.placeholder')}
+          value={localSearch || ''}
           onChange={handleInputChange}
           className="pl-9 pr-20"
         />
@@ -109,7 +109,7 @@ export function FolderSearch({
               size="sm"
               onClick={handleClear}
               className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground"
-              aria-label={t('list.search.clear')}
+              aria-label={t('search.clear')}
             >
               <X className="h-3 w-3" />
             </Button>
@@ -123,8 +123,8 @@ export function FolderSearch({
           <div className="flex items-center space-x-2">
             <Badge variant="outline" className="text-xs">
               {resultCount !== undefined 
-                ? t('list.search.results_count', { count: resultCount })
-                : t('list.search.no_results')
+                ? t('search.results_count', { count: resultCount })
+                : t('search.no_results')
               }
             </Badge>
             
@@ -141,7 +141,7 @@ export function FolderSearch({
             onClick={handleClear}
             className="text-xs h-6"
           >
-            {t('list.search.clear')}
+            {t('search.clear')}
           </Button>
         </div>
       )}
@@ -149,7 +149,7 @@ export function FolderSearch({
       {/* Message d'aide pour la recherche */}
       {hasSearch && resultCount === 0 && !showLoading && (
         <div className="mt-2 text-sm text-muted-foreground">
-          {t('list.search.no_results')}
+          {t('search.no_results')}
         </div>
       )}
     </div>
@@ -158,7 +158,7 @@ export function FolderSearch({
 
 // Hook utilitaire pour extraire les termes de recherche
 export function useSearchTerms() {
-  const [searchQuery] = useQueryState('search', folderSearchParams.search)
+  const [searchQuery] = useQueryState('search', folderSearchParsers.search)
   
   return {
     searchQuery: searchQuery || '',

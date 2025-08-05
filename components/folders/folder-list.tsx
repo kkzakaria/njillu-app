@@ -17,7 +17,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
-import { folderSearchParams, buildApiSearchParams } from '@/lib/search-params/folder-params'
+import { folderSearchParsers } from '@/lib/search-params/folder-params'
+import { buildApiSearchParams } from '@/lib/search-params/folder-params'
 import { useFolders } from '@/hooks/useTranslation'
 import { HighlightSearch } from './folder-search'
 import type { Folder, FolderStatus, FolderPriority, FolderType } from '@/types/folders'
@@ -131,7 +132,7 @@ export function FolderList({ className }: FolderListProps) {
   const t = useFolders()
   const locale = useLocale()
   
-  const [filters] = useQueryStates(folderSearchParams)
+  const [filters] = useQueryStates(folderSearchParsers)
   const [isLoading, setIsLoading] = useState(false)
   const [folders, setFolders] = useState(MOCK_FOLDERS)
   const [error, setError] = useState<string | null>(null)
@@ -156,33 +157,33 @@ export function FolderList({ className }: FolderListProps) {
         // Pour la démo, on filtre les données mock
         let filteredFolders = MOCK_FOLDERS
         
-        // Filtre par recherche
-        if (filters.search) {
+        // Filtre par recherche avec vérifications null
+        if (filters.search && typeof filters.search === 'string') {
           const searchLower = filters.search.toLowerCase()
           filteredFolders = filteredFolders.filter(folder =>
-            folder.folder_number.toLowerCase().includes(searchLower) ||
-            folder.reference_number?.toLowerCase().includes(searchLower) ||
-            folder.client_info.name.toLowerCase().includes(searchLower)
+            (folder.folder_number || '').toLowerCase().includes(searchLower) ||
+            (folder.reference_number || '').toLowerCase().includes(searchLower) ||
+            (folder.client_info?.name || '').toLowerCase().includes(searchLower)
           )
         }
         
-        // Filtre par statut
-        if (filters.status.length > 0) {
+        // Filtre par statut avec vérifications null
+        if (filters.status && Array.isArray(filters.status) && filters.status.length > 0) {
           filteredFolders = filteredFolders.filter(folder =>
-            filters.status.includes(folder.status)
+            folder.status && filters.status.includes(folder.status)
           )
         }
         
-        // Filtre par type
-        if (filters.type.length > 0) {
+        // Filtre par type avec vérifications null
+        if (filters.type && Array.isArray(filters.type) && filters.type.length > 0) {
           filteredFolders = filteredFolders.filter(folder =>
-            filters.type.includes(folder.type)
+            folder.type && filters.type.includes(folder.type)
           )
         }
         
         setFolders(filteredFolders)
       } catch (err) {
-        setError(t('list.error.load_failed'))
+        setError(t('error.load_failed'))
       } finally {
         setIsLoading(false)
       }
@@ -204,7 +205,7 @@ export function FolderList({ className }: FolderListProps) {
     
     return (
       <Badge variant={variants[status] || 'outline'}>
-        {t(`list.filters.status.${status}`)}
+        {t(`filters.status.${status}`)}
       </Badge>
     )
   }
@@ -221,7 +222,7 @@ export function FolderList({ className }: FolderListProps) {
     
     return (
       <Badge className={colors[priority]}>
-        {t(`list.filters.priority.${priority}`)}
+        {t(`filters.priority.${priority}`)}
       </Badge>
     )
   }
@@ -272,11 +273,11 @@ export function FolderList({ className }: FolderListProps) {
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={() => handleView(folder.id)}>
                       <Eye className="h-4 w-4 mr-2" />
-                      {t('list.actions.view')}
+                      {t('actions.view')}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => handleEdit(folder.id)}>
                       <Edit className="h-4 w-4 mr-2" />
-                      {t('list.actions.edit')}
+                      {t('actions.edit')}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -290,7 +291,7 @@ export function FolderList({ className }: FolderListProps) {
               <div className="space-y-1">
                 <div className="flex items-center text-muted-foreground">
                   <Package className="h-3 w-3 mr-1" />
-                  {t(`list.filters.type.${folder.type}`)}
+                  {t(`filters.type.${folder.type}`)}
                 </div>
                 <div className="flex items-center text-muted-foreground">
                   <MapPin className="h-3 w-3 mr-1" />
@@ -304,7 +305,7 @@ export function FolderList({ className }: FolderListProps) {
                 </div>
                 <div className="flex items-center text-muted-foreground">
                   <DollarSign className="h-3 w-3 mr-1" />
-                  {folder.financial_info.estimated_cost?.toLocaleString()} {folder.financial_info.currency}
+                  {folder.financial_info?.estimated_cost?.toLocaleString() || '0'} {folder.financial_info?.currency || 'EUR'}
                 </div>
               </div>
             </div>
@@ -313,9 +314,9 @@ export function FolderList({ className }: FolderListProps) {
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Progression</span>
-                <span className="font-medium">{folder.completion_percentage}%</span>
+                <span className="font-medium">{folder.completion_percentage || 0}%</span>
               </div>
-              <Progress value={folder.completion_percentage} className="h-2" />
+              <Progress value={folder.completion_percentage || 0} className="h-2" />
             </div>
 
             {/* Badges et métriques */}
@@ -329,10 +330,10 @@ export function FolderList({ className }: FolderListProps) {
                 )}
               </div>
               <div className="flex items-center space-x-3 text-xs text-muted-foreground">
-                {folder.bl_count > 0 && (
+                {(folder.bl_count || 0) > 0 && (
                   <span>{folder.bl_count} B/L</span>
                 )}
-                {folder.alert_count > 0 && (
+                {(folder.alert_count || 0) > 0 && (
                   <span className="flex items-center text-destructive">
                     <AlertCircle className="h-3 w-3 mr-1" />
                     {folder.alert_count}
@@ -352,14 +353,14 @@ export function FolderList({ className }: FolderListProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>{t('list.table.folder_number')}</TableHead>
-            <TableHead>{t('list.table.client_name')}</TableHead>
-            <TableHead>{t('list.table.status')}</TableHead>
-            <TableHead>{t('list.table.type')}</TableHead>
-            <TableHead>{t('list.table.priority')}</TableHead>
-            <TableHead>{t('list.table.deadline_date')}</TableHead>
-            <TableHead>{t('list.table.completion_percentage')}</TableHead>
-            <TableHead className="text-right">{t('list.table.actions')}</TableHead>
+            <TableHead>{t('table.folder_number')}</TableHead>
+            <TableHead>{t('table.client_name')}</TableHead>
+            <TableHead>{t('table.status')}</TableHead>
+            <TableHead>{t('table.type')}</TableHead>
+            <TableHead>{t('table.priority')}</TableHead>
+            <TableHead>{t('table.deadline_date')}</TableHead>
+            <TableHead>{t('table.completion_percentage')}</TableHead>
+            <TableHead className="text-right">{t('table.actions')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -372,15 +373,15 @@ export function FolderList({ className }: FolderListProps) {
                 <HighlightSearch text={folder.client_info.name} />
               </TableCell>
               <TableCell>{getStatusBadge(folder.status)}</TableCell>
-              <TableCell>{t(`list.filters.type.${folder.type}`)}</TableCell>
+              <TableCell>{t(`filters.type.${folder.type}`)}</TableCell>
               <TableCell>{getPriorityBadge(folder.priority)}</TableCell>
               <TableCell>
                 {folder.deadline_date && format(new Date(folder.deadline_date), 'dd/MM/yyyy', { locale: dateLocale })}
               </TableCell>
               <TableCell>
                 <div className="flex items-center space-x-2">
-                  <Progress value={folder.completion_percentage} className="h-2 w-16" />
-                  <span className="text-sm text-muted-foreground">{folder.completion_percentage}%</span>
+                  <Progress value={folder.completion_percentage || 0} className="h-2 w-16" />
+                  <span className="text-sm text-muted-foreground">{folder.completion_percentage || 0}%</span>
                 </div>
               </TableCell>
               <TableCell className="text-right">
@@ -393,11 +394,11 @@ export function FolderList({ className }: FolderListProps) {
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={() => handleView(folder.id)}>
                       <Eye className="h-4 w-4 mr-2" />
-                      {t('list.actions.view')}
+                      {t('actions.view')}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => handleEdit(folder.id)}>
                       <Edit className="h-4 w-4 mr-2" />
-                      {t('list.actions.edit')}
+                      {t('actions.edit')}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -441,7 +442,7 @@ export function FolderList({ className }: FolderListProps) {
               <div>
                 <h3 className="font-medium">{error}</h3>
                 <p className="text-sm text-muted-foreground mt-1">
-                  {t('list.error.retry')}
+                  {t('error.retry')}
                 </p>
               </div>
               <Button
@@ -449,7 +450,7 @@ export function FolderList({ className }: FolderListProps) {
                 onClick={() => window.location.reload()}
               >
                 <RotateCcw className="h-4 w-4 mr-2" />
-                {t('list.error.retry')}
+                {t('error.retry')}
               </Button>
             </div>
           </CardContent>
@@ -467,18 +468,18 @@ export function FolderList({ className }: FolderListProps) {
             <div className="text-center space-y-4">
               <Package className="h-12 w-12 text-muted-foreground mx-auto" />
               <div>
-                <h3 className="font-medium">{t('list.empty_state.title')}</h3>
+                <h3 className="font-medium">{t('empty_state.title')}</h3>
                 <p className="text-sm text-muted-foreground mt-1">
-                  {t('list.empty_state.description')}
+                  {t('empty_state.description')}
                 </p>
               </div>
               <div className="flex items-center justify-center space-x-2">
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
-                  {t('list.empty_state.create_first')}
+                  {t('empty_state.create_first')}
                 </Button>
                 <Button variant="outline">
-                  {t('list.empty_state.clear_filters')}
+                  {t('empty_state.clear_filters')}
                 </Button>
               </div>
             </div>
@@ -493,7 +494,7 @@ export function FolderList({ className }: FolderListProps) {
       {/* En-tête avec sélecteur de vue */}
       <div className="flex items-center justify-between mb-4">
         <div className="text-sm text-muted-foreground">
-          {t('list.pagination.showing', { 
+          {t('pagination.showing', { 
             start: 1, 
             end: folders.length, 
             total: folders.length 
@@ -506,8 +507,8 @@ export function FolderList({ className }: FolderListProps) {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="cards">{t('list.view_modes.cards')}</SelectItem>
-              <SelectItem value="table">{t('list.view_modes.table')}</SelectItem>
+              <SelectItem value="cards">{t('view_modes.cards')}</SelectItem>
+              <SelectItem value="table">{t('view_modes.table')}</SelectItem>
             </SelectContent>
           </Select>
         </div>

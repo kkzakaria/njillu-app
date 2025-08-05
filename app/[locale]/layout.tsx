@@ -4,9 +4,11 @@ import { ThemeProvider } from "next-themes";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { routing } from '@/i18n/routing';
 import { Messages } from '@/types/i18n.types';
 import { AlertProvider } from '@/components/alert-system';
+import { Providers } from '../providers';
 import "../globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -66,7 +68,11 @@ export default async function LocaleLayout({
             disableTransitionOnChange
           >
             <AlertProvider>
-              {children}
+              <Providers>
+                <NuqsAdapter>
+                  {children}
+                </NuqsAdapter>
+              </Providers>
             </AlertProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
