@@ -27,7 +27,10 @@ ConfirmDialog.displayName = "ConfirmDialog"
 
 export const DeleteDialog = React.forwardRef<
   React.ComponentRef<typeof EnhancedAlertDialog>,
-  Omit<BaseAlertDialogProps, "type" | "showIcon" | "actionVariant" | "icon">
+  Omit<BaseAlertDialogProps, "type" | "showIcon" | "actionVariant" | "icon" | "title" | "description"> & {
+    title?: string;
+    description?: string | React.ReactNode;
+  }
 >(({ 
   title = "Supprimer l'élément", 
   description = "Cette action est irréversible. Êtes-vous sûr de vouloir supprimer cet élément ?",
@@ -53,7 +56,10 @@ DeleteDialog.displayName = "DeleteDialog"
 
 export const LogoutDialog = React.forwardRef<
   React.ComponentRef<typeof EnhancedAlertDialog>,
-  Omit<BaseAlertDialogProps, "type" | "showIcon" | "icon">
+  Omit<BaseAlertDialogProps, "type" | "showIcon" | "icon" | "title" | "description"> & {
+    title?: string;
+    description?: string | React.ReactNode;
+  }
 >(({ 
   title = "Se déconnecter", 
   description = "Êtes-vous sûr de vouloir vous déconnecter ?",
@@ -78,7 +84,10 @@ LogoutDialog.displayName = "LogoutDialog"
 
 export const SaveDialog = React.forwardRef<
   React.ComponentRef<typeof EnhancedAlertDialog>,
-  Omit<BaseAlertDialogProps, "type" | "showIcon" | "icon">
+  Omit<BaseAlertDialogProps, "type" | "showIcon" | "icon" | "title" | "description"> & {
+    title?: string;
+    description?: string | React.ReactNode;
+  }
 >(({ 
   title = "Sauvegarder les modifications", 
   description = "Voulez-vous enregistrer les modifications avant de continuer ?",
@@ -174,7 +183,10 @@ WarningDialog.displayName = "WarningDialog"
 
 export const CriticalDeleteDialog = React.forwardRef<
   React.ComponentRef<typeof ConfirmationDeleteDialog>,
-  Omit<ConfirmationDeleteDialogProps, "actionText" | "title">
+  Omit<ConfirmationDeleteDialogProps, "actionText" | "title"> & {
+    actionText?: string;
+    title?: string;
+  }
 >(({ 
   confirmationText,
   description,

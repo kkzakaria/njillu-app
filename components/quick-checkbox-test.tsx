@@ -17,7 +17,7 @@ export function QuickCheckboxTest() {
             <EnhancedCheckbox
               label="□ Checkbox AVANT le texte"
               position="left"
-              defaultChecked
+              checked
               color="primary"
             />
           </div>
@@ -27,7 +27,7 @@ export function QuickCheckboxTest() {
             <EnhancedCheckbox
               label="Checkbox APRÈS le texte □"
               position="right"
-              defaultChecked
+              checked
               color="success"
             />
           </div>
@@ -38,10 +38,10 @@ export function QuickCheckboxTest() {
       <div className="space-y-4 p-4 border rounded-lg">
         <h3 className="font-semibold">Test Couleurs (COCHÉES)</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <EnhancedCheckbox label="🔵 Primary (bleu)" color="primary" defaultChecked />
-          <EnhancedCheckbox label="🟢 Success (vert)" color="success" defaultChecked />
-          <EnhancedCheckbox label="🟠 Warning (orange)" color="warning" defaultChecked />
-          <EnhancedCheckbox label="🔴 Destructive (rouge)" color="destructive" defaultChecked />
+          <EnhancedCheckbox label="🔵 Primary (bleu)" color="primary" checked />
+          <EnhancedCheckbox label="🟢 Success (vert)" color="success" checked />
+          <EnhancedCheckbox label="🟠 Warning (orange)" color="warning" checked />
+          <EnhancedCheckbox label="🔴 Destructive (rouge)" color="destructive" checked />
         </div>
       </div>
 
@@ -65,13 +65,13 @@ export function QuickCheckboxTest() {
             label="Position LEFT + Couleur Success" 
             position="left" 
             color="success" 
-            defaultChecked
+            checked
           />
           <EnhancedCheckbox 
             label="Position RIGHT + Couleur Warning" 
             position="right" 
             color="warning" 
-            defaultChecked
+            checked
           />
         </div>
       </div>
