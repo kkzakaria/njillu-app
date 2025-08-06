@@ -11,8 +11,102 @@ import type {
   PaymentStatus
 } from './enums';
 
-import type { PartyInfo, BillOfLading, BLContainer } from './core';
+import type { PartyInfo } from './core';
 import type { CreateFreightChargeData } from './charges';
+
+// ============================================================================
+// Types de base pour les valeurs et paramètres
+// ============================================================================
+
+/**
+ * Type union pour les valeurs des champs BL dans l'audit et les opérations
+ */
+export type BLFieldValue = 
+  | string 
+  | number 
+  | boolean 
+  | Date 
+  | null 
+  | PartyInfo 
+  | FreightTerms 
+  | BLStatus 
+  | LoadingMethod 
+  | ChargeType 
+  | PaymentStatus;
+
+/**
+ * Paramètres pour changement de statut en lot
+ */
+export interface StatusChangeParams {
+  new_status: BLStatus;
+  reason?: string;
+  notes?: string;
+  effective_date?: string;
+  notify_parties?: boolean;
+}
+
+/**
+ * Paramètres pour assignation à un dossier en lot
+ */
+export interface AssignToFolderParams {
+  folder_id: string;
+  overwrite_existing?: boolean;
+  reason?: string;
+}
+
+/**
+ * Paramètres pour ajout de frais en lot
+ */
+export interface AddChargesParams {
+  charges: Array<{
+    charge_type: ChargeType;
+    amount: number;
+    currency: string;
+    description?: string;
+  }>;
+  apply_to_all?: boolean;
+}
+
+/**
+ * Paramètres pour mise à jour de compagnie maritime en lot
+ */
+export interface UpdateShippingCompanyParams {
+  new_shipping_company_id: string;
+  reason?: string;
+  update_related_charges?: boolean;
+}
+
+/**
+ * Paramètres pour export en lot
+ */
+export interface BulkExportParams {
+  format: 'excel' | 'csv' | 'pdf';
+  include_containers?: boolean;
+  include_charges?: boolean;
+  include_cargo_details?: boolean;
+  template_id?: string;
+}
+
+/**
+ * Paramètres pour suppression en lot
+ */
+export interface BulkDeleteParams {
+  soft_delete?: boolean;
+  reason: string;
+  cascade_containers?: boolean;
+  cascade_charges?: boolean;
+}
+
+/**
+ * Type union pour tous les paramètres d'opérations BL en lot
+ */
+export type BLBatchOperationParams = 
+  | StatusChangeParams
+  | AssignToFolderParams
+  | AddChargesParams
+  | UpdateShippingCompanyParams
+  | BulkExportParams
+  | BulkDeleteParams;
 
 // ============================================================================
 // Types pour la création et modification des BL
@@ -281,7 +375,7 @@ export interface BLBatchOperation {
     | 'bulk_delete';
   
   bl_ids: string[];
-  parameters: Record<string, any>;
+  parameters: BLBatchOperationParams;
   
   // Options de traitement
   continue_on_error: boolean;
@@ -346,8 +440,8 @@ export interface BLAuditEntry {
   entity_id?: string;
   
   // Changements
-  old_values?: Record<string, any>;
-  new_values?: Record<string, any>;
+  old_values?: Record<string, BLFieldValue>;
+  new_values?: Record<string, BLFieldValue>;
   
   // Métadonnées
   performed_by: string;
