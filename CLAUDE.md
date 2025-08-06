@@ -469,3 +469,9 @@ This is an enhanced version of the official Supabase Next.js starter template wi
 - **Flow Guards**: Multi-layered access control preventing unauthorized access
 
 The project serves as a production-ready foundation for building secure, multilingual Next.js applications with Supabase integration and enterprise-grade authentication flows.
+
+## Security Insights
+
+### Security Memory
+
+- Setting `security_invoker=on` ensures the View runs with the permissions of the querying user, reducing the risk of unintended data exposure.

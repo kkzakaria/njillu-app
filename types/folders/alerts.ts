@@ -9,9 +9,9 @@ import type {
   AlertStatus,
   FolderStatus,
   ProcessingStage
-} from './enums';
+} from './constants/enums';
 
-import type { Folder } from './core';
+import type { Folder } from './core/folder';
 
 // ============================================================================
 // Interface principale des alertes
@@ -208,7 +208,7 @@ export interface AlertRule {
     data_conditions?: Array<{
       field_path: string;
       operator: 'equals' | 'not_equals' | 'greater' | 'less' | 'contains' | 'exists' | 'is_null';
-      value: any;
+      value: string | number | boolean | Date | null | undefined;
     }>;
   };
   

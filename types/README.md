@@ -54,16 +54,22 @@ Gestion complète des Bills of Lading
 
 **Types principaux :** `BillOfLading`, `BLContainer`, `BLFreightCharge`, `ShippingCompany`
 
-### 🔷 **Folders Module** (`./types/folders/`)
-Système de gestion des dossiers
+### 🔷 **Folders Module v2.0** (`./types/folders/`)
+Système de gestion des dossiers avec architecture modulaire avancée
 
-**Fichiers :**
-- `enums.ts` - Statuts de dossiers, priorités, régimes douaniers
-- `core.ts` - Interfaces principales (Folder, relations, métadonnées)
-- `alerts.ts` - Système d'alertes et notifications
-- `operations.ts` - Opérations CRUD et workflows
+**Structure Modulaire :**
+- `constants/enums.ts` - Énumérations centralisées
+- `entities/` - Entités métier (client, location, financial, audit)
+- `core/` - Interfaces principales (folder, folder-relations)
+- `workflow/` - Système de workflow (stages, transitions, metrics)
+- `operations/` - Opérations CRUD (create, update, search, batch)
+- `alerts.ts` - Système d'alertes avancé
+- `processing-stages.ts` - DÉPRÉCIÉ - Compatibilité v1.0
 
-**Types principaux :** `Folder`, `FolderAlert`, `ClientInfo`, `LocationInfo`
+**Types principaux :** `Folder`, `ProcessingStage`, `FolderProcessingStage`, `ClientInfo`, `CreateFolderData`
+
+**📖 Documentation complète :** [types/folders/README.md](./folders/README.md)  
+**🔄 Guide de migration :** [types/folders/MIGRATION_GUIDE.md](./folders/MIGRATION_GUIDE.md)
 
 ### 🔷 **Containers Module** (`./types/containers/`)
 Suivi avancé des arrivées de conteneurs
