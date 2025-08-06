@@ -75,13 +75,16 @@ export type {
 
 // Interfaces principales Containers
 export type {
-  ContainerArrivalTracking,
+  ContainerArrivalTracking
+} from './containers/tracking-core';
+
+export type {
   ArrivalPerformanceMetrics
-} from './containers/arrival-tracking';
+} from './containers/metrics';
 
 export type {
   ContainerArrivalDashboard
-} from './containers/dashboard';
+} from './containers/dashboards';
 
 export type {
   ContainerArrivalStatus,
@@ -126,7 +129,8 @@ export * as BLEnums from './bl/enums';
 export * as BLCore from './bl/core';
 export * as BLCharges from './bl/charges';
 export * as BLViews from './bl/views';
-export * as BLOperations from './bl/operations';
+// Note: bl/operations.ts a été décomposé en modules spécialisés
+export * as BLOperations from './bl';
 
 // Sous-modules Folders
 export * as FolderEnums from './folders/constants';
@@ -138,9 +142,10 @@ export * as FolderOperations from './folders/operations';
 
 // Sous-modules Containers
 export * as ContainerEnums from './containers/enums';
-export * as ArrivalTracking from './containers/arrival-tracking';
-export * as ContainerDashboards from './containers/dashboard';
-export * as ContainerOperations from './containers/operations';
+export * as TrackingCore from './containers/tracking-core';
+export * as ContainerDashboards from './containers/dashboards';
+// Note: containers modules ont été décomposés en architecture modulaire
+export * as ContainerOperations from './containers';
 
 // Sous-modules Shared
 export * as CommonTypes from './shared/common';
@@ -166,7 +171,7 @@ export const Enums = {
 export const Core = {
   BL: () => import('./bl/core'),
   Folders: () => import('./folders/core'),
-  Containers: () => import('./containers/arrival-tracking'),
+  Containers: () => import('./containers/tracking-core'),
   Shared: () => import('./shared/common')
 } as const;
 
@@ -174,9 +179,9 @@ export const Core = {
  * Types pour les opérations (CRUD, workflows, validation)
  */
 export const Operations = {
-  BL: () => import('./bl/operations'),
+  BL: () => import('./bl'),
   Folders: () => import('./folders/operations'),
-  Containers: () => import('./containers/operations')
+  Containers: () => import('./containers')
 } as const;
 
 /**
@@ -184,7 +189,7 @@ export const Operations = {
  */
 export const Views = {
   BL: () => import('./bl/views'),
-  Containers: () => import('./containers/dashboard')
+  Containers: () => import('./containers/dashboards')
 } as const;
 
 /**
@@ -244,7 +249,7 @@ export interface EntityTypeMap {
   folder: import('./folders/core').Folder;
   folder_alert: import('./folders/alerts').FolderAlert;
   folder_document: import('./folders/core').FolderDocument;
-  container_arrival_tracking: import('./containers/arrival-tracking').ContainerArrivalTracking;
+  container_arrival_tracking: import('./containers/tracking-core').ContainerArrivalTracking;
 }
 
 /**

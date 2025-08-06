@@ -1,6 +1,10 @@
 /**
  * Types pour les dashboards et vues analytiques des conteneurs
- * Interfaces pour l'affichage, reporting et analyse des données conteneurs
+ * Vues principales, dashboards utilisateurs et analyses
+ * 
+ * @module Containers/Dashboards
+ * @version 2.0.0
+ * @since 2025-01-06
  */
 
 import type {
@@ -12,9 +16,19 @@ import type {
 } from './enums';
 
 import type {
-  ContainerArrivalTracking,
+  ContainerArrivalTracking
+} from './tracking-core';
+
+import type {
   ArrivalPerformanceMetrics
-} from './arrival-tracking';
+} from './metrics';
+
+import type {
+  WidgetConfiguration,
+  DashboardFilters,
+  CachedDashboardData,
+  NavigationDetails
+} from './dashboard-types';
 
 // ============================================================================
 // Dashboard principal des arrivées
@@ -406,7 +420,7 @@ export interface CostImpactAnalysis {
 }
 
 // ============================================================================
-// Configuration et personnalisation des dashboards
+// Configuration et session des dashboards
 // ============================================================================
 
 /**
@@ -423,7 +437,7 @@ export interface DashboardConfiguration {
       widget_id: string;
       widget_type: 'kpi' | 'chart' | 'table' | 'alert' | 'map';
       position: { x: number; y: number; width: number; height: number };
-      configuration: Record<string, any>;
+      configuration: WidgetConfiguration;
       is_visible: boolean;
       refresh_interval_seconds?: number;
     }>;
@@ -474,7 +488,7 @@ export interface DashboardSession {
   dashboard_id: string;
   
   // État actuel
-  current_filters: Record<string, any>;
+  current_filters: DashboardFilters;
   selected_date_range: {
     start_date: string;
     end_date: string;
@@ -483,7 +497,7 @@ export interface DashboardSession {
   zoom_level?: number;
   
   // Données en cache
-  cached_data?: Record<string, any>;
+  cached_data?: CachedDashboardData;
   cache_timestamp?: string;
   cache_expiry?: string;
   
@@ -491,7 +505,7 @@ export interface DashboardSession {
   navigation_history: Array<{
     timestamp: string;
     action: 'filter_change' | 'view_change' | 'drill_down' | 'export';
-    details: Record<string, any>;
+    details: NavigationDetails;
   }>;
   
   // Métriques de session
