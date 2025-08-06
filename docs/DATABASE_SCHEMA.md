@@ -6,8 +6,10 @@ Le système de base de données de njillu-app gère un écosystème complet de g
 - **Gestion des utilisateurs** avec authentification Supabase
 - **Système de dossiers** avec numérotation automatique  
 - **Bills of Lading (BL)** avec relation 1:1 aux dossiers
+- **Système d'étapes de traitement** avec workflow configurable
 - **Gestion des conteneurs** et types de conteneurs
 - **Compagnies maritimes** et frais de transport
+- **Analytics et reporting** intégrés
 - **Soft delete** et audit trail complets
 
 ## 🏗️ Architecture Globale
@@ -19,6 +21,8 @@ erDiagram
     users ||--o{ folders : manages
     users ||--o{ bills_of_lading : creates
     folders ||--|| bills_of_lading : "1:1 relation"
+    folders ||--o{ folder_processing_stages : tracks
+    default_processing_stages ||--o{ folder_processing_stages : configures
     shipping_companies ||--o{ bills_of_lading : issues
     bills_of_lading ||--o{ bl_containers : contains
     container_types ||--o{ bl_containers : defines
@@ -97,6 +101,106 @@ CREATE TABLE public.folders (
 - **Compteur global unique** thread-safe avec retry logic
 - **Trigger automatique** `set_folder_number_trigger` pour génération du numéro
 - **Relation 1:1** avec bills_of_lading via contraintes bidirectionnelles
+
+---
+
+### 🔄 Tables `folder_processing_stages` & `default_processing_stages` - Système d'Étapes de Traitement
+
+**Description** : Système complet de gestion du workflow logistique avec 8 étapes métier configurables.
+
+#### Table `folder_processing_stages` - Suivi des Étapes par Dossier
+
+```sql
+CREATE TABLE public.folder_processing_stages (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  folder_id uuid NOT NULL REFERENCES folders(id) ON DELETE CASCADE,
+  
+  -- Configuration de l'étape
+  stage processing_stage_enum NOT NULL,
+  status stage_status_enum NOT NULL DEFAULT 'pending',
+  priority stage_priority_enum NOT NULL DEFAULT 'normal',
+  sequence_order integer NOT NULL,
+  
+  -- Métadonnées du workflow
+  is_mandatory boolean NOT NULL DEFAULT true,
+  can_be_skipped boolean NOT NULL DEFAULT false,
+  requires_approval boolean NOT NULL DEFAULT false,
+  
+  -- Assignation et progression
+  assigned_to uuid REFERENCES users(id),
+  started_by uuid REFERENCES users(id),
+  completed_by uuid REFERENCES users(id),
+  approved_by uuid REFERENCES users(id),
+  
+  -- Timing et durées
+  estimated_duration interval,
+  actual_duration interval,
+  deadline_date timestamptz,
+  started_at timestamptz,
+  completed_at timestamptz,
+  
+  -- Métadonnées
+  completion_notes text,
+  blocking_reason text,
+  attached_documents jsonb DEFAULT '[]',
+  custom_metadata jsonb DEFAULT '{}',
+  
+  -- Audit trail
+  created_by uuid REFERENCES users(id),
+  updated_by uuid REFERENCES users(id),
+  created_at timestamptz DEFAULT now() NOT NULL,
+  updated_at timestamptz DEFAULT now() NOT NULL
+);
+```
+
+#### Table `default_processing_stages` - Configuration par Défaut
+
+```sql
+CREATE TABLE public.default_processing_stages (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  stage processing_stage_enum NOT NULL UNIQUE,
+  sequence_order integer NOT NULL UNIQUE,
+  
+  -- Configuration par défaut
+  default_priority stage_priority_enum NOT NULL DEFAULT 'normal',
+  is_mandatory boolean NOT NULL DEFAULT true,
+  can_be_skipped boolean NOT NULL DEFAULT false,
+  requires_approval boolean NOT NULL DEFAULT false,
+  default_duration interval,
+  
+  -- Métadonnées
+  description text,
+  instructions text,
+  required_documents jsonb DEFAULT '[]',
+  
+  -- Audit
+  is_active boolean DEFAULT true,
+  created_by uuid REFERENCES users(id),
+  updated_by uuid REFERENCES users(id),
+  created_at timestamptz DEFAULT now() NOT NULL,
+  updated_at timestamptz DEFAULT now() NOT NULL
+);
+```
+
+**Enums Associés** :
+- `processing_stage_enum` : 8 étapes métier (enregistrement, révision_facture_commerciale, elaboration_fdi, elaboration_rfcv, declaration_douaniere, service_exploitation, facturation_client, livraison)
+- `stage_status_enum` : 5 statuts (pending, in_progress, completed, blocked, skipped)
+- `stage_priority_enum` : 4 priorités (low, normal, high, urgent)
+
+**Fonctionnalités Clés** :
+- **Workflow configurable** : 8 étapes du processus logistique complet
+- **Gestion des états** : Suivi en temps réel du statut de chaque étape
+- **Calcul de progression** : Pourcentage d'avancement automatique
+- **Analytics intégrées** : Métriques et KPIs en temps réel
+- **Assignation flexible** : Attribution des tâches aux utilisateurs
+- **Durées calculées** : Estimation vs réalité avec optimisations
+- **Documents attachés** : Gestion des pièces jointes par étape
+- **Système d'approbation** : Validation requise pour étapes critiques
+
+**Contraintes** :
+- `UNIQUE(folder_id, stage)` : Une seule instance d'étape par dossier
+- `CHECK(started_at <= completed_at)` : Cohérence temporelle
+- `CHECK(sequence_order > 0)` : Ordre séquentiel valide
 
 ---
 
@@ -358,6 +462,12 @@ Le système inclut plusieurs vues pour le reporting et analytics :
 - `executive_dashboard` : KPIs principaux et métriques de croissance
 - `folders_requiring_attention` : Système d'alertes avec scoring automatique
 
+**Vues Analytics Étapes de Traitement** :
+- `folder_stage_statistics` : Statistiques détaillées par étape avec temps moyens
+- `folders_with_stage_progress` : Progression en temps réel par dossier avec pourcentages
+- `stage_alerts_dashboard` : Alertes intelligentes (retards, blocages, échéances)
+- `executive_stage_dashboard` : Vue exécutive des performances globales par étape
+
 **Vues Actives (Soft Delete)** :
 - `active_bills_of_lading` : BL non supprimés
 - `active_bl_containers` : Conteneurs actifs
@@ -390,6 +500,13 @@ Le système inclut plusieurs vues pour le reporting et analytics :
 - Soft delete sécurisé avec audit trail
 - Contraintes d'intégrité référentielle
 
+**Tables Étapes de Traitement** :
+- `folder_processing_stages_select_optimized` : SELECT optimisé avec `(SELECT auth.uid())`
+- `folder_processing_stages_insert_authenticated` : INSERT pour utilisateurs authentifiés
+- `folder_processing_stages_update_permission` : UPDATE selon permissions et assignations
+- `default_stages_select_optimized` : SELECT optimisé pour configuration
+- `default_stages_*_super_admin` : INSERT/UPDATE/DELETE pour super_admin uniquement
+
 ### Fonctions de Sécurité
 
 **Soft Delete System** :
@@ -397,10 +514,15 @@ Le système inclut plusieurs vues pour le reporting et analytics :
 - `restore_bl(uuid, uuid)` : Restauration avec audit
 - `get_deleted_records()` : Audit des suppressions
 
+**Fonctions Helper d'Étapes** :
+- `user_can_access_folder(uuid, uuid)` : Validation d'accès aux dossiers
+- `user_can_modify_stage(uuid, uuid)` : Permissions de modification d'étape
+- `user_can_approve_stage(uuid, uuid)` : Permissions d'approbation d'étape
+
 **Validation et Contrôles** :
 - Triggers de validation automatique
 - Contraintes CHECK sur formats et valeurs
-- Search path sécurisé (SECURITY DEFINER)
+- Search path sécurisé (SECURITY DEFINER) - 72 fonctions protégées
 
 ## 🔧 Fonctions et Triggers
 
@@ -418,10 +540,40 @@ preview_next_folder_number(transport_type_enum, date) → varchar(15)
 reset_folder_counter(integer, integer) → boolean
 ```
 
+### Fonctions de Gestion des Étapes
+
+**Fonctions Métier** :
+```sql
+-- Initialisation des étapes pour un dossier
+initialize_folder_stages(uuid, uuid) → boolean
+
+-- Démarrer une étape avec assignation
+start_processing_stage(uuid, processing_stage_enum, uuid, uuid, text) → boolean
+
+-- Compléter une étape avec notes et documents
+complete_processing_stage(uuid, processing_stage_enum, uuid, text, text[]) → boolean
+
+-- Bloquer/débloquer une étape
+block_processing_stage(uuid, processing_stage_enum, text, uuid) → boolean
+unblock_processing_stage(uuid, processing_stage_enum, uuid, text) → boolean
+
+-- Calculer la progression d'un dossier
+get_folder_progress(uuid) → table(total_stages, completed_stages, completion_percentage)
+```
+
+**Fonctions Helper de Sécurité** :
+```sql
+-- Validation des permissions d'accès
+user_can_access_folder(uuid, uuid) → boolean
+user_can_modify_stage(uuid, uuid) → boolean  
+user_can_approve_stage(uuid, uuid) → boolean
+```
+
 **Triggers Automatiques** :
 - `set_folder_number_trigger` : Auto-génération des numéros de dossier
 - `update_*_updated_at` : Mise à jour automatique des timestamps
 - `validate_folder_bl_relationship_*` : Validation des relations 1:1
+- `trg_calculate_stage_actual_duration` : Calcul automatique des durées réelles d'étapes
 
 ### Fonctions de Relation Dossier-BL
 
@@ -463,7 +615,19 @@ get_period_statistics(date, date) → table
 - `idx_folders_transport_type` : Filtrage par type
 - `idx_folders_status` : Filtrage par statut
 - `idx_folders_folder_date` : Tri chronologique
-- `idx_folders_active` : Dossiers non supprimés (partial)
+- `idx_folders_not_deleted` : Dossiers non supprimés (partial, optimisé)
+
+**Table `folder_processing_stages`** :
+- `idx_fps_folder_stage_unique` : UNIQUE(folder_id, stage)
+- `idx_fps_status_priority` : Filtrage par statut et priorité
+- `idx_fps_sequence_order` : Tri par ordre séquentiel
+- `idx_fps_assignment_optimization` : Optimisation requêtes d'assignation
+- `idx_fps_deadline_date` : Suivi des échéances
+
+**Table `default_processing_stages`** :
+- `idx_dps_stage_unique` : UNIQUE sur stage
+- `idx_dps_sequence_order` : UNIQUE sur sequence_order
+- `idx_dps_active` : Configurations actives uniquement
 
 **Table `bills_of_lading`** :
 - `idx_bl_bl_number` : UNIQUE sur bl_number
@@ -477,7 +641,7 @@ get_period_statistics(date, date) → table
 
 ## 🔄 Migrations et Évolution
 
-### Migrations Actuelles (16 fichiers)
+### Migrations Actuelles (34 fichiers)
 
 **Système de Base** :
 1. `20250727095022_create_basic_users_table.sql`
@@ -507,6 +671,27 @@ get_period_statistics(date, date) → table
 17. `20250804142404_create_folder_statistical_views.sql`
 18. `20250804145411_create_folder_bl_reassignment_functions.sql`
 19. `20250804171803_add_soft_delete_columns.sql` (corrections)
+20. `20250804182206_add_container_arrival_tracking_system.sql`
+21. `20250804182318_enhance_folder_alerts_with_container_tracking.sql`
+
+**Optimisations Performance et Sécurité** :
+22. `20250805190000_fix_search_path_only.sql`
+23. `20250805191500_optimize_rls_policies_performance.sql`
+24. `20250805192000_consolidate_multiple_permissive_policies.sql`
+25. `20250805192500_cleanup_duplicate_indexes.sql`
+
+**Système d'Étapes de Traitement** :
+26. `20250806075915_create_folder_processing_stages_system.sql`
+27. `20250806080019_create_folder_processing_stages_functions.sql`
+28. `20250806080302_create_folder_processing_stages_analytics_views.sql`
+29. `20250806080433_create_folder_processing_stages_rls_policies.sql`
+
+**Sécurité et Optimisations Finales** :
+30. `20250806083751_fix_all_search_path_security_issues.sql`
+31. `20250806084902_fix_search_path_empty_string.sql`
+32. `20250806190000_fix_rls_performance_final.sql`
+33. `20250806195000_cleanup_performance_issues.sql`
+34. `20250806200000_fix_final_policy_conflict.sql`
 
 ### Commandes de Migration
 
@@ -585,6 +770,36 @@ SELECT
   attention_score
 FROM folders_requiring_attention
 ORDER BY attention_score DESC;
+
+-- Analytics des étapes de traitement
+SELECT 
+  stage_name,
+  total_instances,
+  completed_instances,
+  avg_duration_hours,
+  completion_rate
+FROM folder_stage_statistics;
+
+-- Progression des dossiers en temps réel
+SELECT 
+  folder_number,
+  current_stage,
+  completion_percentage,
+  estimated_completion_date,
+  is_delayed
+FROM folders_with_stage_progress
+WHERE completion_percentage < 100;
+
+-- Alertes et retards
+SELECT 
+  folder_number,
+  stage_name,
+  alert_type,
+  severity,
+  days_overdue,
+  assigned_to_name
+FROM stage_alerts_dashboard
+WHERE severity IN ('high', 'urgent');
 ```
 
 ## 🚀 État Actuel et Prochaines Étapes
@@ -593,17 +808,21 @@ ORDER BY attention_score DESC;
 
 ✅ **Système de numérotation** : Format M250804-000001 avec compteur global thread-safe  
 ✅ **Relations dossier-BL** : 1:1 bidirectionnel avec fonctions de réassignation  
+✅ **Système d'étapes de traitement** : 8 étapes métier configurables avec workflow complet
+✅ **Analytics temps réel** : 4 vues analytics d'étapes + dashboard exécutif  
+✅ **Gestion des états** : Suivi complet pending → in_progress → completed
 ✅ **Soft delete complet** : Audit trail et restauration sur toutes les tables  
-✅ **Analytics temps réel** : Vues statistiques et dashboard exécutif  
-✅ **Sécurité RLS** : Contrôle d'accès granulaire par utilisateur  
-✅ **Performance** : Index optimisés et fonctions thread-safe  
+✅ **Sécurité RLS** : Contrôle d'accès granulaire avec 72 fonctions protégées
+✅ **Performance** : Index optimisés, politiques RLS ultra-performantes, 0 problème restant
 
 ### Évolutions Possibles
 
-- **Workflow avancé** : États et transitions de dossiers configurables
-- **Notifications** : Système d'alertes automatiques et emails
+- **Workflow avancé** : États et transitions de dossiers configurables (partiellement implémenté avec les étapes)
+- **Notifications** : Système d'alertes automatiques et emails basé sur stage_alerts_dashboard
 - **API GraphQL** : Exposition des données via Supabase GraphQL
-- **Intégrations** : Connecteurs vers systèmes externes (EDI, APIs)
-- **Machine Learning** : Prédictions de délais et optimisations logistiques
+- **Intégrations** : Connecteurs vers systèmes externes (EDI, APIs) 
+- **Machine Learning** : Prédictions de délais basées sur l'historique des durées d'étapes
+- **Mobile App** : Interface mobile pour suivi temps réel des étapes
+- **Automatisation avancée** : Transitions automatiques d'étapes basées sur des conditions
 
 Cette architecture enterprise offre une base solide et évolutive pour la gestion complète des opérations logistiques avec traçabilité, sécurité et performance optimales.
