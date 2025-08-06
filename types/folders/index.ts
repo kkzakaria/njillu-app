@@ -60,6 +60,34 @@ export type {
 } from './alerts';
 
 // ============================================================================
+// Système d'étapes de traitement
+// ============================================================================
+export type {
+  ProcessingStage,
+  StageStatus,
+  StagePriority,
+  FolderProcessingStage,
+  DefaultProcessingStage,
+  FolderProgress as StageProgress,
+  StageRequiringAttention,
+  StagePerformanceMetrics,
+  InitializeFolderStagesParams,
+  StartProcessingStageParams,
+  CompleteProcessingStageParams,
+  BlockProcessingStageParams,
+  UnblockProcessingStageParams,
+  ApproveProcessingStageParams,
+  SkipProcessingStageParams,
+  CreateStageData,
+  UpdateStageData,
+  StageTransitionData,
+  StagesDashboard,
+  StageAlert,
+  StageSearchParams,
+  StageSearchResults
+} from './processing-stages';
+
+// ============================================================================
 // Opérations et workflows
 // ============================================================================
 export type {
@@ -89,6 +117,9 @@ export * as FolderCore from './core';
 
 // Système d'alertes
 export * as FolderAlerts from './alerts';
+
+// Système d'étapes de traitement
+export * as ProcessingStages from './processing-stages';
 
 // Opérations et workflows
 export * as FolderOperations from './operations';
