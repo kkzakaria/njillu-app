@@ -179,21 +179,40 @@ export type {
 } from './operations/batch';
 
 // ============================================================================
-// ALERTS (Système d'alertes)
+// ALERTS (Système d'alertes modulaire v2.0)
 // ============================================================================
 export type {
+  // Core alert types
   FolderAlert,
+  BusinessImpact,
+  ResolutionMethod,
+  NotificationMethod,
+  
+  // Specialized alert types
   DeadlineAlert,
   ComplianceAlert,
   DelayAlert,
   CostAlert,
+  DeadlineType,
+  ComplianceArea,
+  
+  // Rules and triggers
   AlertRule,
-  AlertSystemConfig,
+  TriggerConditions,
+  AlertConfig,
+  
+  // Analytics and reporting
   AlertDashboard,
   AlertMetrics,
+  
+  // Operations
   CreateAlertData,
   UpdateAlertData,
-  AlertSearchParams
+  AlertSearchParams,
+  
+  // Configuration
+  AlertSystemConfig,
+  Environment
 } from './alerts';
 
 // ============================================================================

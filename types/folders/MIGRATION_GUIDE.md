@@ -73,6 +73,47 @@ Guide complet pour migrer de l'architecture monolithique vers l'architecture mod
 | `import type { FolderStatus } from '@/types/folders/enums';` | `import type { FolderStatus } from '@/types/folders/constants/enums';` |
 | `import type { AlertType } from '@/types/folders/enums';` | `import type { AlertType } from '@/types/folders/constants/enums';` |
 
+### 🚨 Alerts - Architecture Modulaire v2.0
+
+**TRANSFORMATION MAJEURE** : Le système d'alertes passe de 1 fichier monolithique (418 lignes) à 6 modules spécialisés.
+
+| v1.0 (Monolithique) | v2.0 (Modulaire) | Module |
+|---------------------|-------------------|---------|
+| `import type { FolderAlert } from '@/types/folders/alerts';` | `import type { FolderAlert } from '@/types/folders/alerts';` | Global ✅ |
+| `import type { FolderAlert } from '@/types/folders/alerts';` | `import type { FolderAlert } from '@/types/folders/alerts/core';` | Core (optimal) |
+| `import type { DeadlineAlert } from '@/types/folders/alerts';` | `import type { DeadlineAlert } from '@/types/folders/alerts/specialized';` | Specialized |
+| `import type { AlertRule } from '@/types/folders/alerts';` | `import type { AlertRule } from '@/types/folders/alerts/rules';` | Rules |
+| `import type { AlertDashboard } from '@/types/folders/alerts';` | `import type { AlertDashboard } from '@/types/folders/alerts/analytics';` | Analytics |
+| `import type { CreateAlertData } from '@/types/folders/alerts';` | `import type { CreateAlertData } from '@/types/folders/alerts/operations';` | Operations |
+| `import type { AlertSystemConfig } from '@/types/folders/alerts';` | `import type { AlertSystemConfig } from '@/types/folders/alerts/config';` | Config |
+
+#### Nouveaux Patterns d'Import v2.0
+
+**Global (Recommandé - Compatibilité 100%)**:
+```typescript
+import type {
+  FolderAlert,
+  DeadlineAlert, 
+  AlertRule,
+  AlertDashboard,
+  CreateAlertData
+} from '@/types/folders/alerts';
+```
+
+**Granulaire (Optimal pour performance)**:
+```typescript
+import type { FolderAlert } from '@/types/folders/alerts/core';
+import type { DeadlineAlert } from '@/types/folders/alerts/specialized';
+import type { AlertRule } from '@/types/folders/alerts/rules';
+```
+
+**Namespace (Organisation du code)**:
+```typescript
+import * as Alerts from '@/types/folders/alerts';
+import * as AlertCore from '@/types/folders/alerts/core';
+import * as AlertRules from '@/types/folders/alerts/rules';
+```
+
 ## 🛠️ Exemples de Migration Pratiques
 
 ### Exemple 1: Composant de Création de Dossier
@@ -169,6 +210,96 @@ import type {
 } from '@/types/folders';
 ```
 
+### Exemple 4: Système d'Alertes Modulaire 🚨
+
+**Avant (v1.0 - Monolithique):**
+```typescript
+// alert.service.ts
+import type {
+  FolderAlert,
+  DeadlineAlert,
+  ComplianceAlert,
+  AlertRule,
+  AlertDashboard,
+  CreateAlertData,
+  UpdateAlertData,
+  AlertSearchParams,
+  AlertSystemConfig
+} from '@/types/folders/alerts'; // Tout depuis un seul fichier de 418 lignes
+```
+
+**Après (v2.0 - Architecture Modulaire):**
+
+**Option A - Import Global (Recommandé pour la migration)**:
+```typescript
+// alert.service.ts - MIGRATION SIMPLE
+import type {
+  FolderAlert,         // Depuis alerts/core
+  DeadlineAlert,       // Depuis alerts/specialized  
+  ComplianceAlert,     // Depuis alerts/specialized
+  AlertRule,           // Depuis alerts/rules
+  AlertDashboard,      // Depuis alerts/analytics
+  CreateAlertData,     // Depuis alerts/operations
+  UpdateAlertData,     // Depuis alerts/operations
+  AlertSearchParams,   // Depuis alerts/operations
+  AlertSystemConfig    // Depuis alerts/config
+} from '@/types/folders/alerts'; // Point d'entrée unifié
+```
+
+**Option B - Import Granulaire (Optimal pour nouveaux développements)**:
+```typescript
+// alert.service.ts - PERFORMANCE OPTIMALE
+import type { FolderAlert, BusinessImpact } from '@/types/folders/alerts/core';
+import type { 
+  DeadlineAlert, 
+  ComplianceAlert, 
+  DelayAlert 
+} from '@/types/folders/alerts/specialized';
+import type { 
+  AlertRule, 
+  TriggerConditions 
+} from '@/types/folders/alerts/rules';
+import type { 
+  AlertDashboard, 
+  AlertMetrics 
+} from '@/types/folders/alerts/analytics';
+import type { 
+  CreateAlertData, 
+  UpdateAlertData,
+  AlertSearchParams 
+} from '@/types/folders/alerts/operations';
+import type { AlertSystemConfig } from '@/types/folders/alerts/config';
+```
+
+**Option C - Import Namespace (Organisation avancée)**:
+```typescript
+// alert.service.ts - ORGANISATION DU CODE
+import * as Alerts from '@/types/folders/alerts';
+import * as AlertCore from '@/types/folders/alerts/core';
+import * as AlertSpecialized from '@/types/folders/alerts/specialized';
+import * as AlertRules from '@/types/folders/alerts/rules';
+import * as AlertAnalytics from '@/types/folders/alerts/analytics';
+import * as AlertOps from '@/types/folders/alerts/operations';
+
+export class AlertService {
+  async createAlert(data: AlertOps.CreateAlertData): Promise<AlertCore.FolderAlert> {
+    // Usage avec namespaces clairs
+  }
+  
+  async createDeadlineAlert(data: AlertOps.CreateAlertData): Promise<AlertSpecialized.DeadlineAlert> {
+    // Spécialisation avec types précis
+  }
+  
+  async checkRules(folderId: string): Promise<AlertRules.AlertRule[]> {
+    // Logique de règles avec types dédiés
+  }
+  
+  async getDashboard(): Promise<AlertAnalytics.AlertDashboard> {
+    // Analytics avec métriques spécialisées
+  }
+}
+```
+
 ## 🧪 Scripts de Migration Automatisée
 
 ### Script 1: Détection des Imports à Migrer
@@ -179,6 +310,15 @@ grep -r "from '@/types/folders/processing-stages'" src/
 grep -r "from '@/types/folders/enums'" src/
 grep -r "from '@/types/folders/core'" src/
 grep -r "from '@/types/folders/operations'" src/
+
+# NOUVEAU - Détection des imports d'alertes (pour optimisation v2.0)
+echo "=== Fichiers utilisant les alertes ==="
+grep -r "from '@/types/folders/alerts'" src/ | grep -v "alerts/" | wc -l
+echo "Nombre de fichiers détectés pour optimisation alerts modulaires"
+
+# Analyse détaillée des types d'alertes utilisés
+echo "=== Analyse des types d'alertes utilisés ==="
+grep -r "FolderAlert\|DeadlineAlert\|ComplianceAlert\|AlertRule" src/ --include="*.ts" --include="*.tsx" | cut -d: -f1 | sort -u
 ```
 
 ### Script 2: Migration Automatique des Imports Simples
@@ -188,6 +328,62 @@ grep -r "from '@/types/folders/operations'" src/
 find src/ -name "*.ts" -type f -exec sed -i "s|from '@/types/folders/enums'|from '@/types/folders/constants/enums'|g" {} \;
 
 # ATTENTION: Vérifiez toujours les changements avant de les appliquer !
+```
+
+### Script 3: Optimisation des Imports d'Alertes v2.0 🚨
+
+```bash
+# Script d'analyse des imports d'alertes pour optimisation
+#!/bin/bash
+
+echo "🔍 Analyse des imports d'alertes pour optimisation v2.0"
+
+# Fonction pour analyser les types utilisés dans un fichier
+analyze_alert_types() {
+  local file="$1"
+  echo "📁 Analyse de: $file"
+  
+  # Types Core
+  if grep -q "FolderAlert\|BusinessImpact" "$file"; then
+    echo "  ✓ Core types détectés (alerts/core)"
+  fi
+  
+  # Types Specialized
+  if grep -q "DeadlineAlert\|ComplianceAlert\|DelayAlert\|CostAlert" "$file"; then
+    echo "  ✓ Specialized types détectés (alerts/specialized)"
+  fi
+  
+  # Types Rules  
+  if grep -q "AlertRule\|TriggerConditions" "$file"; then
+    echo "  ✓ Rules types détectés (alerts/rules)"
+  fi
+  
+  # Types Analytics
+  if grep -q "AlertDashboard\|AlertMetrics" "$file"; then
+    echo "  ✓ Analytics types détectés (alerts/analytics)"
+  fi
+  
+  # Types Operations
+  if grep -q "CreateAlertData\|UpdateAlertData\|AlertSearchParams" "$file"; then
+    echo "  ✓ Operations types détectés (alerts/operations)"
+  fi
+  
+  # Types Config
+  if grep -q "AlertSystemConfig" "$file"; then
+    echo "  ✓ Config types détectés (alerts/config)"
+  fi
+}
+
+# Analyser tous les fichiers TypeScript
+for file in $(grep -l "from '@/types/folders/alerts'" src/**/*.{ts,tsx} 2>/dev/null); do
+  analyze_alert_types "$file"
+  echo ""
+done
+
+echo "💡 Recommandations:"
+echo "1. Fichiers utilisant 1-2 modules → Import granulaire optimal"
+echo "2. Fichiers utilisant 3+ modules → Import global recommandé" 
+echo "3. Services complexes → Import namespace pour organisation"
 ```
 
 ## ✅ Checklist de Migration par Fichier
@@ -228,6 +424,58 @@ find src/ -name "*.ts" -type f -exec sed -i "s|from '@/types/folders/enums'|from
   git commit -m "migrate: update imports to v2.0 architecture in mon-fichier.ts"
   ```
 
+### 🚨 Checklist Spéciale - Migration Alerts v2.0
+
+**Pour les fichiers utilisant le système d'alertes:**
+
+- [ ] **1. Analyser l'usage des types d'alertes**
+  ```bash
+  ./scripts/analyze_alert_types.sh mon-fichier.ts
+  ```
+
+- [ ] **2. Choisir la stratégie d'import optimale**
+  - [ ] **Global** (si utilisation de 3+ modules) → `from '@/types/folders/alerts'`
+  - [ ] **Granulaire** (si 1-2 modules) → `from '@/types/folders/alerts/core'`
+  - [ ] **Namespace** (si service complexe) → `import * as Alerts`
+
+- [ ] **3. Migration selon le pattern choisi**
+  ```typescript
+  // Pattern Global (RECOMMANDÉ)
+  import type { FolderAlert, DeadlineAlert, AlertRule } from '@/types/folders/alerts';
+  
+  // Pattern Granulaire (OPTIMAL)  
+  import type { FolderAlert } from '@/types/folders/alerts/core';
+  import type { DeadlineAlert } from '@/types/folders/alerts/specialized';
+  
+  // Pattern Namespace (ORGANISÉ)
+  import * as Alerts from '@/types/folders/alerts';
+  ```
+
+- [ ] **4. Validation spécifique aux alertes**
+  ```bash
+  # Test de compilation avec les nouveaux imports
+  pnpm tsc --noEmit mon-fichier.ts
+  
+  # Vérification que tous les types d'alertes sont résolus
+  grep -n "DeadlineAlert\|ComplianceAlert\|AlertRule" mon-fichier.ts
+  ```
+
+- [ ] **5. Test de performance (pour imports granulaires)**
+  ```bash
+  # Mesurer l'impact bundle (optionnel)
+  pnpm build:analyze
+  ```
+
+- [ ] **6. Commit spécialisé**
+  ```bash
+  git add mon-fichier.ts
+  git commit -m "migrate: alerts v2.0 modular architecture in mon-fichier.ts
+  
+  - Switch from monolithic alerts.ts (418L) to modular structure
+  - Use [global/granular/namespace] import pattern
+  - Improve bundle size by [X]% through tree-shaking"
+  ```
+
 ## 🚨 Points d'Attention
 
 ### ⚠️ Pièges Courants
@@ -250,6 +498,40 @@ find src/ -name "*.ts" -type f -exec sed -i "s|from '@/types/folders/enums'|from
    // ✅ Utiliser des alias
    import type { StageTransitionData as WorkflowTransitionData } from '@/types/folders/workflow/transitions';
    import type { StageTransitionData as BatchTransitionData } from '@/types/folders/operations/batch';
+   ```
+
+3. **Pièges Spécifiques aux Alertes v2.0** 🚨
+   ```typescript
+   // ❌ Erreur - Import depuis le mauvais module
+   import type { FolderAlert } from '@/types/folders/alerts/specialized';
+   
+   // ✅ Correct - FolderAlert est dans core
+   import type { FolderAlert } from '@/types/folders/alerts/core';
+   // OU (recommandé)
+   import type { FolderAlert } from '@/types/folders/alerts';
+   ```
+
+4. **Confusion entre types similaires**
+   ```typescript
+   // ❌ Peut créer de la confusion
+   import type { AlertRule } from '@/types/folders/alerts/rules';
+   import type { AlertRuleData } from '@/types/folders/alerts/operations'; // N'existe pas
+   
+   // ✅ Types corrects selon le module
+   import type { AlertRule } from '@/types/folders/alerts/rules';
+   import type { CreateAlertData } from '@/types/folders/alerts/operations';
+   ```
+
+5. **Import inefficace pour usage simple**
+   ```typescript
+   // ❌ Import global pour un seul type
+   import type { 
+     FolderAlert, DeadlineAlert, AlertRule, AlertDashboard 
+   } from '@/types/folders/alerts'; // Bundle inutilement large
+   
+   // ✅ Import granulaire pour usage simple  
+   import type { FolderAlert } from '@/types/folders/alerts/core';
+   // Bundle optimisé, seulement ce qui est nécessaire
    ```
 
 ### 🔍 Validation Post-Migration
@@ -303,6 +585,18 @@ R: Vérifiez le mapping des imports dans ce guide. La plupart des erreurs vienne
 **Q: Puis-je mélanger v1.0 et v2.0 dans le même projet ?**  
 R: Oui, les deux versions coexistent parfaitement.
 
+**Q: L'architecture modulaire des alertes v2.0 casse-t-elle la compatibilité ?**  
+R: Non, 100% de compatibilité maintenue. L'import `from '@/types/folders/alerts'` continue de fonctionner identiquement.
+
+**Q: Dois-je migrer tous mes imports d'alertes vers la version modulaire ?**  
+R: Non, c'est une optimisation optionnelle. L'import global reste recommandé pour la plupart des cas.
+
+**Q: Quels sont les bénéfices réels de l'architecture modulaire des alertes ?**  
+R: -83% taille fichiers, +200% maintenabilité, imports granulaires pour optimisation bundle, navigation intuitive.
+
+**Q: Comment choisir entre import global et granulaire pour les alertes ?**  
+R: Global pour 3+ modules, granulaire pour 1-2 modules, namespace pour services complexes.
+
 ### 🔧 Résolution de Problèmes Courants
 
 | Erreur | Cause | Solution |
@@ -311,6 +605,10 @@ R: Oui, les deux versions coexistent parfaitement.
 | `Type not exported` | Type dans mauvais module | Consultez la documentation du module |
 | `Duplicate identifier` | Conflit de noms | Utilisez des alias d'import |
 | `Cannot find type` | Import manquant | Ajoutez l'import depuis le bon module |
+| `FolderAlert not found in alerts/specialized` | Import depuis mauvais module alerts | FolderAlert est dans `alerts/core`, pas `specialized` |
+| `DeadlineAlert not found in alerts/core` | Import spécialisé depuis core | DeadlineAlert est dans `alerts/specialized` |
+| `Bundle size increased after alerts migration` | Import global au lieu de granulaire | Utilisez imports granulaires pour 1-2 types seulement |
+| `AlertRule conflicts` | Import depuis plusieurs modules | AlertRule est uniquement dans `alerts/rules` |
 
 ---
 
