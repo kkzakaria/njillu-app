@@ -135,9 +135,7 @@ export type {
   OperatorDashboardView,
   ClientDashboardView,
   PerformanceAnalysisView,
-  CostImpactAnalysis,
-  DashboardConfiguration,
-  DashboardSession
+  CostImpactAnalysis
 } from './dashboards';
 
 export type {
@@ -157,7 +155,11 @@ export type {
   UrgencyFilter,
   CustomFilter,
   TrendData,
-  DashboardSummary
+  DashboardSummary,
+  DashboardConfiguration,
+  DashboardSession,
+  AlertThresholdType,
+  AlertThresholdOverrides
 } from './dashboard-types';
 
 // ============================================================================
