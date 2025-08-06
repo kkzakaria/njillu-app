@@ -51,12 +51,18 @@ export type {
 
 // Interfaces principales Folders
 export type {
-  Folder,
-  FolderAlert,
+  Folder
+} from './folders/core';
+
+export type {
+  FolderAlert
+} from './folders/alerts';
+
+export type {
   ClientInfo,
   LocationInfo,
   FinancialInfo
-} from './folders/core';
+} from './folders/entities';
 
 export type {
   FolderStatus,
@@ -65,7 +71,7 @@ export type {
   ProcessingStage,
   AlertType,
   AlertSeverity
-} from './folders/enums';
+} from './folders/constants';
 
 // Interfaces principales Containers
 export type {
@@ -123,8 +129,10 @@ export * as BLViews from './bl/views';
 export * as BLOperations from './bl/operations';
 
 // Sous-modules Folders
-export * as FolderEnums from './folders/enums';
+export * as FolderEnums from './folders/constants';
 export * as FolderCore from './folders/core';
+export * as FolderEntities from './folders/entities';
+export * as FolderWorkflow from './folders/workflow';
 export * as FolderAlerts from './folders/alerts';
 export * as FolderOperations from './folders/operations';
 
@@ -148,7 +156,7 @@ export * as Search from './shared/search';
  */
 export const Enums = {
   BL: () => import('./bl/enums'),
-  Folders: () => import('./folders/enums'),
+  Folders: () => import('./folders/constants'),
   Containers: () => import('./containers/enums')
 } as const;
 
@@ -207,7 +215,7 @@ export type MainEntityId =
  */
 export type MainEntityStatus = 
   | import('./bl/enums').BLStatus
-  | import('./folders/enums').FolderStatus
+  | import('./folders/constants').FolderStatus
   | import('./containers/enums').ContainerArrivalStatus;
 
 /**

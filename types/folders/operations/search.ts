@@ -155,7 +155,7 @@ export type SortField =
 export interface CustomFilter {
   field: string;
   operator: FilterOperator;
-  value: any;
+  value: string | number | boolean | Date | string[] | number[] | null;
   logical_operator?: 'AND' | 'OR';
 }
 

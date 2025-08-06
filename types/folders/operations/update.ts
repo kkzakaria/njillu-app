@@ -154,7 +154,7 @@ export type ActionCategory =
 export interface ActionCondition {
   field: string;
   operator: 'equals' | 'not_equals' | 'in' | 'not_in' | 'greater_than' | 'less_than';
-  value: any;
+  value: string | number | boolean | Date | string[] | number[] | null;
   error_message?: string;
 }
 
@@ -204,7 +204,7 @@ export interface UpdateFolderOptions {
   
   // Audit
   audit_reason?: string;
-  audit_metadata?: Record<string, any>;
+  audit_metadata?: Record<string, string | number | boolean | null>;
   
   // Intégrations
   sync_external_systems: boolean;

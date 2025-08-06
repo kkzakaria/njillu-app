@@ -153,7 +153,7 @@ export interface FolderActivity {
   related_entity_id?: string;
   
   // Métadonnées
-  metadata?: Record<string, any>;
+  metadata?: Record<string, string | number | boolean | Date | null>;
   
   // Impact
   impact_level: 'low' | 'medium' | 'high' | 'critical';

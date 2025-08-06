@@ -194,7 +194,7 @@ export interface TagData {
 export interface CustomOperationData {
   type: 'custom';
   operation_name: string;
-  parameters: Record<string, any>;
+  parameters: Record<string, string | number | boolean | Date | null | string[] | number[]>;
 }
 
 /**

@@ -25,7 +25,7 @@ export interface AuditLogEntry {
   entity_type: string;
   entity_id: string;
   changes?: Array<FieldChange>;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, string | number | boolean | null>;
   ip_address?: string;
   user_agent?: string;
 }
@@ -35,8 +35,8 @@ export interface AuditLogEntry {
  */
 export interface FieldChange {
   field_name: string;
-  old_value?: any;
-  new_value?: any;
+  old_value?: string | number | boolean | Date | null | Record<string, unknown> | unknown[];
+  new_value?: string | number | boolean | Date | null | Record<string, unknown> | unknown[];
   field_type?: 'string' | 'number' | 'boolean' | 'date' | 'object' | 'array';
 }
 

@@ -208,7 +208,7 @@ export interface AlertRule {
     data_conditions?: Array<{
       field_path: string;
       operator: 'equals' | 'not_equals' | 'greater' | 'less' | 'contains' | 'exists' | 'is_null';
-      value: any;
+      value: string | number | boolean | Date | null | undefined;
     }>;
   };
   

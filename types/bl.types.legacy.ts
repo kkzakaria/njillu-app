@@ -102,12 +102,11 @@ export type {
   LocationInfo,
   FinancialInfo,
   AuditMetadata,
+  // Core types
   Folder,
   FolderBLRelation,
   FolderDocument,
   FolderActivity,
-  FolderStatistics,
-  FolderConfiguration,
 
   // Système d'alertes
   FolderAlert,
@@ -129,13 +128,10 @@ export type {
   FolderStatusTransition,
   FolderAvailableActions,
   FolderProgress,
-  FolderValidationRules,
-  FolderValidationResult,
   FolderBatchOperation,
   FolderBatchOperationResult,
   FolderSearchParams,
-  FolderSearchResults,
-  FolderExportConfig
+  FolderSearchResults
 } from './folders';
 
 // Containers - Types de conteneurs et arrivées

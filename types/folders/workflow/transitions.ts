@@ -206,7 +206,7 @@ export interface TransitionCondition {
   type: 'field_value' | 'time_elapsed' | 'dependency_met' | 'approval_received' | 'custom';
   field?: string;
   operator?: 'equals' | 'not_equals' | 'greater_than' | 'less_than' | 'contains';
-  value?: any;
+  value?: string | number | boolean | Date | null;
   dependency_stage?: ProcessingStage;
   custom_validation?: string;
   error_message?: string;
