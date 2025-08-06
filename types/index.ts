@@ -13,7 +13,7 @@
 // EXPORTS DIRECTS - Types les plus couramment utilisés
 // ============================================================================
 
-// Types de base partagés
+// Types de base partagés (architecture modulaire v2.0)
 export type {
   EntityId,
   Timestamp,
@@ -29,7 +29,7 @@ export type {
   FilterGroup,
   ValidationResult,
   ApiResponse
-} from './shared/common';
+} from './shared';
 
 // Interfaces principales Bills of Lading
 export type {
@@ -92,13 +92,13 @@ export type {
   ContainerHealthStatus
 } from './containers/enums';
 
-// Système de soft delete
+// Système de soft delete (architecture modulaire v2.0)
 export type {
   SoftDeletable,
   DeletionMetadata,
   SoftDeleteParams,
-  RestoreParams
-} from './shared/soft-delete';
+  ConditionalDeleteParams
+} from './shared';
 
 // ============================================================================
 // EXPORTS MODULAIRES - Accès complet aux modules
@@ -147,10 +147,16 @@ export * as ContainerDashboards from './containers/dashboards';
 // Note: containers modules ont été décomposés en architecture modulaire
 export * as ContainerOperations from './containers';
 
-// Sous-modules Shared
-export * as CommonTypes from './shared/common';
-export * as SoftDelete from './shared/soft-delete';
-export * as Search from './shared/search';
+// Sous-modules Shared (architecture modulaire v2.0)
+export * as SharedCore from './shared/core';
+export * as SharedAudit from './shared/audit';
+export * as SharedPagination from './shared/pagination';
+export * as SharedFiltering from './shared/filtering';
+export * as SharedValidation from './shared/validation';
+export * as SharedAPI from './shared/api';
+export * as SharedEvents from './shared/events';
+export * as SharedSearch from './shared/search';
+export * as SharedSoftDelete from './shared/soft-delete';
 
 // ============================================================================
 // COLLECTIONS THÉMATIQUES - Regroupements logiques
@@ -172,7 +178,7 @@ export const Core = {
   BL: () => import('./bl/core'),
   Folders: () => import('./folders/core'),
   Containers: () => import('./containers/tracking-core'),
-  Shared: () => import('./shared/common')
+  Shared: () => import('./shared')
 } as const;
 
 /**
@@ -291,19 +297,19 @@ export const TypeSystemMetadata = {
       entities: ['ContainerArrivalTracking', 'ContainerDelayAlert', 'ArrivalPerformanceMetrics']
     },
     shared: {
-      description: 'Shared - Types communs et utilitaires système',
-      files: ['common', 'soft-delete', 'search'],
-      entities: ['AuditMetadata', 'ValidationResult', 'ApiResponse', 'SearchParams']
+      description: 'Shared - Types communs et utilitaires système (architecture modulaire v2.0)',
+      files: ['core', 'audit', 'pagination', 'filtering', 'validation', 'api', 'events', 'search', 'soft-delete'],
+      entities: ['EntityId', 'AuditMetadata', 'PaginatedResponse', 'Filter', 'ValidationResult', 'ApiResponse', 'SearchParams', 'SoftDeletable']
     }
   },
   
   // Statistiques (approximatives)
   statistics: {
-    total_files: 16,
-    total_interfaces: 150,
-    total_enums: 45,
-    total_types: 200,
-    lines_of_code: 4500
+    total_files: 40,
+    total_interfaces: 240,
+    total_enums: 65,
+    total_types: 350,
+    lines_of_code: 7300
   }
 } as const;
 
