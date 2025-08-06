@@ -1,209 +1,54 @@
 /**
- * Types pour le système de suivi des étapes de traitement de dossier
- * Gestion du workflow et des transitions d'états
+ * @deprecated - Ce fichier est déprécié. Utilisez les modules workflow/* pour la nouvelle architecture.
+ * Ce fichier reste pour la compatibilité ascendante uniquement.
+ * 
+ * Migration: Utilisez `@/types/folders/workflow/*` à la place
  */
 
 // ============================================================================
-// Enums pour les étapes de traitement
+// COMPATIBILITÉ ASCENDANTE - Redirections vers les nouveaux modules
 // ============================================================================
 
-export type ProcessingStage = 
-  | 'enregistrement'               // 1. Prise en charge initiale du dossier
-  | 'revision_facture_commerciale' // 2. Vérification documents commerciaux  
-  | 'elaboration_fdi'             // 3. Fiche de Déclaration à l'Import
-  | 'elaboration_rfcv'            // 4. Rapport Final de Classification et Valeur
-  | 'declaration_douaniere'       // 5. Soumission aux autorités douanières
-  | 'service_exploitation'        // 6. Paiement factures compagnies, acquisition conteneurs
-  | 'facturation_client'          // 7. Élaboration facture finale client
-  | 'livraison';                  // 8. Livraison des conteneurs au destinataire
+// Re-export des types depuis les nouveaux modules workflow
+export type {
+  ProcessingStage,
+  StageStatus, 
+  StagePriority,
+  FolderProcessingStage,
+  DefaultProcessingStage,
+  FolderProgress,
+  StageRequiringAttention,
+  StagePerformanceMetrics
+} from './workflow/stages';
 
-export type StageStatus = 
-  | 'pending'      // En attente
-  | 'in_progress'  // En cours  
-  | 'completed'    // Terminé
-  | 'blocked'      // Bloqué (attente externe)
-  | 'skipped';     // Ignoré (non applicable)
+export type {
+  InitializeFolderStagesParams,
+  StartProcessingStageParams,
+  CompleteProcessingStageParams,
+  BlockProcessingStageParams,
+  UnblockProcessingStageParams,
+  ApproveProcessingStageParams,
+  SkipProcessingStageParams,
+  StageTransitionData
+} from './workflow/transitions';
 
-export type StagePriority = 
-  | 'low'          // Priorité faible
-  | 'normal'       // Priorité normale
-  | 'high'         // Priorité élevée
-  | 'urgent';      // Urgent
-
-// ============================================================================
-// Interfaces principales
-// ============================================================================
-
-export interface FolderProcessingStage {
-  id: string;
-  folder_id: string;
-  
-  // Configuration de l'étape
-  stage: ProcessingStage;
-  status: StageStatus;
-  sequence_order: number;
-  priority: StagePriority;
-  
-  // Dates de suivi
-  started_at?: string;
-  completed_at?: string;
-  due_date?: string;
-  estimated_completion_date?: string;
-  
-  // Responsabilités et assignation
-  assigned_to?: string;
-  completed_by?: string;
-  
-  // Métadonnées de traitement
-  notes?: string;
-  internal_comments?: string;
-  client_visible_comments?: string;
-  documents_required?: string[];
-  documents_received?: string[];
-  blocking_reason?: string;
-  
-  // Durées et performance
-  estimated_duration?: string; // Interval PostgreSQL
-  actual_duration?: string;    // Interval PostgreSQL
-  
-  // Configuration dynamique
-  is_mandatory: boolean;
-  can_be_skipped: boolean;
-  requires_approval: boolean;
-  approval_by?: string;
-  approval_date?: string;
-  
-  // Audit et traçabilité
-  created_at: string;
-  updated_at: string;
-  created_by?: string;
-  updated_by?: string;
-  
-  // Soft delete
-  deleted_at?: string;
-  deleted_by?: string;
-}
-
-export interface DefaultProcessingStage {
-  id: string;
-  stage: ProcessingStage;
-  sequence_order: number;
-  default_duration: string; // Interval PostgreSQL
-  is_mandatory: boolean;
-  can_be_skipped: boolean;
-  requires_approval: boolean;
-  default_priority: StagePriority;
-  description?: string;
-  created_at: string;
-  updated_at: string;
-}
+export type {
+  StagesDashboard,
+  StageAlert,
+  StageSearchParams,
+  StageSearchResults
+} from './workflow/metrics';
 
 // ============================================================================
-// Types de progression et analytics
+// Types dépréciés - maintenir pour compatibilité uniquement
 // ============================================================================
 
-export interface FolderProgress {
-  total_stages: number;
-  completed_stages: number;
-  in_progress_stages: number;
-  blocked_stages: number;
-  pending_stages: number;
-  skipped_stages: number;
-  completion_percentage: number;
-  current_stage?: ProcessingStage;
-  next_stage?: ProcessingStage;
-  estimated_completion_date?: string;
-  is_on_schedule: boolean;
-  overdue_stages: number;
-}
-
-export interface StageRequiringAttention {
-  folder_id: string;
-  folder_number: string;
-  stage: ProcessingStage;
-  status: StageStatus;
-  assigned_to?: string;
-  assignee_name?: string;
-  days_overdue: number;
-  priority: StagePriority;
-  blocking_reason?: string;
-  attention_score: number;
-}
-
-export interface StagePerformanceMetrics {
-  stage: ProcessingStage;
-  stage_name: string;
-  total_completed: number;
-  avg_duration?: string; // Interval PostgreSQL
-  median_duration?: string;
-  min_duration?: string;
-  max_duration?: string;
-  success_rate: number;
-  avg_overdue_days: number;
-}
-
-// ============================================================================
-// Types pour les opérations de workflow
-// ============================================================================
-
-export interface InitializeFolderStagesParams {
-  folder_id: string;
-  created_by?: string;
-}
-
-export interface StartProcessingStageParams {
-  folder_id: string;
-  stage: ProcessingStage;
-  assigned_to?: string;
-  started_by?: string;
-  notes?: string;
-}
-
-export interface CompleteProcessingStageParams {
-  folder_id: string;
-  stage: ProcessingStage;
-  completed_by: string;
-  completion_notes?: string;
-  documents_received?: string[];
-}
-
-export interface BlockProcessingStageParams {
-  folder_id: string;
-  stage: ProcessingStage;
-  blocking_reason: string;
-  blocked_by?: string;
-}
-
-export interface UnblockProcessingStageParams {
-  folder_id: string;
-  stage: ProcessingStage;
-  unblocked_by?: string;
-  resolution_notes?: string;
-}
-
-export interface ApproveProcessingStageParams {
-  folder_id: string;
-  stage: ProcessingStage;
-  approved_by: string;
-  approval_notes?: string;
-}
-
-export interface SkipProcessingStageParams {
-  folder_id: string;
-  stage: ProcessingStage;
-  skipped_by: string;
-  skip_reason: string;
-}
-
-// ============================================================================
-// Types pour les formulaires et UI
-// ============================================================================
-
+/** @deprecated Utilisez ./workflow/transitions à la place */
 export interface CreateStageData {
   folder_id: string;
-  stage: ProcessingStage;
+  stage: import('./workflow/stages').ProcessingStage;
   sequence_order: number;
-  priority?: StagePriority;
+  priority?: import('./workflow/stages').StagePriority;
   assigned_to?: string;
   due_date?: string;
   estimated_duration?: string;
@@ -214,9 +59,10 @@ export interface CreateStageData {
   requires_approval?: boolean;
 }
 
+/** @deprecated Utilisez ./workflow/transitions à la place */
 export interface UpdateStageData {
-  status?: StageStatus;
-  priority?: StagePriority;
+  status?: import('./workflow/stages').StageStatus;
+  priority?: import('./workflow/stages').StagePriority;
   assigned_to?: string;
   due_date?: string;
   estimated_completion_date?: string;
@@ -228,59 +74,11 @@ export interface UpdateStageData {
   blocking_reason?: string;
 }
 
-export interface StageTransitionData {
-  action: 'start' | 'complete' | 'block' | 'unblock' | 'approve' | 'skip';
-  notes?: string;
-  blocking_reason?: string;
-  resolution_notes?: string;
-  approval_notes?: string;
-  skip_reason?: string;
-  documents_received?: string[];
-}
-
 // ============================================================================
-// Types pour les vues et dashboard
+// Constantes et helpers - maintenus pour compatibilité
 // ============================================================================
 
-export interface StagesDashboard {
-  folder_id: string;
-  folder_number: string;
-  stages: FolderProcessingStage[];
-  progress: FolderProgress;
-  alerts: StageAlert[];
-}
-
-export interface StageAlert {
-  type: 'overdue' | 'blocked' | 'approval_required' | 'high_priority';
-  stage: ProcessingStage;
-  message: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  created_at: string;
-}
-
-export interface StageSearchParams {
-  folder_id?: string;
-  stage?: ProcessingStage;
-  status?: StageStatus;
-  priority?: StagePriority;
-  assigned_to?: string;
-  due_date_from?: string;
-  due_date_to?: string;
-  is_overdue?: boolean;
-  requires_attention?: boolean;
-}
-
-export interface StageSearchResults {
-  stages: FolderProcessingStage[];
-  total_count: number;
-  page: number;
-  page_size: number;
-  has_more: boolean;
-}
-
-// ============================================================================
-// Constantes et helpers
-// ============================================================================
+import type { ProcessingStage, StageStatus, StagePriority } from './workflow/stages';
 
 export const PROCESSING_STAGE_LABELS: Record<ProcessingStage, string> = {
   enregistrement: 'Enregistrement',
@@ -308,7 +106,6 @@ export const STAGE_PRIORITY_LABELS: Record<StagePriority, string> = {
   urgent: 'Urgent'
 };
 
-// Ordre des étapes dans le workflow
 export const STAGE_SEQUENCE: ProcessingStage[] = [
   'enregistrement',
   'revision_facture_commerciale',
@@ -321,7 +118,7 @@ export const STAGE_SEQUENCE: ProcessingStage[] = [
 ];
 
 // ============================================================================
-// Type guards et helpers
+// Helper functions - maintenus pour compatibilité
 // ============================================================================
 
 export function isValidProcessingStage(value: string): value is ProcessingStage {
@@ -361,8 +158,8 @@ export function canTransitionTo(fromStatus: StageStatus, toStatus: StageStatus):
     pending: ['in_progress', 'blocked', 'skipped'],
     in_progress: ['completed', 'blocked'],
     blocked: ['pending', 'in_progress'],
-    completed: [], // Les étapes complétées ne peuvent pas changer
-    skipped: []    // Les étapes ignorées ne peuvent pas changer
+    completed: [],
+    skipped: []
   };
   
   return validTransitions[fromStatus]?.includes(toStatus) ?? false;
@@ -387,7 +184,6 @@ export function getAttentionLevel(score: number): 'low' | 'medium' | 'high' | 'c
 export function formatDuration(intervalString?: string): string {
   if (!intervalString) return 'Non défini';
   
-  // Parse PostgreSQL interval format (e.g., "2 days", "4:00:00", "1 day 2:30:00")
   const dayMatch = intervalString.match(/(\d+)\s+days?/);
   const timeMatch = intervalString.match(/(\d+):(\d+):(\d+)/);
   

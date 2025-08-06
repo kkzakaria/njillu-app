@@ -1,10 +1,12 @@
 /**
- * Module Folders - Point d'entrée principal
- * Export hiérarchique de tous les types de gestion des dossiers
+ * Module Folders - Point d'entrée principal (v2.0)
+ * Export hiérarchique de tous les types de gestion des dossiers avec architecture modulaire
+ * 
+ * Version 2.0 - Architecture modulaire avec compatibilité ascendante
  */
 
 // ============================================================================
-// Enums et types de base
+// CONSTANTS & ENUMS (Nouvelle architecture modulaire)
 // ============================================================================
 export type {
   FolderStatus,
@@ -14,7 +16,6 @@ export type {
   FolderUrgency,
   CustomsRegime,
   ComplianceStatus,
-  ProcessingStage,
   DocumentStatus,
   AlertType,
   AlertSeverity,
@@ -23,26 +24,162 @@ export type {
   PerformanceRating,
   ServiceType,
   OperationType
-} from './enums';
+} from './constants/enums';
+
+// Stage-related enums from workflow module
+export type {
+  ProcessingStage,
+  StageStatus,
+  StagePriority
+} from './workflow/stages';
 
 // ============================================================================
-// Interfaces principales
+// ENTITIES (Entités métier modulaires)
 // ============================================================================
 export type {
   ClientInfo,
+  ExtendedClientInfo
+} from './entities/client';
+
+export type {
   LocationInfo,
+  PortInfo,
+  GeoCoordinates
+} from './entities/location';
+
+export type {
   FinancialInfo,
+  CostBreakdown,
+  BillingInfo
+} from './entities/financial';
+
+export type {
   AuditMetadata,
+  AuditLogEntry,
+  AuditAction
+} from './entities/audit';
+
+// ============================================================================
+// CORE (Entités principales)
+// ============================================================================
+export type {
   Folder,
+  FolderSummary,
+  FolderDisplayConfig
+} from './core/folder';
+
+export type {
   FolderBLRelation,
   FolderDocument,
   FolderActivity,
-  FolderStatistics,
-  FolderConfiguration
-} from './core';
+  DocumentCategory,
+  DocumentType,
+  ActivityType,
+  ActivityCategory
+} from './core/folder-relations';
 
 // ============================================================================
-// Système d'alertes
+// WORKFLOW (Système de workflow modulaire)
+// ============================================================================
+export type {
+  FolderProcessingStage,
+  DefaultProcessingStage,
+  FolderProgress,
+  StageRequiringAttention,
+  StagePerformanceMetrics,
+  StageIssueType
+} from './workflow/stages';
+
+export type {
+  InitializeFolderStagesParams,
+  StartProcessingStageParams,
+  CompleteProcessingStageParams,
+  BlockProcessingStageParams,
+  UnblockProcessingStageParams,
+  ApproveProcessingStageParams,
+  SkipProcessingStageParams,
+  SkipReason,
+  StageTransitionData,
+  StartStageData,
+  CompleteStageData,
+  BlockStageData,
+  SkipStageData,
+  StageTransitionRules,
+  TransitionCondition,
+  StageStateMachine,
+  TransitionValidation
+} from './workflow/transitions';
+
+export type {
+  StagesDashboard,
+  StageAlert,
+  StageAlertType,
+  StageSearchParams,
+  StageSearchResults,
+  TeamPerformanceAnalysis,
+  StageSLAConfig
+} from './workflow/metrics';
+
+// ============================================================================
+// OPERATIONS (Opérations CRUD modulaires)
+// ============================================================================
+export type {
+  CreateFolderData,
+  FolderTemplate,
+  CreateFolderValidation,
+  CreateFolderResult,
+  CreateFolderOptions,
+  ValidationError,
+  ValidationWarning
+} from './operations/create';
+
+export type {
+  UpdateFolderData,
+  FolderStatusTransition,
+  FolderAvailableActions,
+  SpecificAction,
+  ActionCategory,
+  ActionCondition,
+  UpdateFolderResult,
+  UpdateFolderOptions
+} from './operations/update';
+
+export type {
+  FolderSearchParams,
+  FolderSearchResults,
+  SearchField,
+  SortField,
+  CustomFilter,
+  FilterOperator,
+  SearchStatistics,
+  SearchSuggestion,
+  SearchFacets,
+  SavedSearch
+} from './operations/search';
+
+export type {
+  FolderBatchOperation,
+  BatchOperationType,
+  BatchOperationData,
+  BulkUpdateData,
+  StatusChangeData,
+  StageTransitionData as BatchStageTransitionData,
+  AssignmentData,
+  DocumentAttachData,
+  NotificationData,
+  ExportData,
+  ArchiveData,
+  DeleteData,
+  TagData,
+  CustomOperationData,
+  BatchExecutionOptions,
+  BatchOperationStatus,
+  BatchProgress,
+  FolderBatchOperationResult
+} from './operations/batch';
+
+// ============================================================================
+// ALERTS (Système d'alertes)
 // ============================================================================
 export type {
   FolderAlert,
@@ -60,66 +197,78 @@ export type {
 } from './alerts';
 
 // ============================================================================
-// Système d'étapes de traitement
+// BACKWARD COMPATIBILITY LAYER - Types dépréciés maintenus
 // ============================================================================
+
+// Anciens imports via processing-stages.ts (maintenant deprecié mais fonctionnel)
+// Note: Ces exports sont commentés car ils causent des conflits avec les nouveaux modules
+// Utilisez directement les imports des modules workflow/* à la place
+/*
 export type {
-  ProcessingStage,
-  StageStatus,
-  StagePriority,
-  FolderProcessingStage,
-  DefaultProcessingStage,
-  FolderProgress as StageProgress,
-  StageRequiringAttention,
-  StagePerformanceMetrics,
-  InitializeFolderStagesParams,
-  StartProcessingStageParams,
-  CompleteProcessingStageParams,
-  BlockProcessingStageParams,
-  UnblockProcessingStageParams,
-  ApproveProcessingStageParams,
-  SkipProcessingStageParams,
+  ProcessingStage as LegacyProcessingStage,
+  StageStatus as LegacyStageStatus,
+  StagePriority as LegacyStagePriority,
+  FolderProcessingStage as LegacyFolderProcessingStage,
+  DefaultProcessingStage as LegacyDefaultProcessingStage,
+  FolderProgress as LegacyStageProgress,
+  StageRequiringAttention as LegacyStageRequiringAttention,
+  StagePerformanceMetrics as LegacyStagePerformanceMetrics,
+  InitializeFolderStagesParams as LegacyInitializeFolderStagesParams,
+  StartProcessingStageParams as LegacyStartProcessingStageParams,
+  CompleteProcessingStageParams as LegacyCompleteProcessingStageParams,
+  BlockProcessingStageParams as LegacyBlockProcessingStageParams,
+  UnblockProcessingStageParams as LegacyUnblockProcessingStageParams,
+  ApproveProcessingStageParams as LegacyApproveProcessingStageParams,
+  SkipProcessingStageParams as LegacySkipProcessingStageParams,
+  StageTransitionData as LegacyStageTransitionData,
+  StagesDashboard as LegacyStagesDashboard,
+  StageAlert as LegacyStageAlert,
+  StageSearchParams as LegacyStageSearchParams,
+  StageSearchResults as LegacyStageSearchResults,
+  // Types dépréciés mais maintenus
   CreateStageData,
-  UpdateStageData,
-  StageTransitionData,
-  StagesDashboard,
-  StageAlert,
-  StageSearchParams,
-  StageSearchResults
+  UpdateStageData
 } from './processing-stages';
+*/
+
+// Anciens imports core.ts -> Redirection vers les nouvelles entités
+/** @deprecated Utilisez ./entities/client ClientInfo à la place */
+export type { ClientInfo as OldClientInfo } from './entities/client';
+/** @deprecated Utilisez ./entities/location LocationInfo à la place */
+export type { LocationInfo as OldLocationInfo } from './entities/location';
+/** @deprecated Utilisez ./entities/financial FinancialInfo à la place */
+export type { FinancialInfo as OldFinancialInfo } from './entities/financial';
+/** @deprecated Utilisez ./entities/audit AuditMetadata à la place */
+export type { AuditMetadata as OldAuditMetadata } from './entities/audit';
 
 // ============================================================================
-// Opérations et workflows
-// ============================================================================
-export type {
-  CreateFolderData,
-  UpdateFolderData,
-  FolderStatusTransition,
-  FolderAvailableActions,
-  FolderProgress,
-  FolderValidationRules,
-  FolderValidationResult,
-  FolderBatchOperation,
-  FolderBatchOperationResult,
-  FolderSearchParams,
-  FolderSearchResults,
-  FolderExportConfig
-} from './operations';
-
-// ============================================================================
-// Réexports organisés par catégorie
+// ORGANIZED NAMESPACE EXPORTS (v2.0)
 // ============================================================================
 
-// Types de base et enums
-export * as FolderEnums from './enums';
+// Constants et énumérations
+export * as FolderConstants from './constants/enums';
 
-// Interfaces principales
+// Entités métier
+export * as FolderEntities from './entities';
+
+// Core business logic
 export * as FolderCore from './core';
+
+// Système de workflow
+export * as FolderWorkflow from './workflow';
+
+// Opérations CRUD
+export * as FolderOperations from './operations';
 
 // Système d'alertes
 export * as FolderAlerts from './alerts';
 
-// Système d'étapes de traitement
-export * as ProcessingStages from './processing-stages';
+// ============================================================================
+// LEGACY NAMESPACE EXPORTS (Compatibilité v1.0)
+// ============================================================================
 
-// Opérations et workflows
-export * as FolderOperations from './operations';
+/** @deprecated Utilisez FolderConstants à la place */
+export * as FolderEnums from './constants/enums';
+
+/** @deprecated Utilisez FolderWorkflow à la place */
+export * as ProcessingStages from './processing-stages';

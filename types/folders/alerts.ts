@@ -9,9 +9,9 @@ import type {
   AlertStatus,
   FolderStatus,
   ProcessingStage
-} from './enums';
+} from './constants/enums';
 
-import type { Folder } from './core';
+import type { Folder } from './core/folder';
 
 // ============================================================================
 // Interface principale des alertes
