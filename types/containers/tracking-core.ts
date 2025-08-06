@@ -9,7 +9,6 @@
 
 import type {
   ContainerArrivalStatus,
-  ArrivalUrgency,
   DelaySeverity,
   ContainerUrgencyLevel,
   ContainerHealthStatus

@@ -10,7 +10,6 @@
 import type {
   ContainerArrivalStatus,
   ArrivalUrgency,
-  DelaySeverity
 } from './enums';
 
 import type {

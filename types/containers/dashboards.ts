@@ -16,10 +16,6 @@ import type {
 } from './enums';
 
 import type {
-  ContainerArrivalTracking
-} from './tracking-core';
-
-import type {
   ArrivalPerformanceMetrics
 } from './metrics';
 
