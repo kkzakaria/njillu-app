@@ -1,0 +1,53 @@
+{
+  "card": {
+    "title": "Folder",
+    "actions": {
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete",
+      "archive": "Archive",
+      "duplicate": "Duplicate",
+      "export": "Export",
+      "moreActions": "More actions"
+    },
+    "status": {
+      "open": "Open",
+      "processing": "Processing",
+      "completed": "Completed",
+      "closed": "Closed",
+      "on_hold": "On Hold",
+      "cancelled": "Cancelled"
+    },
+    "priority": {
+      "low": "Low",
+      "normal": "Normal",
+      "high": "High",
+      "urgent": "Urgent",
+      "critical": "Critical"
+    },
+    "urgency": {
+      "standard": "Standard",
+      "expedited": "Expedited",
+      "rush": "Rush",
+      "emergency": "Emergency"
+    },
+    "labels": {
+      "createdOn": "Created on",
+      "modifiedOn": "Modified on",
+      "blNumber": "BL Number",
+      "folderNumber": "Folder No.",
+      "client": "Client",
+      "origin": "Origin",
+      "destination": "Destination",
+      "noBL": "No associated BL"
+    },
+    "accessibility": {
+      "folderCard": "Folder card",
+      "openMenu": "Open actions menu",
+      "selectFolder": "Select this folder",
+      "folderStatus": "Folder status",
+      "folderPriority": "Folder priority",
+      "folderUrgency": "Folder urgency"
+    }
+  }
+}

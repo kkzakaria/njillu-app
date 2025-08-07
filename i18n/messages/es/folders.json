@@ -1,0 +1,53 @@
+{
+  "card": {
+    "title": "Expediente",
+    "actions": {
+      "view": "Ver",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "archive": "Archivar",
+      "duplicate": "Duplicar",
+      "export": "Exportar",
+      "moreActions": "Más acciones"
+    },
+    "status": {
+      "open": "Abierto",
+      "processing": "Procesando",
+      "completed": "Completado",
+      "closed": "Cerrado",
+      "on_hold": "En espera",
+      "cancelled": "Cancelado"
+    },
+    "priority": {
+      "low": "Baja",
+      "normal": "Normal",
+      "high": "Alta",
+      "urgent": "Urgente",
+      "critical": "Crítica"
+    },
+    "urgency": {
+      "standard": "Estándar",
+      "expedited": "Acelerado",
+      "rush": "Rápido",
+      "emergency": "Emergencia"
+    },
+    "labels": {
+      "createdOn": "Creado el",
+      "modifiedOn": "Modificado el",
+      "blNumber": "Número BL",
+      "folderNumber": "N° Expediente",
+      "client": "Cliente",
+      "origin": "Origen",
+      "destination": "Destino",
+      "noBL": "Sin BL asociado"
+    },
+    "accessibility": {
+      "folderCard": "Tarjeta de expediente",
+      "openMenu": "Abrir menú de acciones",
+      "selectFolder": "Seleccionar este expediente",
+      "folderStatus": "Estado del expediente",
+      "folderPriority": "Prioridad del expediente",
+      "folderUrgency": "Urgencia del expediente"
+    }
+  }
+}

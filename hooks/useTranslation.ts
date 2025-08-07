@@ -19,3 +19,7 @@ export function useCustoms() {
 export function useLanguage() {
   return useTranslations('language');
 }
+
+export function useFolders() {
+  return useTranslations('folders.card');
+}
