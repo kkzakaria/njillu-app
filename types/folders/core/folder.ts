@@ -9,12 +9,14 @@ import type {
   FolderPriority,
   CustomsRegime,
   ComplianceStatus,
-  ProcessingStage,
   HealthStatus,
   PerformanceRating,
   ServiceType,
   OperationType
 } from '../constants';
+
+// Import ProcessingStage from workflow module (correct DB stages)
+import type { ProcessingStage } from '../workflow/stages';
 
 import type {
   ClientInfo,

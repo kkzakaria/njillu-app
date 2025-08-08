@@ -34,13 +34,31 @@
       "destination": "Destination",
       "noBL": "No associated BL"
     },
+    "processingStages": {
+      "enregistrement": "Registration",
+      "revision_facture_commerciale": "Invoice Review",
+      "elaboration_fdi": "FDI Preparation",
+      "elaboration_rfcv": "RFCV Preparation", 
+      "declaration_douaniere": "Customs Declaration",
+      "service_exploitation": "Operations Service",
+      "facturation_client": "Client Billing",
+      "livraison": "Delivery"
+    },
+    "stageStatus": {
+      "pending": "Pending",
+      "in_progress": "In Progress",
+      "completed": "Completed", 
+      "blocked": "Blocked",
+      "skipped": "Skipped"
+    },
     "accessibility": {
       "folderCard": "Folder card",
       "openMenu": "Open actions menu",
       "selectFolder": "Select this folder",
       "folderStatus": "Folder status",
       "folderPriority": "Folder priority",
-      "folderUrgency": "Folder urgency"
+      "folderUrgency": "Folder urgency",
+      "processingStage": "Processing stage"
     }
   }
 }

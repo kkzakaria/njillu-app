@@ -34,13 +34,31 @@
       "destination": "Destino",
       "noBL": "Sin BL asociado"
     },
+    "processingStages": {
+      "enregistrement": "Registro",
+      "revision_facture_commerciale": "Revisión Factura",
+      "elaboration_fdi": "Elaboración FDI",
+      "elaboration_rfcv": "Elaboración RFCV",
+      "declaration_douaniere": "Declaración Aduanas",
+      "service_exploitation": "Servicio Operativo",
+      "facturation_client": "Facturación",
+      "livraison": "Entrega"
+    },
+    "stageStatus": {
+      "pending": "Pendiente",
+      "in_progress": "En progreso",
+      "completed": "Completado",
+      "blocked": "Bloqueado", 
+      "skipped": "Omitido"
+    },
     "accessibility": {
       "folderCard": "Tarjeta de expediente",
       "openMenu": "Abrir menú de acciones",
       "selectFolder": "Seleccionar este expediente",
       "folderStatus": "Estado del expediente",
       "folderPriority": "Prioridad del expediente",
-      "folderUrgency": "Urgencia del expediente"
+      "folderUrgency": "Urgencia del expediente",
+      "processingStage": "Etapa de procesamiento"
     }
   }
 }

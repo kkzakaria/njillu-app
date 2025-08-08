@@ -12,7 +12,7 @@ const sampleFolder: FolderSummary = {
   category: 'commercial',
   status: 'open',
   priority: 'urgent',
-  processing_stage: 'documentation',
+  processing_stage: 'elaboration_fdi',
   health_status: 'healthy',
   created_date: '2024-11-10T13:05:23',
   client_name: 'Import Export Co.',
@@ -26,7 +26,7 @@ const sampleFolderWithBL: FolderSummary = {
   folder_number: 'M241110-00002',
   status: 'completed',
   priority: 'normal',
-  processing_stage: 'closure',
+  processing_stage: 'livraison',
 };
 
 const sampleFolderOnHold: FolderSummary = {
@@ -35,7 +35,7 @@ const sampleFolderOnHold: FolderSummary = {
   folder_number: 'M241110-00003',
   status: 'on_hold',
   priority: 'critical',
-  processing_stage: 'customs_clearance',
+  processing_stage: 'declaration_douaniere',
   health_status: 'warning',
   client_name: 'Global Logistics Inc.',
 };
@@ -46,7 +46,7 @@ const sampleFolderCancelled: FolderSummary = {
   folder_number: 'M241110-00004',
   status: 'cancelled',
   priority: 'low',
-  processing_stage: 'intake',
+  processing_stage: 'enregistrement',
   health_status: 'healthy',
   client_name: 'Deleted Corp.',
 };
@@ -57,7 +57,7 @@ const sampleFolderUrgent: FolderSummary = {
   folder_number: 'M241110-00005',
   status: 'processing',
   priority: 'urgent',
-  processing_stage: 'customs_clearance',
+  processing_stage: 'service_exploitation',
   health_status: 'healthy',
   client_name: 'Urgent Logistics Inc.',
 };
@@ -68,7 +68,7 @@ const sampleFolderCritical: FolderSummary = {
   folder_number: 'M241110-00006',
   status: 'open',
   priority: 'critical',
-  processing_stage: 'documentation',
+  processing_stage: 'elaboration_rfcv',
   health_status: 'warning',
   client_name: 'Critical Emergency Co.',
 };

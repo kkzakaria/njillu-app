@@ -36,6 +36,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { PriorityBadge } from '@/components/priority-badge';
+import { ProcessingStageBadge } from '@/components/processing-stage-badge';
 import { cn } from '@/lib/utils';
 import { useFolders } from '@/hooks/useTranslation';
 
@@ -70,6 +71,7 @@ export interface FolderCardProps {
   actions?: FolderAction[];
   showStatus?: boolean;
   showPriority?: boolean;
+  showProcessingStage?: boolean;
   showClient?: boolean;
 }
 
@@ -141,6 +143,7 @@ export function FolderCard({
   actions = defaultActions,
   showStatus = true, // eslint-disable-line @typescript-eslint/no-unused-vars -- keeping for API compatibility
   showPriority = true,
+  showProcessingStage = true,
   showClient = false,
 }: FolderCardProps) {
   const locale = useLocale();
@@ -202,19 +205,19 @@ export function FolderCard({
             aria-hidden="true"
           />
           <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-base leading-none">
-                {folder.folder_number}
-              </h3>
-              {showPriority && folder.priority && (
+            <h3 className="font-semibold text-base leading-none">
+              {folder.folder_number}
+            </h3>
+            {showPriority && folder.priority && (
+              <div className="flex items-center mt-1">
                 <PriorityBadge 
                   priority={folder.priority}
                   aria-label={`${t('accessibility.folderPriority')}: ${t(`priority.${folder.priority}`)}`}
                 >
                   {t(`priority.${folder.priority}`)}
                 </PriorityBadge>
-              )}
-            </div>
+              </div>
+            )}
             {showClient && folder.client_name && (
               <p className="text-sm text-muted-foreground">
                 {folder.client_name}
@@ -282,7 +285,18 @@ export function FolderCard({
         )}
       </CardContent>
 
-      <CardFooter className={cn('justify-end', compact && 'pt-2')}>
+      <CardFooter className={cn('justify-between', compact && 'pt-2')}>
+        {showProcessingStage && folder.processing_stage ? (
+          <ProcessingStageBadge 
+            stage={folder.processing_stage}
+            aria-label={`${t('accessibility.processingStage')}: ${t(`processingStages.${folder.processing_stage}`)}`}
+          >
+            {t(`processingStages.${folder.processing_stage}`)}
+          </ProcessingStageBadge>
+        ) : (
+          <div /> 
+        )}
+        
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <Calendar className="h-3 w-3" aria-hidden="true" />
           <time dateTime={folder.created_date}>
