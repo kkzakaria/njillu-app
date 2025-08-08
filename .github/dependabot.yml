@@ -1,0 +1,56 @@
+version: 2
+updates:
+  # Enable version updates for npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "your-team"
+    assignees:
+      - "your-team"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    # Group security updates
+    groups:
+      security:
+        patterns:
+          - "*"
+        update-types:
+          - "security-update"
+    # Security updates get priority
+    labels:
+      - "dependencies"
+      - "security"
+    # Automatically merge security patches
+    auto-merge:
+      enable: true
+      strategy: "squash"
+    # Ignore specific packages if needed
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+    labels:
+      - "github-actions"
+      - "dependencies"
+
+  # Enable version updates for Docker (if using)
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "docker"
+      - "dependencies"

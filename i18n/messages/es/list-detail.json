@@ -1,0 +1,68 @@
+{
+  "search": {
+    "placeholder": "Buscar...",
+    "suggestions": "Sugerencias de búsqueda",
+    "noResults": "No se encontraron resultados",
+    "clear": "Limpiar búsqueda"
+  },
+  "filters": {
+    "title": "Filtros",
+    "clear": "Limpiar filtros",
+    "apply": "Aplicar filtros",
+    "showAll": "Mostrar todo",
+    "status": "Estado",
+    "priority": "Prioridad",
+    "dateRange": "Rango de fechas"
+  },
+  "list": {
+    "loading": "Cargando...",
+    "error": "Error al cargar datos",
+    "empty": "No se encontraron elementos",
+    "retry": "Reintentar",
+    "showingResults": "Mostrando {start} a {end} de {total} resultados",
+    "itemsPerPage": "Elementos por página"
+  },
+  "actions": {
+    "select": "Seleccionar",
+    "selectAll": "Seleccionar todo",
+    "delete": "Eliminar seleccionados",
+    "export": "Exportar",
+    "edit": "Editar",
+    "view": "Ver detalles",
+    "refresh": "Actualizar"
+  },
+  "detail": {
+    "loading": "Cargando detalles...",
+    "error": "Error al cargar detalles",
+    "notFound": "Elemento no encontrado",
+    "backToList": "Volver a la lista",
+    "tabs": {
+      "overview": "Resumen",
+      "details": "Detalles",
+      "activities": "Actividades",
+      "related": "Elementos relacionados",
+      "attachments": "Adjuntos"
+    }
+  },
+  "sort": {
+    "newest": "Más recientes primero",
+    "oldest": "Más antiguos primero",
+    "alphabetical": "A-Z",
+    "reverseAlphabetical": "Z-A",
+    "priority": "Prioridad"
+  },
+  "layout": {
+    "switchToList": "Vista de lista",
+    "switchToGrid": "Vista de cuadrícula",
+    "splitView": "Vista dividida",
+    "fullDetail": "Vista de detalle completa"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "retry": "Reintentar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "close": "Cerrar"
+  }
+}

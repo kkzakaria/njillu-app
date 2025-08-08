@@ -23,3 +23,7 @@ export function useLanguage() {
 export function useFolders() {
   return useTranslations('folders.card');
 }
+
+export function useListDetail() {
+  return useTranslations('list-detail');
+}

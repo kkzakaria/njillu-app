@@ -1,0 +1,29 @@
+name: "CodeQL Config"
+
+disable-default-queries: false
+
+queries:
+  - uses: security-and-quality
+  - uses: security-experimental
+
+paths-ignore:
+  - "**/*.test.ts"
+  - "**/*.test.tsx"  
+  - "**/*.spec.ts"
+  - "**/*.spec.tsx"
+  - "**/test/**"
+  - "**/tests/**"
+  - "**/__tests__/**"
+  - "**/e2e/**"
+  - "**/node_modules/**"
+  - "**/.next/**"
+  - "**/coverage/**"
+  - "**/dist/**"
+  - "**/build/**"
+
+paths:
+  - "app/**"
+  - "components/**"
+  - "lib/**"
+  - "hooks/**"
+  - "middleware.ts"

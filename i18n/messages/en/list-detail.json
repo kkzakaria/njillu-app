@@ -1,0 +1,68 @@
+{
+  "search": {
+    "placeholder": "Search...",
+    "suggestions": "Search suggestions",
+    "noResults": "No results found",
+    "clear": "Clear search"
+  },
+  "filters": {
+    "title": "Filters",
+    "clear": "Clear filters",
+    "apply": "Apply filters",
+    "showAll": "Show all",
+    "status": "Status",
+    "priority": "Priority",
+    "dateRange": "Date range"
+  },
+  "list": {
+    "loading": "Loading...",
+    "error": "Error loading data",
+    "empty": "No items found",
+    "retry": "Retry",
+    "showingResults": "Showing {start} to {end} of {total} results",
+    "itemsPerPage": "Items per page"
+  },
+  "actions": {
+    "select": "Select",
+    "selectAll": "Select all",
+    "delete": "Delete selected",
+    "export": "Export",
+    "edit": "Edit",
+    "view": "View details",
+    "refresh": "Refresh"
+  },
+  "detail": {
+    "loading": "Loading details...",
+    "error": "Error loading details",
+    "notFound": "Item not found",
+    "backToList": "Back to list",
+    "tabs": {
+      "overview": "Overview",
+      "details": "Details",
+      "activities": "Activities",
+      "related": "Related items",
+      "attachments": "Attachments"
+    }
+  },
+  "sort": {
+    "newest": "Newest first",
+    "oldest": "Oldest first",
+    "alphabetical": "A-Z",
+    "reverseAlphabetical": "Z-A",
+    "priority": "Priority"
+  },
+  "layout": {
+    "switchToList": "Switch to list view",
+    "switchToGrid": "Switch to grid view",
+    "splitView": "Split view",
+    "fullDetail": "Full detail view"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "close": "Close"
+  }
+}

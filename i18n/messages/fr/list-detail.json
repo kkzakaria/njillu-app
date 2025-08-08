@@ -1,0 +1,68 @@
+{
+  "search": {
+    "placeholder": "Rechercher...",
+    "suggestions": "Suggestions de recherche",
+    "noResults": "Aucun résultat trouvé",
+    "clear": "Effacer la recherche"
+  },
+  "filters": {
+    "title": "Filtres",
+    "clear": "Effacer les filtres",
+    "apply": "Appliquer les filtres",
+    "showAll": "Tout afficher",
+    "status": "Statut",
+    "priority": "Priorité",
+    "dateRange": "Plage de dates"
+  },
+  "list": {
+    "loading": "Chargement...",
+    "error": "Erreur lors du chargement",
+    "empty": "Aucun élément trouvé",
+    "retry": "Réessayer",
+    "showingResults": "Affichage de {start} à {end} sur {total} résultats",
+    "itemsPerPage": "Éléments par page"
+  },
+  "actions": {
+    "select": "Sélectionner",
+    "selectAll": "Tout sélectionner",
+    "delete": "Supprimer la sélection",
+    "export": "Exporter",
+    "edit": "Modifier",
+    "view": "Voir les détails",
+    "refresh": "Actualiser"
+  },
+  "detail": {
+    "loading": "Chargement des détails...",
+    "error": "Erreur lors du chargement des détails",
+    "notFound": "Élément non trouvé",
+    "backToList": "Retour à la liste",
+    "tabs": {
+      "overview": "Aperçu",
+      "details": "Détails",
+      "activities": "Activités",
+      "related": "Éléments liés",
+      "attachments": "Pièces jointes"
+    }
+  },
+  "sort": {
+    "newest": "Plus récents en premier",
+    "oldest": "Plus anciens en premier",
+    "alphabetical": "A-Z",
+    "reverseAlphabetical": "Z-A",
+    "priority": "Priorité"
+  },
+  "layout": {
+    "switchToList": "Vue en liste",
+    "switchToGrid": "Vue en grille",
+    "splitView": "Vue divisée",
+    "fullDetail": "Vue détail complète"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "retry": "Réessayer",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "close": "Fermer"
+  }
+}

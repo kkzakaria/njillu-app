@@ -1,0 +1,412 @@
+name: Cross-Browser Compatibility Testing
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'components/**'
+      - 'e2e/**'
+      - 'playwright.config.ts'
+      - 'package.json'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'components/**'
+      - 'e2e/**'
+      - 'playwright.config.ts'
+      - 'package.json'
+  schedule:
+    # Run compatibility tests weekly (Mondays at 2 AM UTC)
+    - cron: '0 2 * * 1'
+  workflow_dispatch:
+    inputs:
+      browsers:
+        description: 'Browsers to test (comma-separated)'
+        required: false
+        default: 'chromium,firefox,webkit'
+      test-type:
+        description: 'Type of tests to run'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+        - all
+        - core
+        - accessibility
+        - performance
+        - cross-browser-only
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '9'
+
+jobs:
+  # Matrix strategy for comprehensive browser testing
+  cross-browser-tests:
+    name: Cross-Browser Tests (${{ matrix.browser }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+        include:
+          - browser: chromium
+            browser-name: 'Chrome'
+          - browser: firefox  
+            browser-name: 'Firefox'
+          - browser: webkit
+            browser-name: 'Safari'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Setup test environment
+        run: |
+          cp .env.example .env.local
+          echo "NEXT_PUBLIC_SUPABASE_URL=https://test.supabase.co" >> .env.local
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=test_key" >> .env.local
+
+      - name: Build application
+        run: pnpm build
+
+      - name: Run cross-browser compatibility tests
+        run: pnpm exec playwright test e2e/cross-browser-compatibility.spec.ts --project=${{ matrix.browser }}
+        env:
+          CI: true
+
+      - name: Run core functionality tests  
+        if: ${{ github.event.inputs.test-type == 'all' || github.event.inputs.test-type == 'core' }}
+        run: pnpm exec playwright test e2e/list-detail-workflows.spec.ts --project=${{ matrix.browser }}
+
+      - name: Run accessibility tests
+        if: ${{ github.event.inputs.test-type == 'all' || github.event.inputs.test-type == 'accessibility' }}
+        run: pnpm exec playwright test e2e/accessibility.spec.ts --project=${{ matrix.browser }}
+
+      - name: Run performance tests
+        if: ${{ github.event.inputs.test-type == 'all' || github.event.inputs.test-type == 'performance' }}
+        run: pnpm exec playwright test e2e/performance.spec.ts --project=${{ matrix.browser }}
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.browser }}
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
+
+  # Mobile browser testing
+  mobile-browser-tests:
+    name: Mobile Browser Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [mobile-chrome, mobile-safari]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: Setup test environment
+        run: |
+          cp .env.example .env.local
+          echo "NEXT_PUBLIC_SUPABASE_URL=https://test.supabase.co" >> .env.local
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=test_key" >> .env.local
+
+      - name: Build application
+        run: pnpm build
+
+      - name: Run mobile tests
+        run: pnpm exec playwright test --project=${{ matrix.project }}
+        env:
+          CI: true
+
+      - name: Upload mobile test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-test-results-${{ matrix.project }}
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
+
+  # Compatibility validation and reporting
+  compatibility-validation:
+    name: Generate Compatibility Report  
+    runs-on: ubuntu-latest
+    needs: [cross-browser-tests, mobile-browser-tests]
+    if: always()
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Download all test results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: '*test-results-*'
+          path: test-results/
+          merge-multiple: true
+
+      - name: Generate compatibility report
+        run: |
+          # Create compatibility validation script that processes downloaded results
+          node -e "
+          const fs = require('fs');
+          const path = require('path');
+          
+          // Process downloaded test results
+          const resultsDir = 'test-results';
+          const browsers = ['chromium', 'firefox', 'webkit'];
+          const report = {
+            timestamp: new Date().toISOString(),
+            browsers: {},
+            summary: { passed: 0, failed: 0, total: 0 }
+          };
+          
+          browsers.forEach(browser => {
+            const browserResultsPath = path.join(resultsDir, browser, 'results.json');
+            if (fs.existsSync(browserResultsPath)) {
+              try {
+                const results = JSON.parse(fs.readFileSync(browserResultsPath, 'utf8'));
+                report.browsers[browser] = {
+                  stats: results.stats,
+                  suites: results.suites?.length || 0
+                };
+                report.summary.passed += results.stats?.passed || 0;
+                report.summary.failed += results.stats?.failed || 0; 
+                report.summary.total += results.stats?.expected || 0;
+              } catch (e) {
+                console.log(\`Warning: Could not parse results for \${browser}\`);
+                report.browsers[browser] = { error: e.message };
+              }
+            } else {
+              console.log(\`Warning: No results found for \${browser}\`);
+              report.browsers[browser] = { error: 'No results found' };
+            }
+          });
+          
+          // Calculate pass rate
+          report.summary.passRate = report.summary.total > 0 ? 
+            (report.summary.passed / report.summary.total * 100).toFixed(1) : 0;
+          
+          console.log('=== CROSS-BROWSER COMPATIBILITY REPORT ===');
+          console.log(\`Overall Pass Rate: \${report.summary.passRate}%\`);
+          console.log(\`Total Tests: \${report.summary.total}\`);
+          console.log(\`Passed: \${report.summary.passed}\`);
+          console.log(\`Failed: \${report.summary.failed}\`);
+          console.log('');
+          console.log('Browser Results:');
+          Object.entries(report.browsers).forEach(([browser, data]) => {
+            if (data.stats) {
+              const passRate = data.stats.expected > 0 ? 
+                (data.stats.passed / data.stats.expected * 100).toFixed(1) : 0;
+              console.log(\`  \${browser.toUpperCase()}: \${passRate}% (\${data.stats.passed}/\${data.stats.expected})\`);
+            } else {
+              console.log(\`  \${browser.toUpperCase()}: ERROR - \${data.error || 'Unknown error'}\`);
+            }
+          });
+          
+          // Save report
+          fs.writeFileSync('compatibility-report.json', JSON.stringify(report, null, 2));
+          
+          // Set GitHub output
+          console.log(\`::set-output name=pass-rate::\${report.summary.passRate}\`);
+          console.log(\`::set-output name=total-tests::\${report.summary.total}\`);
+          console.log(\`::set-output name=passed-tests::\${report.summary.passed}\`);
+          
+          // Exit with appropriate code
+          if (parseFloat(report.summary.passRate) < 75) {
+            console.log('');
+            console.log('❌ Compatibility validation failed (pass rate < 75%)');
+            process.exit(1);
+          } else {
+            console.log('');
+            console.log('✅ Compatibility validation passed!');
+          }
+          "
+
+      - name: Upload compatibility report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compatibility-report
+          path: compatibility-report.json
+          retention-days: 30
+
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            if (!fs.existsSync('compatibility-report.json')) {
+              console.log('No compatibility report found');
+              return;
+            }
+            
+            const report = JSON.parse(fs.readFileSync('compatibility-report.json', 'utf8'));
+            
+            const browserResults = Object.entries(report.browsers)
+              .map(([browser, data]) => {
+                if (data.stats) {
+                  const passRate = data.stats.expected > 0 ? 
+                    (data.stats.passed / data.stats.expected * 100).toFixed(1) : 0;
+                  const icon = passRate >= 90 ? '✅' : passRate >= 75 ? '⚠️' : '❌';
+                  return `| ${browser} | ${icon} ${passRate}% | ${data.stats.passed}/${data.stats.expected} |`;
+                } else {
+                  return `| ${browser} | ❌ Error | ${data.error || 'Unknown error'} |`;
+                }
+              })
+              .join('\n');
+            
+            const overallIcon = parseFloat(report.summary.passRate) >= 75 ? '✅' : '❌';
+            
+            const body = `## ${overallIcon} Cross-Browser Compatibility Report
+            
+            **Overall Pass Rate: ${report.summary.passRate}%** (${report.summary.passed}/${report.summary.total} tests)
+            
+            | Browser | Status | Tests |
+            |---------|--------|-------|
+            ${browserResults}
+            
+            _Generated on ${new Date(report.timestamp).toLocaleString()}_
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+  # Performance regression check
+  performance-regression:
+    name: Performance Regression Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright
+        run: pnpm exec playwright install chromium
+
+      - name: Setup test environment  
+        run: |
+          cp .env.example .env.local
+          echo "NEXT_PUBLIC_SUPABASE_URL=https://test.supabase.co" >> .env.local
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=test_key" >> .env.local
+
+      - name: Build application
+        run: pnpm build
+
+      - name: Run performance benchmark
+        run: pnpm exec playwright test e2e/performance.spec.ts --project=performance-chrome --reporter=json
+        env:
+          CI: true
+
+      - name: Analyze performance results
+        run: |
+          if [ -f "test-results/results.json" ]; then
+            node -e "
+            const results = require('./test-results/results.json');
+            const perfTests = results.suites?.find(s => s.title.includes('Performance'));
+            
+            if (perfTests && perfTests.specs) {
+              console.log('Performance Test Results:');
+              perfTests.specs.forEach(spec => {
+                const status = spec.tests?.[0]?.results?.[0]?.status || 'unknown';
+                console.log(\`  - \${spec.title}: \${status}\`);
+              });
+            } else {
+              console.log('No performance test results found');
+            }
+            "
+          else
+            echo "No performance test results file found"
+          fi
+
+      - name: Upload performance results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-results
+          path: test-results/
+          retention-days: 7

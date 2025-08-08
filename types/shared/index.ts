@@ -65,6 +65,37 @@ export type {
   ConditionalDeleteParams
 } from './soft-delete';
 
+// List-Detail Layout System
+export type {
+  LayoutBreakpoints,
+  LayoutMode,
+  ListDetailLayoutConfig,
+  ListViewItemBase,
+  ListViewItem,
+  ListItemBadge,
+  ListItemAction,
+  ListViewParams,
+  ListViewResponse,
+  ListViewAggregates,
+  ListViewFacet,
+  DetailViewData,
+  DetailViewRelated,
+  DetailViewActivity,
+  DetailViewMetadata,
+  DetailViewTab,
+  ListApiParams,
+  DetailApiParams,
+  BulkOperationParams,
+  SearchConfig,
+  SearchField,
+  SearchSuggestion,
+  CacheConfig,
+  PerformanceMetrics,
+  ListDetailState,
+  ListDetailAction,
+  ListDetailI18nKeys
+} from './list-detail';
+
 // ============================================================================
 // EXPORTS MODULAIRES - Accès complet aux modules
 // ============================================================================
@@ -95,6 +126,9 @@ export * as Search from './search';
 
 // Module SoftDelete (suppression logique)
 export * as SoftDelete from './soft-delete';
+
+// Module ListDetail (layout système liste-détail)
+export * as ListDetail from './list-detail';
 
 // ============================================================================
 // COLLECTIONS THÉMATIQUES - Regroupements logiques

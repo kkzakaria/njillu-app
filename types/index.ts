@@ -100,6 +100,22 @@ export type {
   ConditionalDeleteParams
 } from './shared';
 
+// Système List-Detail Layout (responsive UI/UX)
+export type {
+  ListViewItem,
+  ListViewResponse,
+  DetailViewData,
+  ListDetailLayoutConfig,
+  ListApiParams,
+  DetailApiParams,
+  BulkOperationParams,
+  SearchSuggestion,
+  ListViewAggregates,
+  LayoutMode,
+  CacheConfig,
+  PerformanceMetrics
+} from './shared';
+
 // ============================================================================
 // EXPORTS MODULAIRES - Accès complet aux modules
 // ============================================================================
