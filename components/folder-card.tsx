@@ -198,26 +198,26 @@ export function FolderCard({
       role="article"
       aria-label={t('accessibility.folderCard')}
     >
-      <CardHeader className={cn('flex flex-row items-start justify-between', compact && 'pb-2')}>
+      <CardHeader className={cn('flex flex-row items-start justify-between relative', compact && 'pb-2')}>
         <div className="flex items-start gap-3">
           <StatusIcon 
             className={cn('h-5 w-5 mt-0.5', colorClass)} 
             aria-hidden="true"
           />
           <div className="flex flex-col gap-1">
-            <h3 className="font-semibold text-base leading-none">
-              {folder.folder_number}
-            </h3>
-            {showPriority && folder.priority && (
-              <div className="flex items-center mt-1">
+            <div className="flex items-center gap-2">
+              <h3 className="font-semibold text-base leading-none">
+                {folder.folder_number}
+              </h3>
+              {showPriority && folder.priority && (
                 <PriorityBadge 
                   priority={folder.priority}
                   aria-label={`${t('accessibility.folderPriority')}: ${t(`priority.${folder.priority}`)}`}
                 >
                   {t(`priority.${folder.priority}`)}
                 </PriorityBadge>
-              </div>
-            )}
+              )}
+            </div>
             {showClient && folder.client_name && (
               <p className="text-sm text-muted-foreground">
                 {folder.client_name}
@@ -232,7 +232,7 @@ export function FolderCard({
               <Button 
                 variant="ghost" 
                 size="icon"
-                className="h-8 w-8"
+                className="h-8 w-8 absolute top-2 right-2"
                 aria-label={t('accessibility.openMenu')}
               >
                 <MoreVertical className="h-4 w-4" />
