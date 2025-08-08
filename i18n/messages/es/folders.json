@@ -1,0 +1,64 @@
+{
+  "card": {
+    "title": "Expediente",
+    "actions": {
+      "view": "Ver",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "archive": "Archivar",
+      "duplicate": "Duplicar",
+      "export": "Exportar",
+      "moreActions": "Más acciones"
+    },
+    "status": {
+      "open": "Abierto",
+      "processing": "Procesando",
+      "completed": "Completado",
+      "closed": "Cerrado",
+      "on_hold": "En espera",
+      "cancelled": "Cancelado"
+    },
+    "priority": {
+      "low": "Baja",
+      "normal": "Normal",
+      "urgent": "Urgente",
+      "critical": "Crítica"
+    },
+    "labels": {
+      "createdOn": "Creado el",
+      "modifiedOn": "Modificado el",
+      "blNumber": "Número BL",
+      "folderNumber": "N° Expediente",
+      "client": "Cliente",
+      "origin": "Origen",
+      "destination": "Destino",
+      "noBL": "Sin BL asociado"
+    },
+    "processingStages": {
+      "enregistrement": "Registro",
+      "revision_facture_commerciale": "Revisión Factura",
+      "elaboration_fdi": "Elaboración FDI",
+      "elaboration_rfcv": "Elaboración RFCV",
+      "declaration_douaniere": "Declaración Aduanas",
+      "service_exploitation": "Servicio Operativo",
+      "facturation_client": "Facturación",
+      "livraison": "Entrega"
+    },
+    "stageStatus": {
+      "pending": "Pendiente",
+      "in_progress": "En progreso",
+      "completed": "Completado",
+      "blocked": "Bloqueado", 
+      "skipped": "Omitido"
+    },
+    "accessibility": {
+      "folderCard": "Tarjeta de expediente",
+      "openMenu": "Abrir menú de acciones",
+      "selectFolder": "Seleccionar este expediente",
+      "folderStatus": "Estado del expediente",
+      "folderPriority": "Prioridad del expediente",
+      "folderUrgency": "Urgencia del expediente",
+      "processingStage": "Etapa de procesamiento"
+    }
+  }
+}

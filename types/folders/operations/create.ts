@@ -6,7 +6,6 @@ import type {
   FolderType,
   FolderCategory,
   FolderPriority,
-  FolderUrgency,
   CustomsRegime,
   ServiceType,
   OperationType
@@ -26,7 +25,6 @@ export interface CreateFolderData {
   type: FolderType;
   category: FolderCategory;
   priority?: FolderPriority;
-  urgency?: FolderUrgency;
   
   // Références
   reference_number?: string;

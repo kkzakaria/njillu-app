@@ -7,15 +7,16 @@ import type {
   FolderType,
   FolderCategory,
   FolderPriority,
-  FolderUrgency,
   CustomsRegime,
   ComplianceStatus,
-  ProcessingStage,
   HealthStatus,
   PerformanceRating,
   ServiceType,
   OperationType
 } from '../constants';
+
+// Import ProcessingStage from workflow module (correct DB stages)
+import type { ProcessingStage } from '../workflow/stages';
 
 import type {
   ClientInfo,
@@ -42,7 +43,6 @@ export interface Folder {
   type: FolderType;
   category: FolderCategory;
   priority: FolderPriority;
-  urgency: FolderUrgency;
   
   // Informations client
   client_info: ClientInfo;

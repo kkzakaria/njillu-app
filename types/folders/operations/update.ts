@@ -6,7 +6,6 @@ import type {
   FolderType,
   FolderCategory,
   FolderPriority,
-  FolderUrgency,
   CustomsRegime,
   ServiceType,
   OperationType,
@@ -31,7 +30,6 @@ export interface UpdateFolderData {
   type?: FolderType;
   category?: FolderCategory;
   priority?: FolderPriority;
-  urgency?: FolderUrgency;
   
   reference_number?: string;
   internal_reference?: string;

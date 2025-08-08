@@ -1,0 +1,63 @@
+{
+  "card": {
+    "title": "Dossier",
+    "actions": {
+      "view": "Voir",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "archive": "Archiver",
+      "duplicate": "Dupliquer",
+      "export": "Exporter",
+      "moreActions": "Plus d'actions"
+    },
+    "status": {
+      "open": "Ouvert",
+      "processing": "En traitement",
+      "completed": "Terminé",
+      "closed": "Fermé",
+      "on_hold": "En suspens",
+      "cancelled": "Annulé"
+    },
+    "priority": {
+      "low": "Basse",
+      "normal": "Normale",
+      "urgent": "Urgent",
+      "critical": "Critique"
+    },
+    "labels": {
+      "createdOn": "Créé le",
+      "modifiedOn": "Modifié le",
+      "blNumber": "Numéro BL",
+      "folderNumber": "N° Dossier",
+      "client": "Client",
+      "origin": "Origine",
+      "destination": "Destination",
+      "noBL": "Aucun BL associé"
+    },
+    "processingStages": {
+      "enregistrement": "Enregistrement",
+      "revision_facture_commerciale": "Révision Facture",
+      "elaboration_fdi": "Élaboration FDI",
+      "elaboration_rfcv": "Élaboration RFCV",
+      "declaration_douaniere": "Déclaration Douane",
+      "service_exploitation": "Service Exploit.",
+      "facturation_client": "Facturation",
+      "livraison": "Livraison"
+    },
+    "stageStatus": {
+      "pending": "En attente",
+      "in_progress": "En cours",
+      "completed": "Terminé",
+      "blocked": "Bloqué",
+      "skipped": "Ignoré"
+    },
+    "accessibility": {
+      "folderCard": "Carte de dossier",
+      "openMenu": "Ouvrir le menu d'actions",
+      "selectFolder": "Sélectionner ce dossier",
+      "folderStatus": "Statut du dossier",
+      "folderPriority": "Priorité du dossier",
+      "processingStage": "Étape de traitement"
+    }
+  }
+}

@@ -7,7 +7,6 @@ import type {
   FolderType,
   FolderCategory,
   FolderPriority,
-  FolderUrgency,
   CustomsRegime,
   ComplianceStatus,
   ProcessingStage,
@@ -32,7 +31,6 @@ export interface FolderSearchParams {
   type?: FolderType | FolderType[];
   category?: FolderCategory | FolderCategory[];
   priority?: FolderPriority | FolderPriority[];
-  urgency?: FolderUrgency | FolderUrgency[];
   
   // Filtres workflow
   processing_stage?: ProcessingStage | ProcessingStage[];
