@@ -7,7 +7,6 @@ import type {
   FolderType,
   FolderCategory,
   FolderPriority,
-  FolderUrgency,
   CustomsRegime,
   ComplianceStatus,
   ProcessingStage,
@@ -42,7 +41,6 @@ export interface Folder {
   type: FolderType;
   category: FolderCategory;
   priority: FolderPriority;
-  urgency: FolderUrgency;
   
   // Informations client
   client_info: ClientInfo;

@@ -44,16 +44,9 @@ export type FolderCategory =
 
 export type FolderPriority = 
   | 'low'          // Priorité faible
-  | 'normal'       // Priorité normale
-  | 'high'         // Priorité élevée
-  | 'urgent'       // Urgent
-  | 'critical';    // Critique
-
-export type FolderUrgency = 
-  | 'standard'     // Traitement standard
-  | 'expedited'    // Traitement accéléré
-  | 'rush'         // Traitement d'urgence
-  | 'emergency';   // Traitement d'urgence absolue
+  | 'normal'       // Priorité normale (défaut DB)
+  | 'urgent'       // Urgent (correspond à DB)
+  | 'critical';    // Critique (correspond à DB)
 
 // ============================================================================
 // Régimes douaniers et réglementaires

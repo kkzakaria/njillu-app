@@ -21,15 +21,8 @@
     "priority": {
       "low": "Basse",
       "normal": "Normale",
-      "high": "Élevée",
       "urgent": "Urgent",
       "critical": "Critique"
-    },
-    "urgency": {
-      "standard": "Standard",
-      "expedited": "Accéléré",
-      "rush": "Rush",
-      "emergency": "Urgence"
     },
     "labels": {
       "createdOn": "Créé le",
@@ -46,8 +39,7 @@
       "openMenu": "Ouvrir le menu d'actions",
       "selectFolder": "Sélectionner ce dossier",
       "folderStatus": "Statut du dossier",
-      "folderPriority": "Priorité du dossier",
-      "folderUrgency": "Urgence du dossier"
+      "folderPriority": "Priorité du dossier"
     }
   }
 }

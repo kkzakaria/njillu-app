@@ -34,13 +34,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { UrgentBadge } from '@/components/urgent-badge';
+import { PriorityBadge } from '@/components/priority-badge';
 import { cn } from '@/lib/utils';
 import { useFolders } from '@/hooks/useTranslation';
 
-import type { FolderSummary, FolderStatus, FolderPriority, FolderUrgency } from '@/types/folders';
+import type { FolderSummary, FolderStatus } from '@/types/folders';
 
 // Action type for menu items
 export interface FolderAction {
@@ -57,7 +56,6 @@ export interface FolderCardProps {
   // Data
   folder: FolderSummary;
   primaryBLNumber?: string;
-  urgency?: FolderUrgency; // Optional urgency level for badge display
   
   // Behavior
   onClick?: (folder: FolderSummary) => void;
@@ -86,55 +84,6 @@ const defaultActions: FolderAction[] = [
   { separator: true, id: 'sep2' },
   { id: 'delete', label: 'delete', icon: Trash2, variant: 'destructive' },
 ];
-
-// Helper functions for status and priority colors
-const getStatusVariant = (status: FolderStatus): 'default' | 'secondary' | 'destructive' | 'outline' => {
-  switch (status) {
-    case 'completed':
-    case 'closed':
-      return 'default';
-    case 'open':
-    case 'processing':
-      return 'secondary';
-    case 'cancelled':
-    case 'on_hold':
-      return 'destructive';
-    default:
-      return 'outline';
-  }
-};
-
-const getPriorityVariant = (priority: FolderPriority): 'default' | 'secondary' | 'destructive' | 'outline' => {
-  switch (priority) {
-    case 'critical':
-    case 'urgent':
-      return 'destructive';
-    case 'high':
-      return 'default';
-    case 'normal':
-      return 'secondary';
-    case 'low':
-      return 'outline';
-    default:
-      return 'outline';
-  }
-};
-
-// Helper function for urgency colors (available for future use)
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const getUrgencyVariant = (urgency: FolderUrgency): 'default' | 'secondary' | 'destructive' | 'outline' => {
-  switch (urgency) {
-    case 'emergency':
-    case 'rush':
-      return 'destructive';
-    case 'expedited':
-      return 'default';
-    case 'standard':
-      return 'secondary';
-    default:
-      return 'outline';
-  }
-};
 
 // Get status icon and color
 const getStatusIcon = (status: FolderStatus) => {
@@ -184,15 +133,14 @@ const getDateLocale = (locale: string) => {
 export function FolderCard({
   folder,
   primaryBLNumber,
-  urgency,
   onClick,
   onActionClick,
   className,
   compact = false,
   showActions = true,
   actions = defaultActions,
-  showStatus = true,
-  showPriority = false,
+  showStatus = true, // eslint-disable-line @typescript-eslint/no-unused-vars -- keeping for API compatibility
+  showPriority = true,
   showClient = false,
 }: FolderCardProps) {
   const locale = useLocale();
@@ -252,27 +200,19 @@ export function FolderCard({
           <StatusIcon 
             className={cn('h-5 w-5 mt-0.5', colorClass)} 
             aria-hidden="true"
-            title={t(`status.${folder.status}`)}
           />
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
               <h3 className="font-semibold text-base leading-none">
                 {folder.folder_number}
               </h3>
-              {urgency && (
-                <UrgentBadge 
-                  urgency={urgency}
-                  aria-label={`${t('accessibility.folderUrgency')}: ${t(`urgency.${urgency}`)}`}
-                />
-              )}
               {showPriority && folder.priority && (
-                <Badge 
-                  variant={getPriorityVariant(folder.priority)}
-                  className="text-xs"
+                <PriorityBadge 
+                  priority={folder.priority}
                   aria-label={`${t('accessibility.folderPriority')}: ${t(`priority.${folder.priority}`)}`}
                 >
                   {t(`priority.${folder.priority}`)}
-                </Badge>
+                </PriorityBadge>
               )}
             </div>
             {showClient && folder.client_name && (

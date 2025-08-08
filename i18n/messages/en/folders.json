@@ -21,15 +21,8 @@
     "priority": {
       "low": "Low",
       "normal": "Normal",
-      "high": "High",
       "urgent": "Urgent",
       "critical": "Critical"
-    },
-    "urgency": {
-      "standard": "Standard",
-      "expedited": "Expedited",
-      "rush": "Rush",
-      "emergency": "Emergency"
     },
     "labels": {
       "createdOn": "Created on",

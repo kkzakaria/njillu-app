@@ -13,7 +13,6 @@ export type {
   FolderType,
   FolderCategory,
   FolderPriority,
-  FolderUrgency,
   CustomsRegime,
   ComplianceStatus,
   DocumentStatus,

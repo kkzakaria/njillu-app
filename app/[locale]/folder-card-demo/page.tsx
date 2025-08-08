@@ -11,7 +11,7 @@ const sampleFolder: FolderSummary = {
   type: 'import',
   category: 'commercial',
   status: 'open',
-  priority: 'high',
+  priority: 'urgent',
   processing_stage: 'documentation',
   health_status: 'healthy',
   created_date: '2024-11-10T13:05:23',
@@ -51,18 +51,18 @@ const sampleFolderCancelled: FolderSummary = {
   client_name: 'Deleted Corp.',
 };
 
-const sampleFolderRush: FolderSummary = {
+const sampleFolderUrgent: FolderSummary = {
   ...sampleFolder,
   id: '5',
   folder_number: 'M241110-00005',
   status: 'processing',
-  priority: 'high',
+  priority: 'urgent',
   processing_stage: 'customs_clearance',
   health_status: 'healthy',
-  client_name: 'Rush Delivery Inc.',
+  client_name: 'Urgent Logistics Inc.',
 };
 
-const sampleFolderEmergency: FolderSummary = {
+const sampleFolderCritical: FolderSummary = {
   ...sampleFolder,
   id: '6',
   folder_number: 'M241110-00006',
@@ -70,7 +70,7 @@ const sampleFolderEmergency: FolderSummary = {
   priority: 'critical',
   processing_stage: 'documentation',
   health_status: 'warning',
-  client_name: 'Emergency Logistics',
+  client_name: 'Critical Emergency Co.',
 };
 
 export default function FolderCardDemoPage() {
@@ -89,7 +89,7 @@ export default function FolderCardDemoPage() {
       <div>
         <h1 className="text-3xl font-bold mb-2">FolderCard Component Demo</h1>
         <p className="text-muted-foreground mb-6">
-          Testing the FolderCard component with different configurations
+          Testing the FolderCard component with unified Priority system (no more urgency duplication)
         </p>
         
         {lastAction && (
@@ -115,7 +115,7 @@ export default function FolderCardDemoPage() {
         <section>
           <h2 className="text-xl font-semibold mb-4">Different Status Icons</h2>
           <p className="text-sm text-muted-foreground mb-4">
-            🟡 Ouvert (amber) • ✅ Terminé (vert) • 🗂️ Archivé (bleu) • ❌ Supprimé (rouge)
+            🟡 Open (amber) • ✅ Completed (green) • 🗂️ On Hold (blue) • ❌ Cancelled (red)
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <FolderCard
@@ -183,33 +183,38 @@ export default function FolderCardDemoPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold mb-4">Urgency Badges</h2>
+          <h2 className="text-xl font-semibold mb-4">Priority Badges (Unified System)</h2>
           <p className="text-sm text-muted-foreground mb-4">
-            🟠 Rush (orange) • 🔴 Emergency (rouge avec animation pulse)
+            🔘 Low (outline) • 🔗 Normal (secondary) • ⚡ Urgent (red with zap icon) • 🚨 Critical (red with triangle + pulse)
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <FolderCard
-              folder={sampleFolderRush}
-              primaryBLNumber="BL0000000000000005"
-              urgency="rush"
-              onClick={handleCardClick}
-              onActionClick={handleActionClick}
-              showClient
-              showPriority
-            />
-            <FolderCard
-              folder={sampleFolderEmergency}
-              primaryBLNumber="BL0000000000000006"
-              urgency="emergency"
-              onClick={handleCardClick}
-              onActionClick={handleActionClick}
-              showClient
-              showPriority
-            />
-            <FolderCard
-              folder={sampleFolder}
+              folder={{...sampleFolder, priority: 'low', folder_number: 'M241110-00007'}}
               primaryBLNumber="BL0000000000000007"
-              urgency="standard"
+              onClick={handleCardClick}
+              onActionClick={handleActionClick}
+              showClient
+              showPriority
+            />
+            <FolderCard
+              folder={{...sampleFolder, priority: 'normal', folder_number: 'M241110-00008'}}
+              primaryBLNumber="BL0000000000000008"
+              onClick={handleCardClick}
+              onActionClick={handleActionClick}
+              showClient
+              showPriority
+            />
+            <FolderCard
+              folder={sampleFolderUrgent}
+              primaryBLNumber="BL0000000000000005"
+              onClick={handleCardClick}
+              onActionClick={handleActionClick}
+              showClient
+              showPriority
+            />
+            <FolderCard
+              folder={sampleFolderCritical}
+              primaryBLNumber="BL0000000000000006"
               onClick={handleCardClick}
               onActionClick={handleActionClick}
               showClient
