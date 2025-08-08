@@ -62,25 +62,69 @@ export type {
 } from './views';
 
 // ============================================================================
-// Types pour les opérations et workflows
+// Types de base pour les opérations
+// ============================================================================
+export type {
+  BLFieldValue,
+  StatusChangeParams,
+  AssignToFolderParams,
+  AddChargesParams,
+  UpdateShippingCompanyParams,
+  BulkExportParams,
+  BulkDeleteParams,
+  BLBatchOperationParams
+} from './parameters';
+
+// ============================================================================
+// Types pour les opérations CRUD
 // ============================================================================
 export type {
   CreateBLData,
   UpdateBLData,
   CreateBLContainerData,
-  CreateCargoDetailData,
+  CreateCargoDetailData
+} from './crud';
+
+// ============================================================================
+// Types pour les workflows
+// ============================================================================
+export type {
   BLStatusChangeData,
   BLStatusHistory,
-  BLAvailableActions,
+  BLAvailableActions
+} from './workflows';
+
+// ============================================================================
+// Types pour la validation
+// ============================================================================
+export type {
   BLValidationRules,
-  BLValidationResult,
+  BLValidationResult
+} from './validation';
+
+// ============================================================================
+// Types pour les opérations en lot
+// ============================================================================
+export type {
   BLBatchOperation,
-  BLBatchOperationResult,
+  BLBatchOperationResult
+} from './batch';
+
+// ============================================================================
+// Types pour l'audit
+// ============================================================================
+export type {
   BLAuditEntry,
-  BLAuditQuery,
+  BLAuditQuery
+} from './audit';
+
+// ============================================================================
+// Types pour l'intégration
+// ============================================================================
+export type {
   BLIntegrationConfig,
   BLSyncResult
-} from './operations';
+} from './integration';
 
 // ============================================================================
 // Réexports organisés par catégorie
@@ -98,5 +142,23 @@ export * as BLCharges from './charges';
 // Vues et affichages
 export * as BLViews from './views';
 
-// Opérations et workflows
-export * as BLOperations from './operations';
+// Paramètres et types de base pour opérations
+export * as BLParameters from './parameters';
+
+// Opérations CRUD
+export * as BLCrud from './crud';
+
+// Workflows et changements d'état
+export * as BLWorkflows from './workflows';
+
+// Validation
+export * as BLValidation from './validation';
+
+// Opérations en lot
+export * as BLBatch from './batch';
+
+// Audit et traçabilité
+export * as BLAudit from './audit';
+
+// Intégration API
+export * as BLIntegration from './integration';
