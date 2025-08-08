@@ -9,7 +9,7 @@ import type {
   DetailViewData,
   ListDetailLayoutConfig,
   LayoutMode,
-  ListViewParams,
+  ListApiParams,
   DetailApiParams,
   ListViewResponse
 } from '@/types';
@@ -115,7 +115,8 @@ export function ListDetailProvider<T extends EntityType>({
   const [totalPages, setTotalPages] = useState(0);
 
   // URL-based parameters
-  const [listParams, setListParams] = useState<ListViewParams>(() => ({
+  const [listParams, setListParams] = useState<ListApiParams>(() => ({
+    entityType,
     page: parseInt(searchParams.get('page') || '1', 10),
     limit: parseInt(searchParams.get('limit') || '20', 10),
     search: searchParams.get('search') || '',
@@ -142,7 +143,7 @@ export function ListDetailProvider<T extends EntityType>({
   }, [responsive.isMobile, layoutMode, config.mode]);
 
   // URL synchronization
-  const updateURL = useCallback((params: Partial<ListViewParams>, selectedId?: EntityId) => {
+  const updateURL = useCallback((params: Partial<ListApiParams>, selectedId?: EntityId) => {
     const newSearchParams = new URLSearchParams(searchParams);
     
     if (params.page !== undefined) newSearchParams.set('page', params.page.toString());
@@ -170,7 +171,7 @@ export function ListDetailProvider<T extends EntityType>({
   }, [pathname, router, searchParams]);
 
   // Load list data
-  const loadList = useCallback(async (params?: Partial<ListViewParams>) => {
+  const loadList = useCallback(async (params?: Partial<ListApiParams>) => {
     try {
       setLoading(true);
       setError(undefined);
@@ -180,8 +181,8 @@ export function ListDetailProvider<T extends EntityType>({
       
       const response = await onLoadList(newParams);
       setItems(response.data);
-      setTotalItems(response.pagination.total);
-      setTotalPages(response.pagination.totalPages);
+      setTotalItems(response.pagination.total_count);
+      setTotalPages(response.pagination.total_pages);
       
       updateURL(newParams);
     } catch (err) {
@@ -238,7 +239,7 @@ export function ListDetailProvider<T extends EntityType>({
 
   // Filter and search management
   const updateFilters = useCallback((filters: Record<string, unknown>) => {
-    loadList({ ...listParams, filters: Object.entries(filters).map(([field, value]) => ({ field, operator: 'eq', value })), page: 1 });
+    loadList({ ...listParams, filters: Object.entries(filters).map(([field, value]) => ({ field, operator: 'equals' as const, value: value as any })), page: 1 });
   }, [listParams, loadList]);
 
   const updateSearch = useCallback((query: string) => {

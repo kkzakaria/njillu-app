@@ -5,7 +5,7 @@ import { ListDetailLayout } from '../layout/list-detail-layout';
 import type { 
   ListViewResponse,
   DetailViewData,
-  ListViewParams,
+  ListApiParams,
   DetailApiParams,
   ListViewItem,
   DetailViewTab,
@@ -23,7 +23,7 @@ interface FolderListDetailLayoutProps {
 
 export function FolderListDetailLayout({ className }: FolderListDetailLayoutProps) {
   // Mock data loader for Folders list
-  const loadFolderList = async (params: ListViewParams): Promise<ListViewResponse<'folder'>> => {
+  const loadFolderList = async (params: ListApiParams): Promise<ListViewResponse<'folder'>> => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 600));
 
@@ -52,7 +52,7 @@ export function FolderListDetailLayout({ className }: FolderListDetailLayoutProp
         badges: [
           {
             label: '€125,000',
-            variant: 'secondary',
+            variant: 'info',
             icon: '💰',
             tooltip: 'Estimated value'
           },
@@ -107,7 +107,7 @@ export function FolderListDetailLayout({ className }: FolderListDetailLayoutProp
         badges: [
           {
             label: '€89,000',
-            variant: 'secondary',
+            variant: 'info',
             icon: '💰'
           },
           {
@@ -145,7 +145,7 @@ export function FolderListDetailLayout({ className }: FolderListDetailLayoutProp
         badges: [
           {
             label: '€45,000',
-            variant: 'secondary',
+            variant: 'info',
             icon: '💰'
           },
           {
@@ -178,7 +178,7 @@ export function FolderListDetailLayout({ className }: FolderListDetailLayoutProp
         badges: [
           {
             label: '€23,500',
-            variant: 'secondary',
+            variant: 'info',
             icon: '💰'
           },
           {
@@ -200,8 +200,8 @@ export function FolderListDetailLayout({ className }: FolderListDetailLayoutProp
     if (params.search) {
       filteredFolders = mockFolders.filter(folder =>
         folder.title.toLowerCase().includes(params.search!.toLowerCase()) ||
-        folder.subtitle.toLowerCase().includes(params.search!.toLowerCase()) ||
-        folder.preview.client_name.toLowerCase().includes(params.search!.toLowerCase())
+        folder.subtitle?.toLowerCase().includes(params.search!.toLowerCase()) ||
+        ((folder.preview as any).client_name?.toLowerCase().includes(params.search!.toLowerCase()))
       );
     }
 
@@ -214,12 +214,12 @@ export function FolderListDetailLayout({ className }: FolderListDetailLayoutProp
     return {
       data: paginatedFolders,
       pagination: {
-        page,
-        limit,
-        total: filteredFolders.length,
-        totalPages: Math.ceil(filteredFolders.length / limit),
-        hasNext: start + limit < filteredFolders.length,
-        hasPrev: page > 1
+        current_page: page,
+        page_size: limit,
+        total_count: filteredFolders.length,
+        total_pages: Math.ceil(filteredFolders.length / limit),
+        has_next_page: start + limit < filteredFolders.length,
+        has_previous_page: page > 1
       },
       aggregates: {
         statusCounts: {
@@ -376,10 +376,10 @@ export function FolderListDetailLayout({ className }: FolderListDetailLayoutProp
           id: 'activity-1',
           action: 'status_changed',
           description: 'Processing stage changed to "customs_clearance"',
-          user_name: 'Marie Dubois',
-          user_id: 'agent-001',
           created_at: '2025-08-07T15:20:00Z',
           updated_at: '2025-08-07T15:20:00Z',
+          created_by: 'agent-001',
+          updated_by: 'agent-001',
           changes: {
             processing_stage: {
               from: 'document_review',
@@ -391,20 +391,20 @@ export function FolderListDetailLayout({ className }: FolderListDetailLayoutProp
           id: 'activity-2',
           action: 'comment_added',
           description: 'Added processing note',
-          user_name: 'Marie Dubois',
-          user_id: 'agent-001',
-          comment: 'All documents verified. Proceeding with customs clearance.',
           created_at: '2025-08-07T14:45:00Z',
-          updated_at: '2025-08-07T14:45:00Z'
+          updated_at: '2025-08-07T14:45:00Z',
+          created_by: 'agent-001',
+          updated_by: 'agent-001',
+          comment: 'All documents verified. Proceeding with customs clearance.'
         },
         {
           id: 'activity-3',
           action: 'created',
           description: 'Folder created and assigned',
-          user_name: 'System',
-          user_id: 'system',
           created_at: '2025-08-01T08:30:00Z',
-          updated_at: '2025-08-01T08:30:00Z'
+          updated_at: '2025-08-01T08:30:00Z',
+          created_by: 'system',
+          updated_by: 'system'
         }
       ],
       related: {

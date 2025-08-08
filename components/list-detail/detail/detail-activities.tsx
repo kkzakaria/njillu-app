@@ -159,13 +159,13 @@ function ActivityItem({ activity }: ActivityItemProps) {
         {/* User */}
         <div className="flex items-center gap-2">
           <Avatar className="h-6 w-6">
-            <AvatarImage src={activity.user_avatar} />
+            <AvatarImage src="" />
             <AvatarFallback>
-              {activity.user_name?.charAt(0) || <User className="h-3 w-3" />}
+              <User className="h-3 w-3" />
             </AvatarFallback>
           </Avatar>
           <span className="text-sm font-medium">
-            {activity.user_name || 'System'}
+            System
           </span>
         </div>
 

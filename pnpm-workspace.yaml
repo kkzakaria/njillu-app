@@ -1,6 +1,4 @@
 onlyBuiltDependencies:
-  - '@sentry/cli'
-  - '@vercel/speed-insights'
   - esbuild
   - sharp
   - unrs-resolver

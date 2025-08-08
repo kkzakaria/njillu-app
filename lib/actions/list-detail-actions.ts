@@ -53,9 +53,11 @@ export async function fetchListData<T extends EntityType>(
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
       return {
-        success: false,
-        error: 'Authentication required',
-        status: 401
+        status: 'error',
+        error: {
+          code: 'AUTHENTICATION_ERROR',
+          message: 'Authentication required'
+        }
       };
     }
 
@@ -86,29 +88,29 @@ export async function fetchListData<T extends EntityType>(
         if (!config.filterFields.includes(filter.field)) continue;
         
         switch (filter.operator) {
-          case 'eq':
+          case 'equals':
             query = query.eq(filter.field, filter.value);
             break;
-          case 'ne':
+          case 'not_equals':
             query = query.neq(filter.field, filter.value);
             break;
-          case 'gt':
+          case 'greater_than':
             query = query.gt(filter.field, filter.value);
             break;
-          case 'gte':
+          case 'greater_than_or_equal':
             query = query.gte(filter.field, filter.value);
             break;
-          case 'lt':
+          case 'less_than':
             query = query.lt(filter.field, filter.value);
             break;
-          case 'lte':
+          case 'less_than_or_equal':
             query = query.lte(filter.field, filter.value);
             break;
           case 'in':
             const values = Array.isArray(filter.value) ? filter.value : [filter.value];
             query = query.in(filter.field, values);
             break;
-          case 'like':
+          case 'contains':
             query = query.ilike(filter.field, `%${filter.value}%`);
             break;
           case 'is_null':
@@ -144,15 +146,17 @@ export async function fetchListData<T extends EntityType>(
     if (error) {
       console.error('List query error:', error);
       return {
-        success: false,
-        error: error.message,
-        status: 500
+        status: 'error',
+        error: {
+          code: 'INTERNAL_ERROR',
+          message: error.message
+        }
       };
     }
 
     // Transform rows to list view items
     const items: ListViewItem<T>[] = (rows || []).map(row => 
-      transformToListViewItem(params.entityType as T, row)
+      transformToListViewItem(params.entityType as T, row as unknown as Record<string, unknown>)
     );
 
     // Calculate pagination info
@@ -161,38 +165,43 @@ export async function fetchListData<T extends EntityType>(
     const totalPages = Math.ceil(totalCount / limit);
     const currentPage = Math.floor(offset / limit) + 1;
 
-    const response: ListViewResponse<T> = {
+    // Create response object
+    let response: ListViewResponse<T> = {
       data: items,
       pagination: {
-        page: currentPage,
-        limit,
-        total: totalCount,
-        totalPages,
-        hasMore,
-        hasPrevious: offset > 0
+        current_page: currentPage,
+        page_size: limit,
+        total_count: totalCount,
+        total_pages: totalPages,
+        has_next_page: hasMore,
+        has_previous_page: offset > 0
       }
     };
 
     // Fetch aggregates if requested
     if (params.includePreview) {
       const aggregates = await fetchAggregatesData(params.entityType);
-      if (aggregates.success) {
-        response.aggregates = aggregates.data;
+      if (aggregates.status === 'success' && aggregates.data) {
+        response = {
+          ...response,
+          aggregates: aggregates.data
+        };
       }
     }
 
     return {
-      success: true,
       data: response,
-      status: 200
+      status: 'success'
     };
 
   } catch (error) {
     console.error('fetchListData error:', error);
     return {
-      success: false,
-      error: 'Internal server error',
-      status: 500
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      },
+      status: 'error'
     };
   }
 }
@@ -215,25 +224,23 @@ export async function fetchAggregatesData(
     
     if (statusError) {
       return {
-        success: false,
-        error: statusError.message,
-        status: 500
+        status: 'error',
+        error: {
+          code: 'INTERNAL_ERROR',
+          message: statusError.message
+        }
       };
     }
 
     // Calculate status distribution
     const statusDistribution = (statusCounts || []).reduce((acc, item) => {
-      const status = item.status || 'unknown';
+      const status = (item as any).status || 'unknown';
       acc[status] = (acc[status] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
 
-    const aggregates: ListViewAggregates = {
-      statusCounts: statusDistribution,
-      totalValue: Object.values(statusDistribution).reduce((sum, count) => sum + count, 0)
-    };
-
-    // Add priority counts for entities that support it
+    // Calculate priority distribution for supported entities
+    let priorityDistribution: Record<string, number> | undefined;
     if (entityType === 'folder' || entityType === 'container_arrival_tracking') {
       const priorityField = entityType === 'folder' ? 'priority' : 'urgency_level';
       
@@ -243,26 +250,33 @@ export async function fetchAggregatesData(
         .is('deleted_at', null);
         
       if (priorityCounts) {
-        aggregates.priorityCounts = priorityCounts.reduce((acc, item) => {
-          const priority = item[priorityField] || 'unknown';
+        priorityDistribution = priorityCounts.reduce((acc, item) => {
+          const priority = (item as any)[priorityField] || 'unknown';
           acc[priority] = (acc[priority] || 0) + 1;
           return acc;
         }, {} as Record<string, number>);
       }
     }
 
+    const aggregates: ListViewAggregates = {
+      statusCounts: statusDistribution,
+      totalValue: Object.values(statusDistribution).reduce((sum, count) => sum + count, 0),
+      ...(priorityDistribution && { priorityCounts: priorityDistribution })
+    };
+
     return {
-      success: true,
       data: aggregates,
-      status: 200
+      status: 'success'
     };
     
   } catch (error) {
     console.error('fetchAggregatesData error:', error);
     return {
-      success: false,
-      error: 'Internal server error',
-      status: 500
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      },
+      status: 'error'
     };
   }
 }
@@ -296,7 +310,7 @@ export async function fetchFacetsData(
       
       // Calculate value counts
       const valueCounts = (facetData || []).reduce((acc, item) => {
-        const value = String(item[field]);
+        const value = String((item as any)[field]);
         acc[value] = (acc[value] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);
@@ -321,17 +335,18 @@ export async function fetchFacetsData(
     }
     
     return {
-      success: true,
       data: facets,
-      status: 200
+      status: 'success'
     };
     
   } catch (error) {
     console.error('fetchFacetsData error:', error);
     return {
-      success: false,
-      error: 'Internal server error',
-      status: 500
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      },
+      status: 'error'
     };
   }
 }
@@ -353,9 +368,11 @@ export async function fetchDetailData<T extends EntityType>(
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
       return {
-        success: false,
-        error: 'Authentication required',
-        status: 401
+        status: 'error',
+        error: {
+          code: 'AUTHENTICATION_ERROR',
+          message: 'Authentication required'
+        }
       };
     }
 
@@ -373,22 +390,82 @@ export async function fetchDetailData<T extends EntityType>(
     if (entityError) {
       if (entityError.code === 'PGRST116') {
         return {
-          success: false,
-          error: 'Entity not found',
-          status: 404
+            error: {
+            code: 'NOT_FOUND',
+            message: 'Entity not found'
+          },
+          status: 'error'
         };
       }
       return {
-        success: false,
-        error: entityError.message,
-        status: 500
+        status: 'error',
+        error: {
+          code: 'INTERNAL_ERROR',
+          message: entityError.message
+        }
       };
     }
     
+    // Fetch related data if requested
+    let relatedData: any = {};
+    if (params.includeRelated) {
+      for (const [relationName, relationConfig] of Object.entries(config.relations)) {
+        const { data: data } = await supabase
+          .from(relationConfig.table)
+          .select(relationConfig.fields.join(', '))
+          .eq(relationConfig.foreignKey, params.id)
+          .is('deleted_at', null)
+          .order('created_at', { ascending: false })
+          .limit(10);
+        
+        if (data && data.length > 0) {
+          relatedData[relationName] = {
+            count: data.length,
+            items: data.map(item => ({
+              id: (item as any).id,
+              title: (item as any).name || (item as any).title || 'Untitled',
+              type: params.entityType,
+              status: (item as any).status
+            }))
+          };
+        }
+      }
+    }
+
+    // Fetch activities if requested
+    let activities: any[] = [];
+    if (params.includeActivities) {
+      // Note: This assumes an audit_logs table exists
+      const { data: activitiesData } = await supabase
+        .from('audit_logs')
+        .select(`
+          id, action, description, changes, comment,
+          created_at, created_by_id
+        `)
+        .eq('entity_type', params.entityType)
+        .eq('entity_id', params.id)
+        .order('created_at', { ascending: false })
+        .limit(params.activityLimit || 20);
+      
+      if (activitiesData) {
+        activities = activitiesData.map(activity => ({
+          id: (activity as any).id,
+          action: (activity as any).action as any,
+          description: (activity as any).description,
+          changes: (activity as any).changes,
+          comment: (activity as any).comment,
+          created_at: (activity as any).created_at,
+          created_by: (activity as any).created_by_id,
+          updated_at: (activity as any).created_at,
+          updated_by: (activity as any).created_by_id
+        }));
+      }
+    }
+
     const detailData: DetailViewData<T> = {
       entity: entityData as any, // Type assertion for EntityTypeMap[T]
-      related: {},
-      activities: [],
+      related: relatedData,
+      activities: activities,
       metadata: {
         permissions: {
           canEdit: true,  // TODO: Implement proper permissions
@@ -404,76 +481,19 @@ export async function fetchDetailData<T extends EntityType>(
       }
     };
     
-    // Fetch related data if requested
-    if (params.includeRelated) {
-      const related: any = {};
-      
-      for (const [relationName, relationConfig] of Object.entries(config.relations)) {
-        const { data: relatedData } = await supabase
-          .from(relationConfig.table)
-          .select(relationConfig.fields.join(', '))
-          .eq(relationConfig.foreignKey, params.id)
-          .is('deleted_at', null)
-          .order('created_at', { ascending: false })
-          .limit(10);
-        
-        if (relatedData && relatedData.length > 0) {
-          related[relationName] = {
-            count: relatedData.length,
-            items: relatedData.map(item => ({
-              id: item.id,
-              title: item.name || item.title || 'Untitled',
-              type: params.entityType,
-              status: item.status
-            }))
-          };
-        }
-      }
-      
-      detailData.related = related;
-    }
-    
-    // Fetch activities if requested
-    if (params.includeActivities) {
-      // Note: This assumes an audit_logs table exists
-      const { data: activitiesData } = await supabase
-        .from('audit_logs')
-        .select(`
-          id, action, description, changes, comment,
-          created_at, created_by_id
-        `)
-        .eq('entity_type', params.entityType)
-        .eq('entity_id', params.id)
-        .order('created_at', { ascending: false })
-        .limit(params.activityLimit || 20);
-      
-      if (activitiesData) {
-        detailData.activities = activitiesData.map(activity => ({
-          id: activity.id,
-          action: activity.action as any,
-          description: activity.description,
-          changes: activity.changes,
-          comment: activity.comment,
-          createdAt: activity.created_at,
-          createdById: activity.created_by_id,
-          updatedAt: activity.created_at,
-          updatedById: activity.created_by_id
-        }));
-      }
-    }
-    
     return {
-      success: true,
       data: detailData,
-      status: 200
+      status: 'success'
     };
     
   } catch (error) {
     console.error('fetchDetailData error:', error);
     return {
-      success: false,
-      error: 'Internal server error',
-      status: 500
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      },
+      status: 'error'
     };
   }
 }
@@ -501,22 +521,26 @@ export async function searchEntities<T extends EntityType>(
     
     const result = await fetchListData<T>(params);
     
-    if (!result.success) {
-      return result;
+    if (result.status !== 'success') {
+      return {
+        status: result.status,
+        error: result.error
+      };
     }
     
     return {
-      success: true,
       data: result.data!.data,
-      status: 200
+      status: 'success'
     };
     
   } catch (error) {
     console.error('searchEntities error:', error);
     return {
-      success: false,
-      error: 'Internal server error',
-      status: 500
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      },
+      status: 'error'
     };
   }
 }
@@ -568,17 +592,18 @@ export async function getSearchSuggestions(
       .slice(0, limit);
     
     return {
-      success: true,
       data: uniqueSuggestions,
-      status: 200
+      status: 'success'
     };
     
   } catch (error) {
     console.error('getSearchSuggestions error:', error);
     return {
-      success: false,
-      error: 'Internal server error',
-      status: 500
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      },
+      status: 'error'
     };
   }
 }
@@ -600,9 +625,11 @@ export async function performBulkOperation(
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
       return {
-        success: false,
-        error: 'Authentication required',
-        status: 401
+        status: 'error',
+        error: {
+          code: 'AUTHENTICATION_ERROR',
+          message: 'Authentication required'
+        }
       };
     }
 
@@ -634,17 +661,15 @@ export async function performBulkOperation(
         
       default:
         return {
-          success: false,
-          error: `Unsupported bulk operation: ${params.operation}`,
+            error: `Unsupported bulk operation: ${params.operation}`,
           status: 400
         };
     }
     
     if (result.error) {
       return {
-        success: false,
         error: result.error.message,
-        status: 500
+        status: 'error'
       };
     }
     
@@ -652,17 +677,18 @@ export async function performBulkOperation(
     revalidatePath(`/${params.entityType}`);
     
     return {
-      success: true,
       data: { affected: params.ids.length },
-      status: 200
+      status: 'success'
     };
     
   } catch (error) {
     console.error('performBulkOperation error:', error);
     return {
-      success: false,
-      error: 'Internal server error',
-      status: 500
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      },
+      status: 'error'
     };
   }
 }

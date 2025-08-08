@@ -60,7 +60,7 @@ export function DetailActions({
 
   const handleCopyId = async () => {
     try {
-      await navigator.clipboard.writeText(entity.id);
+      await navigator.clipboard.writeText((entity as any).id);
       // Could show a toast notification here
     } catch (error) {
       console.error('Failed to copy ID:', error);
@@ -70,7 +70,7 @@ export function DetailActions({
   const handleCopyLink = async () => {
     try {
       const url = new URL(window.location.href);
-      url.searchParams.set('selected', entity.id);
+      url.searchParams.set('selected', (entity as any).id);
       await navigator.clipboard.writeText(url.toString());
       // Could show a toast notification here
     } catch (error) {
@@ -86,7 +86,7 @@ export function DetailActions({
     
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${entity.id}.json`;
+    link.download = `${(entity as any).id}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -99,7 +99,7 @@ export function DetailActions({
       <div className="flex items-center gap-2">
         {permissions.canEdit && (
           <Button
-            onClick={() => onEdit?.(entity.id)}
+            onClick={() => onEdit?.((entity as any).id)}
             size="sm"
           >
             <Edit className="h-4 w-4 mr-2" />
@@ -109,7 +109,7 @@ export function DetailActions({
 
         {permissions.canShare && (
           <Button
-            onClick={() => onShare?.(entity.id)}
+            onClick={() => onShare?.((entity as any).id)}
             variant="outline"
             size="sm"
           >
@@ -150,7 +150,7 @@ export function DetailActions({
           
           {/* Entity actions */}
           {onDuplicate && (
-            <DropdownMenuItem onClick={() => onDuplicate(entity.id)}>
+            <DropdownMenuItem onClick={() => onDuplicate((entity as any).id)}>
               <Copy className="mr-2 h-4 w-4" />
               Duplicate
             </DropdownMenuItem>
@@ -169,7 +169,7 @@ export function DetailActions({
           {onArchive && entity.status !== 'archived' && (
             <>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => onArchive(entity.id)}>
+              <DropdownMenuItem onClick={() => onArchive((entity as any).id)}>
                 <Archive className="mr-2 h-4 w-4" />
                 Archive
               </DropdownMenuItem>
@@ -180,7 +180,7 @@ export function DetailActions({
             <>
               <DropdownMenuSeparator />
               <DropdownMenuItem 
-                onClick={() => onDelete?.(entity.id)}
+                onClick={() => onDelete?.((entity as any).id)}
                 className="text-destructive focus:text-destructive"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
@@ -219,7 +219,7 @@ export function CompactActions({
     <div className={cn('grid grid-cols-2 gap-2', className)}>
       {permissions.canEdit && (
         <Button
-          onClick={() => onEdit?.(entity.id)}
+          onClick={() => onEdit?.((entity as any).id)}
           size="sm"
           className="w-full"
         >
@@ -236,7 +236,7 @@ export function CompactActions({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
-          <DropdownMenuItem onClick={() => navigator.clipboard.writeText(entity.id)}>
+          <DropdownMenuItem onClick={() => navigator.clipboard.writeText((entity as any).id)}>
             <Copy className="mr-2 h-4 w-4" />
             Copy ID
           </DropdownMenuItem>
@@ -255,7 +255,7 @@ export function CompactActions({
             <>
               <DropdownMenuSeparator />
               <DropdownMenuItem 
-                onClick={() => onDelete?.(entity.id)}
+                onClick={() => onDelete?.((entity as any).id)}
                 className="text-destructive focus:text-destructive"
               >
                 <Trash2 className="mr-2 h-4 w-4" />

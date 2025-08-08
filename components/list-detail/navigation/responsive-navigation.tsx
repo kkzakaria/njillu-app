@@ -105,7 +105,7 @@ export function ResponsiveNavigation() {
         {/* Selection info */}
         {selectedItem && (
           <div className="text-sm text-muted-foreground mr-4">
-            Viewing: {(selectedItem.entity as any).title || (selectedItem.entity as any).name || selectedItem.entity.id}
+            Viewing: {(selectedItem.entity as any).title || (selectedItem.entity as any).name || (selectedItem.entity as any).id}
           </div>
         )}
 

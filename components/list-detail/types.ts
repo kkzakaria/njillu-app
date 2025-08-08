@@ -12,7 +12,7 @@ import type {
   DetailViewData,
   ListDetailLayoutConfig,
   LayoutMode,
-  ListViewParams,
+  ListApiParams,
   DetailApiParams,
   ListItemAction,
   ListItemBadge
@@ -29,7 +29,7 @@ export interface ListDetailLayoutProps<T extends EntityType> {
   children?: ReactNode;
   
   // Data fetching functions
-  onLoadList: (params: ListViewParams) => Promise<ListViewResponse<T>>;
+  onLoadList: (params: ListApiParams) => Promise<ListViewResponse<T>>;
   onLoadDetail: (params: DetailApiParams) => Promise<DetailViewData<T>>;
   
   // Event handlers
@@ -41,7 +41,7 @@ export interface ListDetailLayoutProps<T extends EntityType> {
   
   // Initial state
   initialSelectedId?: EntityId;
-  initialParams?: ListViewParams;
+  initialParams?: ListApiParams;
 }
 
 export interface ListViewProps<T extends EntityType> {
@@ -111,9 +111,9 @@ export interface ListPaginationProps {
 export interface UseListDetailOptions<T extends EntityType> {
   entityType: T;
   config?: Partial<ListDetailLayoutConfig>;
-  onLoadList: (params: ListViewParams) => Promise<ListViewResponse<T>>;
+  onLoadList: (params: ListApiParams) => Promise<ListViewResponse<T>>;
   onLoadDetail: (params: DetailApiParams) => Promise<DetailViewData<T>>;
-  initialParams?: ListViewParams;
+  initialParams?: ListApiParams;
   initialSelectedId?: EntityId;
 }
 
@@ -126,7 +126,7 @@ export interface UseListDetailReturn<T extends EntityType> {
   error?: string;
   
   // List state
-  listParams: ListViewParams;
+  listParams: ListApiParams;
   totalItems: number;
   totalPages: number;
   
@@ -135,7 +135,7 @@ export interface UseListDetailReturn<T extends EntityType> {
   isMobile: boolean;
   
   // Actions
-  loadList: (params?: Partial<ListViewParams>) => Promise<void>;
+  loadList: (params?: Partial<ListApiParams>) => Promise<void>;
   loadDetail: (id: EntityId) => Promise<void>;
   selectItem: (id: EntityId) => void;
   selectItems: (ids: EntityId[]) => void;

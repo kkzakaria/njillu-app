@@ -8,7 +8,7 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event';
 import { NextIntlClientProvider } from 'next-intl';
 import { ListDetailProvider, useListDetailContext } from '../context/list-detail-context';
-import type { ListViewParams, DetailApiParams } from '../types';
+import type { ListApiParams, DetailApiParams } from '../types';
 
 // Mock translation messages
 const mockMessages = {

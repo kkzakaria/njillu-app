@@ -185,7 +185,7 @@ export function DetailView<T extends EntityType>({
             {metadata.permissions.canEdit && (
               <Button
                 size="sm"
-                onClick={() => onEdit?.(entity.id)}
+                onClick={() => onEdit?.((entity as any).id)}
               >
                 <Edit className="h-4 w-4 mr-2" />
                 {t('actions.edit')}
@@ -199,7 +199,7 @@ export function DetailView<T extends EntityType>({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => navigator.clipboard.writeText(entity.id)}>
+                <DropdownMenuItem onClick={() => navigator.clipboard.writeText((entity as any).id)}>
                   Copy ID
                 </DropdownMenuItem>
                 {metadata.permissions.canShare && (
@@ -210,7 +210,7 @@ export function DetailView<T extends EntityType>({
                 <DropdownMenuSeparator />
                 {metadata.permissions.canDelete && (
                   <DropdownMenuItem 
-                    onClick={() => onDelete?.(entity.id)}
+                    onClick={() => onDelete?.((entity as any).id)}
                     className="text-destructive focus:text-destructive"
                   >
                     {t('actions.delete')}
@@ -225,7 +225,7 @@ export function DetailView<T extends EntityType>({
         <div className="space-y-3">
           <div className="space-y-2">
             <h1 className="text-2xl font-bold">
-              {(entity as any).title || (entity as any).name || `${config.entityType} ${entity.id}`}
+              {(entity as any).title || (entity as any).name || `${config.entityType} ${(entity as any).id}`}
             </h1>
             {(entity as any).description && (
               <p className="text-muted-foreground">
@@ -318,7 +318,7 @@ function DetailOverview({ entity }: { entity: any }) {
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">Basic Information</h3>
         <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {renderField('ID', entity.id)}
+          {renderField('ID', (entity as any).id)}
           {renderField('Name', entity.name || entity.title)}
           {renderField('Description', entity.description)}
           {renderField('Status', entity.status)}

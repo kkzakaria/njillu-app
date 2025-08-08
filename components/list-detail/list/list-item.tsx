@@ -167,17 +167,35 @@ export function ListItem<T extends EntityType>({
           )}
 
           {/* Custom badges */}
-          {item.badges?.map((badge, index) => (
-            <Badge
-              key={index}
-              variant={badge.variant === 'default' ? 'secondary' : badge.variant}
-              className="text-xs"
-              title={badge.tooltip}
-            >
-              {badge.icon && <span className="mr-1">{badge.icon}</span>}
-              {badge.label}
-            </Badge>
-          ))}
+          {item.badges?.map((badge, index) => {
+            // Map our badge variants to shadcn/ui Badge variants
+            const mapVariant = (variant: string) => {
+              switch (variant) {
+                case 'default':
+                case 'info':
+                  return 'secondary';
+                case 'success':
+                  return 'default';
+                case 'warning':
+                case 'danger':
+                  return 'destructive';
+                default:
+                  return 'secondary';
+              }
+            };
+            
+            return (
+              <Badge
+                key={index}
+                variant={mapVariant(badge.variant)}
+                className="text-xs"
+                title={badge.tooltip}
+              >
+                {badge.icon && <span className="mr-1">{badge.icon}</span>}
+                {badge.label}
+              </Badge>
+            );
+          })}
 
           {/* Updated timestamp */}
           <div className="flex items-center gap-1 text-xs text-muted-foreground ml-auto">

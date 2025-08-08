@@ -5,7 +5,7 @@ import { ListDetailLayout } from '../layout/list-detail-layout';
 import type { 
   ListViewResponse,
   DetailViewData,
-  ListViewParams,
+  ListApiParams,
   DetailApiParams,
   ListViewItem,
   DetailViewTab,
@@ -23,7 +23,7 @@ interface ContainerListDetailLayoutProps {
 
 export function ContainerListDetailLayout({ className }: ContainerListDetailLayoutProps) {
   // Mock data loader for Container Arrivals list
-  const loadContainerList = async (params: ListViewParams): Promise<ListViewResponse<'container_arrival_tracking'>> => {
+  const loadContainerList = async (params: ListApiParams): Promise<ListViewResponse<'container_arrival_tracking'>> => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 700));
 
@@ -65,7 +65,7 @@ export function ContainerListDetailLayout({ className }: ContainerListDetailLayo
           },
           {
             label: '40HC',
-            variant: 'secondary',
+            variant: 'info',
             icon: '📦',
             tooltip: '40-foot High Cube container'
           },
@@ -87,7 +87,7 @@ export function ContainerListDetailLayout({ className }: ContainerListDetailLayo
             id: 'notify',
             label: 'Notify Client',
             icon: '📧',
-            variant: 'secondary'
+            variant: 'primary'
           }
         ] as ListItemAction[]
       },
@@ -125,7 +125,7 @@ export function ContainerListDetailLayout({ className }: ContainerListDetailLayo
           },
           {
             label: '20DV',
-            variant: 'secondary',
+            variant: 'info',
             icon: '📦'
           },
           {
@@ -163,13 +163,13 @@ export function ContainerListDetailLayout({ className }: ContainerListDetailLayo
         badges: [
           {
             label: '2 days',
-            variant: 'secondary',
+            variant: 'info',
             icon: '📅',
             tooltip: 'Arriving in 2 days'
           },
           {
             label: '40DV',
-            variant: 'secondary',
+            variant: 'info',
             icon: '📦'
           }
         ] as ListItemBadge[]
@@ -209,7 +209,7 @@ export function ContainerListDetailLayout({ className }: ContainerListDetailLayo
           },
           {
             label: '20HC',
-            variant: 'secondary',
+            variant: 'info',
             icon: '📦'
           }
         ] as ListItemBadge[]
@@ -221,8 +221,8 @@ export function ContainerListDetailLayout({ className }: ContainerListDetailLayo
     if (params.search) {
       filteredContainers = mockContainers.filter(container =>
         container.title.toLowerCase().includes(params.search!.toLowerCase()) ||
-        container.subtitle.toLowerCase().includes(params.search!.toLowerCase()) ||
-        container.preview.vessel_name.toLowerCase().includes(params.search!.toLowerCase())
+        container.subtitle?.toLowerCase().includes(params.search!.toLowerCase()) ||
+        ((container.preview as any).vessel_name?.toLowerCase().includes(params.search!.toLowerCase()))
       );
     }
 
@@ -235,12 +235,12 @@ export function ContainerListDetailLayout({ className }: ContainerListDetailLayo
     return {
       data: paginatedContainers,
       pagination: {
-        page,
-        limit,
-        total: filteredContainers.length,
-        totalPages: Math.ceil(filteredContainers.length / limit),
-        hasNext: start + limit < filteredContainers.length,
-        hasPrev: page > 1
+        current_page: page,
+        page_size: limit,
+        total_count: filteredContainers.length,
+        total_pages: Math.ceil(filteredContainers.length / limit),
+        has_next_page: start + limit < filteredContainers.length,
+        has_previous_page: page > 1
       },
       aggregates: {
         statusCounts: {
@@ -418,10 +418,10 @@ export function ContainerListDetailLayout({ className }: ContainerListDetailLayo
           id: 'activity-1',
           action: 'status_changed',
           description: 'Status changed from "scheduled" to "delayed"',
-          user_name: 'System',
-          user_id: 'system',
           created_at: '2025-08-07T16:30:00Z',
           updated_at: '2025-08-07T16:30:00Z',
+          created_by: 'system',
+          updated_by: 'system',
           changes: {
             status: {
               from: 'scheduled',
@@ -437,19 +437,19 @@ export function ContainerListDetailLayout({ className }: ContainerListDetailLayo
           id: 'activity-2',
           action: 'updated',
           description: 'Tracking information updated',
-          user_name: 'Port Authority',
-          user_id: 'port-001',
           created_at: '2025-08-06T10:20:00Z',
-          updated_at: '2025-08-06T10:20:00Z'
+          updated_at: '2025-08-06T10:20:00Z',
+          created_by: 'port-001',
+          updated_by: 'port-001'
         },
         {
           id: 'activity-3',
           action: 'created',
           description: 'Container tracking initiated',
-          user_name: 'System',
-          user_id: 'system',
           created_at: '2025-07-25T10:00:00Z',
-          updated_at: '2025-07-25T10:00:00Z'
+          updated_at: '2025-07-25T10:00:00Z',
+          created_by: 'system',
+          updated_by: 'system'
         }
       ],
       related: {

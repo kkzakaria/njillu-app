@@ -7,7 +7,7 @@ import { Ship, Package, MapPin, Calendar } from 'lucide-react';
 import type { 
   ListViewResponse,
   DetailViewData,
-  ListViewParams,
+  ListApiParams,
   DetailApiParams,
   ListViewItem,
   DetailViewTab,
@@ -25,7 +25,7 @@ interface BLListDetailLayoutProps {
 
 export function BLListDetailLayout({ className }: BLListDetailLayoutProps) {
   // Mock data loader for Bills of Lading list
-  const loadBLList = async (params: ListViewParams): Promise<ListViewResponse<'bill_of_lading'>> => {
+  const loadBLList = async (params: ListApiParams): Promise<ListViewResponse<'bill_of_lading'>> => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 800));
 
@@ -54,7 +54,7 @@ export function BLListDetailLayout({ className }: BLListDetailLayoutProps) {
         badges: [
           {
             label: '24 containers',
-            variant: 'secondary',
+            variant: 'info',
             icon: '📦',
             tooltip: '24 containers loaded'
           },
@@ -103,7 +103,7 @@ export function BLListDetailLayout({ className }: BLListDetailLayoutProps) {
         badges: [
           {
             label: '18 containers',
-            variant: 'secondary',
+            variant: 'info',
             icon: '📦'
           }
         ] as ListItemBadge[]
@@ -131,7 +131,7 @@ export function BLListDetailLayout({ className }: BLListDetailLayoutProps) {
         badges: [
           {
             label: '12 containers',
-            variant: 'secondary',
+            variant: 'info',
             icon: '📦'
           },
           {
@@ -148,8 +148,8 @@ export function BLListDetailLayout({ className }: BLListDetailLayoutProps) {
     if (params.search) {
       filteredBLs = mockBLs.filter(bl =>
         bl.title.toLowerCase().includes(params.search!.toLowerCase()) ||
-        bl.subtitle.toLowerCase().includes(params.search!.toLowerCase()) ||
-        bl.preview.vessel_name.toLowerCase().includes(params.search!.toLowerCase())
+        bl.subtitle?.toLowerCase().includes(params.search!.toLowerCase()) ||
+        ((bl.preview as any).vessel_name?.toLowerCase().includes(params.search!.toLowerCase()))
       );
     }
 
@@ -162,12 +162,12 @@ export function BLListDetailLayout({ className }: BLListDetailLayoutProps) {
     return {
       data: paginatedBLs,
       pagination: {
-        page,
-        limit,
-        total: filteredBLs.length,
-        totalPages: Math.ceil(filteredBLs.length / limit),
-        hasNext: start + limit < filteredBLs.length,
-        hasPrev: page > 1
+        current_page: page,
+        page_size: limit,
+        total_count: filteredBLs.length,
+        total_pages: Math.ceil(filteredBLs.length / limit),
+        has_next_page: start + limit < filteredBLs.length,
+        has_previous_page: page > 1
       },
       aggregates: {
         statusCounts: {
@@ -281,10 +281,10 @@ export function BLListDetailLayout({ className }: BLListDetailLayoutProps) {
           id: 'activity-1',
           action: 'status_changed',
           description: 'Status changed from "confirmed" to "in_transit"',
-          user_name: 'John Smith',
-          user_id: 'user-1',
           created_at: '2025-08-07T14:30:00Z',
           updated_at: '2025-08-07T14:30:00Z',
+          created_by: 'user-1',
+          updated_by: 'user-1',
           changes: {
             status: {
               from: 'confirmed',
@@ -296,10 +296,10 @@ export function BLListDetailLayout({ className }: BLListDetailLayoutProps) {
           id: 'activity-2',
           action: 'created',
           description: 'Bill of Lading created',
-          user_name: 'System',
-          user_id: 'system',
           created_at: '2025-07-20T09:00:00Z',
-          updated_at: '2025-07-20T09:00:00Z'
+          updated_at: '2025-07-20T09:00:00Z',
+          created_by: 'system',
+          updated_by: 'system'
         }
       ],
       related: {
