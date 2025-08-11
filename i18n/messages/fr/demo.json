@@ -1,0 +1,96 @@
+{
+  "title": "Démo Two-Columns Layout",
+  "subtitle": "Démonstration du layout responsive à deux colonnes avec sidebar adaptative",
+  "metrics": {
+    "totalFolders": "Total Dossiers",
+    "containerArrivals": "Arrivées Containers",
+    "billsOfLading": "Connaissements",
+    "inProcess": "En cours de traitement",
+    "monthlyIncrease": "+12% par rapport au mois dernier",
+    "weeklyIncrease": "+8% cette semaine"
+  },
+  "recentActivity": {
+    "title": "Activité Récente",
+    "subtitle": "Dernières opérations dans le système",
+    "items": {
+      "folderProcessed": "Dossier IMPORT/2024/001247 traité",
+      "containerArrived": "Container MSKU7845123 - Arrivée confirmée",
+      "blPending": "Connaissement BL-240115-001 en attente",
+      "missingDocuments": "Documents manquants - Action requise",
+      "customsAlert": "Alerte douane - Dossier urgent",
+      "controlRequired": "EXPORT/2024/000892 - Contrôle requis",
+      "monthlyReport": "Rapport mensuel généré",
+      "statisticsAvailable": "Statistiques janvier 2024 disponibles"
+    },
+    "timeAgo": {
+      "twoMinutes": "Il y a 2 minutes",
+      "fifteenMinutes": "Il y a 15 minutes",
+      "oneHour": "Il y a 1 heure",
+      "threeHours": "Il y a 3 heures"
+    },
+    "status": {
+      "completed": "Terminé",
+      "pending": "En attente",
+      "urgent": "Urgent",
+      "info": "Info"
+    }
+  },
+  "statistics": {
+    "title": "Statistiques Mensuelles",
+    "subtitle": "Évolution des opérations sur les 12 derniers mois",
+    "chartPlaceholder": {
+      "title": "Graphique des performances",
+      "subtitle": "Intégration Chart.js à venir"
+    }
+  },
+  "quickActions": {
+    "title": "Actions Rapides",
+    "subtitle": "Opérations courantes",
+    "newFolder": "Nouveau Dossier",
+    "createBL": "Créer Connaissement",
+    "trackContainer": "Suivi Container",
+    "dashboard": "Tableau de Bord"
+  },
+  "systemStatus": {
+    "title": "État du Système",
+    "services": {
+      "customs": "Services Douane",
+      "forwarderApi": "API Transitaire",
+      "database": "Base de données"
+    },
+    "status": {
+      "operational": "Opérationnel",
+      "maintenance": "Maintenance"
+    }
+  },
+  "updates": {
+    "title": "Mises à Jour",
+    "subtitle": "Dernières nouvelles du système",
+    "items": {
+      "newFeature": {
+        "title": "Nouvelle fonctionnalité",
+        "description": "Export PDF des connaissements disponible"
+      },
+      "improvement": {
+        "title": "Amélioration",
+        "description": "Performance des recherches optimisée"
+      },
+      "maintenance": {
+        "title": "Maintenance",
+        "description": "Mise à jour système prévue dimanche 2h-4h"
+      }
+    }
+  },
+  "team": {
+    "title": "Équipe",
+    "connectedAgents": "Agents connectés",
+    "activeFolders": "Dossiers en cours",
+    "urgentTasks": "Tâches urgentes"
+  },
+  "footer": {
+    "layoutInfo": "Layout Two-Columns - Responsive et adaptatif",
+    "sidebarWidth": "Sidebar: 300-400px",
+    "contentWidth": "Contenu: Flexible",
+    "mobileLayout": "Mobile: Single column"
+  }
+}
