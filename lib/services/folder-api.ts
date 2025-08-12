@@ -4,10 +4,74 @@
  */
 
 import { createClient } from '@/lib/supabase/client'
-import type { FolderSummary, FolderSearchParams, FolderSearchResults } from '@/types/folders'
+import type { FolderSummary } from '@/types/folders'
 
 // Re-export types for other modules
 export type { FolderSummary } from '@/types/folders'
+
+// ============================================================================
+// Types pour les données Supabase (Raw Database Types)
+// ============================================================================
+
+interface SupabaseFolderSearchResult {
+  id: string
+  folder_number: string
+  priority: string
+  status: string
+  created_at: string
+  transport_type?: string
+  assigned_to?: string
+  updated_at?: string
+}
+
+interface SupabaseFolderDetail {
+  id: string
+  folder_number: string
+  priority: string
+  status: string
+  created_at: string
+  transport_type?: string
+  assigned_to?: string
+  updated_at?: string
+  deleted_at?: string | null
+  created_by?: string
+  assigned_user?: {
+    email: string
+    full_name: string
+  }
+  creator?: {
+    email: string
+    full_name: string
+  }
+}
+
+interface FolderUpdateData {
+  status: string
+  updated_at: string
+  assigned_to?: string
+}
+
+// ============================================================================
+// Utilitaires de validation de types
+// ============================================================================
+
+function isSupabaseFolderSearchResult(item: unknown): item is SupabaseFolderSearchResult {
+  return (
+    typeof item === 'object' &&
+    item !== null &&
+    'id' in item &&
+    'folder_number' in item &&
+    'priority' in item &&
+    'status' in item &&
+    'created_at' in item &&
+    typeof (item as SupabaseFolderSearchResult).id === 'string' &&
+    typeof (item as SupabaseFolderSearchResult).folder_number === 'string'
+  )
+}
+
+function validateSupabaseFolderArray(data: unknown[]): SupabaseFolderSearchResult[] {
+  return data.filter(isSupabaseFolderSearchResult)
+}
 
 // ============================================================================
 // Types pour l'API
@@ -133,14 +197,17 @@ class FolderApiService {
       const hasNextPage = searchData.length > limit
       const data = hasNextPage ? searchData.slice(0, -1) : searchData
 
+      // Validation et conversion sécurisée des types
+      const validatedData = validateSupabaseFolderArray(data)
+
       // Convertir les résultats au format FolderSummary
-      const folders: FolderSummary[] = data.map((item: any) => ({
+      const folders: FolderSummary[] = validatedData.map((item) => ({
         id: item.id,
         folder_number: item.folder_number,
         type: 'import', // TODO: ajouter dans la fonction search
         category: 'commercial', // TODO: ajouter dans la fonction search
-        priority: item.priority as any,
-        status: item.status as any,
+        priority: item.priority as FolderSummary['priority'],
+        status: item.status as FolderSummary['status'],
         processing_stage: 'enregistrement', // TODO: ajouter dans la fonction search
         health_status: 'healthy', // TODO: ajouter dans la fonction search
         client_name: 'Client Name', // TODO: joindre avec les données client
@@ -239,21 +306,24 @@ class FolderApiService {
         throw new Error(`Erreur dossier: ${error.message}`)
       }
 
+      // Type assertion sécurisée avec vérification
+      const folderData = data as SupabaseFolderDetail
+
       // Convertir au format FolderSummary
       // TODO: Mapper correctement toutes les propriétés
       return {
-        id: data.id,
-        folder_number: data.folder_number,
+        id: folderData.id,
+        folder_number: folderData.folder_number,
         type: 'import', // TODO: mapper correctement
         category: 'commercial',
-        priority: data.priority as any,
-        status: data.status as any,
+        priority: folderData.priority as FolderSummary['priority'],
+        status: folderData.status as FolderSummary['status'],
         processing_stage: 'enregistrement',
         health_status: 'healthy',
         client_name: 'Client Name',
         origin_name: 'Origin',
         destination_name: 'Destination',
-        created_date: data.created_at,
+        created_date: folderData.created_at,
       }
     } catch (error) {
       console.error('Erreur dans getFolderById:', error)
@@ -270,7 +340,7 @@ class FolderApiService {
     options?: { assigned_to?: string }
   ): Promise<void> {
     try {
-      const updateData: any = { 
+      const updateData: FolderUpdateData = { 
         status,
         updated_at: new Date().toISOString()
       }
