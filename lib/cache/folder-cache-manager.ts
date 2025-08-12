@@ -383,21 +383,36 @@ export class FolderCacheManager {
    * Invalidation intelligente basée sur les relations
    */
   async invalidateRelated(type: CacheType, keys?: string[]): Promise<void> {
+    // Invalidation granulaire si des clés spécifiques sont fournies
+    if (keys && keys.length > 0) {
+      for (const key of keys) {
+        await this.delete(key, type)
+      }
+    }
+
     // Logique d'invalidation basée sur les relations entre types de données
     switch (type) {
       case 'folders':
         // Quand les dossiers changent, invalider les compteurs et attention
         await this.clear('counters')
         await this.clear('attention')
+        // Invalider aussi les recherches qui pourraient contenir ces dossiers
+        if (keys && keys.length > 0) {
+          // Pour les recherches, on invalide tout car difficile de savoir quelles recherches contiennent ces dossiers
+          await this.clear('search')
+        }
         break
       case 'counters':
         // Les compteurs peuvent être invalidés seuls
+        // Pas d'invalidation en cascade nécessaire
         break
       case 'attention':
         // L'attention peut être invalidé seul
+        // Pas d'invalidation en cascade nécessaire
         break
       case 'search':
         // Les recherches peuvent être invalidées seules
+        // Pas d'invalidation en cascade nécessaire
         break
     }
   }
