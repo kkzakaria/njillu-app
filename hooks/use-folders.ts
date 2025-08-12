@@ -181,7 +181,7 @@ export function useFolder(id: string) {
 // ============================================================================
 
 export function useFolderCounters(params?: { transport_type?: string; status?: string }) {
-  return useQuery({
+  return useQuery<FolderApiCounters[], Error>({
     queryKey: [...FOLDER_KEYS.counters(), params],
     queryFn: () => folderApi.getFolderCounters(params),
     staleTime: 10 * 60 * 1000, // 10 minutes (données moins critiques)
@@ -195,7 +195,7 @@ export function useFolderCounters(params?: { transport_type?: string; status?: s
 // ============================================================================
 
 export function useFoldersAttention(params?: { assigned_to?: string; limit?: number }) {
-  return useQuery({
+  return useQuery<FolderApiAttention[], Error>({
     queryKey: [...FOLDER_KEYS.attention(), params],
     queryFn: () => folderApi.getFoldersRequiringAttention(params),
     staleTime: 2 * 60 * 1000,  // 2 minutes (données critiques)
