@@ -35,6 +35,17 @@ interface CacheConfig {
 
 type CacheType = 'folders' | 'counters' | 'attention' | 'search'
 
+// Types de données pour chaque type de cache
+type CacheDataMap = {
+  folders: FolderSummary[]
+  counters: FolderApiCounters[]
+  attention: FolderApiAttention[]
+  search: FolderSummary[]
+}
+
+// Type union de toutes les données possibles
+type CacheData = CacheDataMap[keyof CacheDataMap]
+
 // ============================================================================
 // Configuration du cache
 // ============================================================================
@@ -63,7 +74,7 @@ const CACHE_VERSION = '1.0.0'
 // ============================================================================
 
 class MemoryCache {
-  private cache = new Map<string, CacheEntry<any>>()
+  private cache = new Map<string, CacheEntry<unknown>>()
   private accessOrder = new Array<string>() // Pour LRU
   private readonly maxSize: number
 
@@ -106,7 +117,7 @@ class MemoryCache {
       version: CACHE_VERSION
     }
 
-    this.cache.set(key, entry)
+    this.cache.set(key, entry as CacheEntry<unknown>)
     this.updateAccessOrder(key)
   }
 
@@ -394,7 +405,10 @@ export class FolderCacheManager {
   /**
    * Préchargement intelligent des données
    */
-  async warmCache(type: CacheType, dataLoader: () => Promise<any>): Promise<void> {
+  async warmCache<T extends CacheType>(
+    type: T, 
+    dataLoader: () => Promise<CacheDataMap[T]>
+  ): Promise<void> {
     try {
       const data = await dataLoader()
       await this.set(`warm_${Date.now()}`, data, type)
