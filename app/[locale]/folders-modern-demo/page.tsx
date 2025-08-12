@@ -222,7 +222,7 @@ function FoldersModernDemoContent() {
         <div>
           <h1 className="text-3xl font-bold">Gestion Moderne des Dossiers</h1>
           <p className="text-muted-foreground mt-1">
-            Démonstration de l'architecture scalable avec virtualisation et cache intelligent
+            Démonstration de l&apos;architecture scalable avec virtualisation et cache intelligent
           </p>
         </div>
         <div className="flex items-center gap-2">
