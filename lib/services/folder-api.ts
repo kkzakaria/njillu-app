@@ -6,6 +6,9 @@
 import { createClient } from '@/lib/supabase/client'
 import type { FolderSummary, FolderSearchParams, FolderSearchResults } from '@/types/folders'
 
+// Re-export types for other modules
+export type { FolderSummary } from '@/types/folders'
+
 // ============================================================================
 // Types pour l'API
 // ============================================================================
@@ -131,7 +134,7 @@ class FolderApiService {
       const data = hasNextPage ? searchData.slice(0, -1) : searchData
 
       // Convertir les résultats au format FolderSummary
-      const folders: FolderSummary[] = data.map(item => ({
+      const folders: FolderSummary[] = data.map((item: any) => ({
         id: item.id,
         folder_number: item.folder_number,
         type: 'import', // TODO: ajouter dans la fonction search
@@ -145,7 +148,6 @@ class FolderApiService {
         destination_name: 'Destination', // TODO: joindre avec les données location
         created_date: item.created_at,
         reference_number: undefined, // TODO: ajouter si nécessaire
-        transport_type: item.transport_type as any,
         expected_completion_date: undefined, // TODO: ajouter si nécessaire
         sla_compliance: undefined, // TODO: calculer si nécessaire
       }))
@@ -252,7 +254,6 @@ class FolderApiService {
         origin_name: 'Origin',
         destination_name: 'Destination',
         created_date: data.created_at,
-        transport_type: data.transport_type as any,
       }
     } catch (error) {
       console.error('Erreur dans getFolderById:', error)

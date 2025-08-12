@@ -252,7 +252,7 @@ export const useFolderStore = create<FolderStore>()(
     })),
     {
       name: 'folder-store', // nom pour les devtools
-      partialize: (state) => ({
+      partialize: (state: FolderStore) => ({
         // Persister seulement certains états dans localStorage
         viewMode: state.viewMode,
         isCompactMode: state.isCompactMode,

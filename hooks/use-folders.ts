@@ -52,7 +52,7 @@ interface DeleteVariables {
 }
 
 interface OptimisticUpdateContext {
-  previousData: Array<[string[], unknown]>
+  previousData: Array<[import('@tanstack/react-query').QueryKey, unknown]>
 }
 
 // ============================================================================
@@ -216,7 +216,7 @@ export function useFolderMutations() {
   const updateStatusMutation = useMutation<void, Error, UpdateStatusVariables, OptimisticUpdateContext>({
     mutationFn: ({ ids, status, options }) => folderApi.updateFoldersStatus(ids, status, options),
     
-    onMutate: async ({ ids, status }) => {
+    onMutate: async ({ ids, status }): Promise<OptimisticUpdateContext> => {
       // Annuler les requêtes en cours pour éviter les conflits
       await queryClient.cancelQueries({ queryKey: FOLDER_KEYS.lists() })
       
@@ -290,7 +290,7 @@ export function useFolderMutations() {
   const deleteMutation = useMutation<void, Error, DeleteVariables, OptimisticUpdateContext>({
     mutationFn: ({ ids, userId }) => folderApi.deleteFolders(ids, userId),
     
-    onMutate: async ({ ids }) => {
+    onMutate: async ({ ids }): Promise<OptimisticUpdateContext> => {
       await queryClient.cancelQueries({ queryKey: FOLDER_KEYS.lists() })
       
       const previousData = queryClient.getQueriesData({ queryKey: FOLDER_KEYS.lists() })
