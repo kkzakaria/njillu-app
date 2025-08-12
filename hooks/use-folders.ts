@@ -17,6 +17,67 @@ import { useFolderStore } from '@/lib/stores/folder-store'
 import type { FolderSummary } from '@/types/folders'
 
 // ============================================================================
+// Types pour TanStack Query
+// ============================================================================
+
+interface FolderSearchResult {
+  data: FolderSummary[]
+  count: number
+  hasNextPage: boolean
+}
+
+interface InfiniteSearchResult extends FolderSearchResult {
+  nextPage?: number
+}
+
+interface InfiniteQueryData {
+  pages: InfiniteSearchResult[]
+  pageParams: number[]
+}
+
+interface QueryData {
+  data: FolderSummary[]
+  count: number
+}
+
+interface UpdateStatusVariables {
+  ids: string[]
+  status: string
+  options?: { assigned_to?: string }
+}
+
+interface DeleteVariables {
+  ids: string[]
+  userId: string
+}
+
+interface OptimisticUpdateContext {
+  previousData: Array<[string[], unknown]>
+}
+
+// ============================================================================
+// Type Guards
+// ============================================================================
+
+function isInfiniteQueryData(data: unknown): data is InfiniteQueryData {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'pages' in data &&
+    Array.isArray((data as InfiniteQueryData).pages)
+  )
+}
+
+function isQueryData(data: unknown): data is QueryData {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'data' in data &&
+    Array.isArray((data as QueryData).data)
+  )
+}
+
+// ============================================================================
 // Hook principal pour la recherche et liste des dossiers
 // ============================================================================
 
@@ -152,12 +213,8 @@ export function useFolderMutations() {
   const setError = useFolderStore(state => state.setError)
   
   // Mutation pour mise à jour du statut
-  const updateStatusMutation = useMutation({
-    mutationFn: ({ ids, status, options }: { 
-      ids: string[]; 
-      status: string; 
-      options?: { assigned_to?: string } 
-    }) => folderApi.updateFoldersStatus(ids, status, options),
+  const updateStatusMutation = useMutation<void, Error, UpdateStatusVariables, OptimisticUpdateContext>({
+    mutationFn: ({ ids, status, options }) => folderApi.updateFoldersStatus(ids, status, options),
     
     onMutate: async ({ ids, status }) => {
       // Annuler les requêtes en cours pour éviter les conflits
@@ -169,28 +226,28 @@ export function useFolderMutations() {
       // Optimistic update : mettre à jour les caches immédiatement
       queryClient.setQueriesData(
         { queryKey: FOLDER_KEYS.lists() },
-        (oldData: any) => {
+        (oldData: unknown): InfiniteQueryData | QueryData | unknown => {
           if (!oldData) return oldData
           
           // Update pour pagination infinie
-          if (oldData.pages) {
+          if (isInfiniteQueryData(oldData)) {
             return {
               ...oldData,
-              pages: oldData.pages.map((page: any) => ({
+              pages: oldData.pages.map((page) => ({
                 ...page,
-                data: page.data.map((folder: FolderSummary) =>
-                  ids.includes(folder.id) ? { ...folder, status } : folder
+                data: page.data.map((folder) =>
+                  ids.includes(folder.id) ? { ...folder, status: status as FolderSummary['status'] } : folder
                 )
               }))
             }
           }
           
           // Update pour pagination simple
-          if (oldData.data) {
+          if (isQueryData(oldData)) {
             return {
               ...oldData,
-              data: oldData.data.map((folder: FolderSummary) =>
-                ids.includes(folder.id) ? { ...folder, status } : folder
+              data: oldData.data.map((folder) =>
+                ids.includes(folder.id) ? { ...folder, status: status as FolderSummary['status'] } : folder
               )
             }
           }
@@ -230,9 +287,8 @@ export function useFolderMutations() {
   })
   
   // Mutation pour suppression
-  const deleteMutation = useMutation({
-    mutationFn: ({ ids, userId }: { ids: string[]; userId: string }) => 
-      folderApi.deleteFolders(ids, userId),
+  const deleteMutation = useMutation<void, Error, DeleteVariables, OptimisticUpdateContext>({
+    mutationFn: ({ ids, userId }) => folderApi.deleteFolders(ids, userId),
     
     onMutate: async ({ ids }) => {
       await queryClient.cancelQueries({ queryKey: FOLDER_KEYS.lists() })
@@ -242,23 +298,25 @@ export function useFolderMutations() {
       // Optimistic update : retirer les dossiers supprimés
       queryClient.setQueriesData(
         { queryKey: FOLDER_KEYS.lists() },
-        (oldData: any) => {
+        (oldData: unknown): InfiniteQueryData | QueryData | unknown => {
           if (!oldData) return oldData
           
-          if (oldData.pages) {
+          if (isInfiniteQueryData(oldData)) {
             return {
               ...oldData,
-              pages: oldData.pages.map((page: any) => ({
+              pages: oldData.pages.map((page) => ({
                 ...page,
-                data: page.data.filter((folder: FolderSummary) => !ids.includes(folder.id))
+                data: page.data.filter((folder) => !ids.includes(folder.id)),
+                count: page.count - ids.filter(id => page.data.some(f => f.id === id)).length
               }))
             }
           }
           
-          if (oldData.data) {
+          if (isQueryData(oldData)) {
             return {
               ...oldData,
-              data: oldData.data.filter((folder: FolderSummary) => !ids.includes(folder.id))
+              data: oldData.data.filter((folder) => !ids.includes(folder.id)),
+              count: oldData.count - ids.filter(id => oldData.data.some(f => f.id === id)).length
             }
           }
           
@@ -292,7 +350,7 @@ export function useFolderMutations() {
   })
   
   // Mutation pour rafraîchir les vues matérialisées
-  const refreshViewsMutation = useMutation({
+  const refreshViewsMutation = useMutation<void, Error, void>({
     mutationFn: () => folderApi.refreshMaterializedViews(),
     onSuccess: () => {
       // Invalidate tous les caches après refresh
