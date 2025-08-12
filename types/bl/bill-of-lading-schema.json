@@ -1,0 +1,230 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Bill of Lading (BL) Schema",
+    "description": "Comprehensive schema for maritime shipping Bill of Lading document",
+    "type": "object",
+    "required": [
+        "id",
+        "bl_number", 
+        "shipping_company_id",
+        "shipper_info",
+        "consignee_info",
+        "port_of_loading",
+        "port_of_discharge",
+        "issue_date",
+        "freight_terms",
+        "loading_method",
+        "status",
+        "created_at",
+        "updated_at"
+    ],
+    "properties": {
+        "id": {
+            "type": "string",
+            "description": "Unique identifier for the Bill of Lading"
+        },
+        "bl_number": {
+            "type": "string", 
+            "description": "Official Bill of Lading number"
+        },
+        "booking_reference": {
+            "type": "string",
+            "description": "Reference number for the booking"
+        },
+        "export_reference": {
+            "type": "string",
+            "description": "Export-specific reference number"
+        },
+        "service_contract": {
+            "type": "string",
+            "description": "Service contract associated with the shipment"
+        },
+        "shipping_company_id": {
+            "type": "string",
+            "description": "Identifier of the shipping company"
+        },
+        "shipping_company": {
+            "type": "object",
+            "description": "Shipping company details (populated via join)",
+            "properties": {
+                "id": {"type": "string"},
+                "name": {"type": "string"},
+                "scac_code": {"type": "string"},
+                "contact_info": {
+                    "type": "object",
+                    "properties": {
+                        "phone": {"type": "string"},
+                        "email": {"type": "string"},
+                        "emergency_contact": {"type": "string"}
+                    }
+                }
+            }
+        },
+        "shipper_info": {
+            "type": "object",
+            "description": "Information about the shipper",
+            "required": ["name"],
+            "properties": {
+                "name": {"type": "string"},
+                "address": {"type": "string"},
+                "city": {"type": "string"},
+                "country": {"type": "string"},
+                "phone": {"type": "string"},
+                "email": {"type": "string"},
+                "tax_id": {"type": "string"}
+            }
+        },
+        "consignee_info": {
+            "type": "object", 
+            "description": "Information about the consignee",
+            "required": ["name"],
+            "properties": {
+                "name": {"type": "string"},
+                "address": {"type": "string"},
+                "city": {"type": "string"},
+                "country": {"type": "string"},
+                "phone": {"type": "string"},
+                "email": {"type": "string"},
+                "tax_id": {"type": "string"}
+            }
+        },
+        "notify_party_info": {
+            "type": "object",
+            "description": "Optional notification party information",
+            "properties": {
+                "name": {"type": "string"},
+                "address": {"type": "string"},
+                "city": {"type": "string"},
+                "country": {"type": "string"},
+                "phone": {"type": "string"},
+                "email": {"type": "string"}
+            }
+        },
+        "port_of_loading": {
+            "type": "string",
+            "description": "Location where goods are loaded onto the vessel"
+        },
+        "port_of_discharge": {
+            "type": "string", 
+            "description": "Location where goods are unloaded from the vessel"
+        },
+        "place_of_receipt": {
+            "type": "string",
+            "description": "Initial location where goods are received for shipment"
+        },
+        "place_of_delivery": {
+            "type": "string", 
+            "description": "Final destination for goods delivery"
+        },
+        "vessel_details": {
+            "type": "object",
+            "properties": {
+                "vessel_name": {"type": "string"},
+                "voyage_number": {"type": "string"},
+                "vessel_imo_number": {"type": "string"}
+            }
+        },
+        "dates": {
+            "type": "object", 
+            "properties": {
+                "issue_date": {"type": "string", "format": "date-time"},
+                "shipped_on_board_date": {"type": "string", "format": "date-time"},
+                "estimated_arrival_date": {"type": "string", "format": "date-time"}
+            }
+        },
+        "commercial_terms": {
+            "type": "object", 
+            "required": ["freight_terms", "loading_method"],
+            "properties": {
+                "freight_terms": {
+                    "type": "string", 
+                    "enum": ["prepaid", "collect", "prepaid_collect"],
+                    "description": "Terms of freight payment"
+                },
+                "loading_method": {
+                    "type": "string",
+                    "enum": ["FCL", "LCL", "RORO", "BREAK_BULK"],
+                    "description": "Method of cargo loading"
+                }
+            }
+        },
+        "cargo_details": {
+            "type": "object",
+            "properties": {
+                "description": {"type": "string"},
+                "total_packages": {"type": "number"},
+                "total_gross_weight_kg": {"type": "number"},
+                "total_volume_cbm": {"type": "number"},
+                "declared_value": {
+                    "type": "object", 
+                    "properties": {
+                        "amount": {"type": "number"},
+                        "currency": {"type": "string", "description": "ISO 4217 currency code"}
+                    }
+                }
+            }
+        },
+        "status": {
+            "type": "string", 
+            "enum": ["draft", "issued", "shipped", "discharged", "delivered", "cancelled"],
+            "description": "Current status of the Bill of Lading"
+        },
+        "containers": {
+            "type": "array", 
+            "items": {
+                "type": "object", 
+                "required": ["container_number", "loading_method"],
+                "properties": {
+                    "container_number": {"type": "string"},
+                    "container_type": {
+                        "type": "object", 
+                        "properties": {
+                            "iso_code": {"type": "string"},
+                            "size_feet": {"type": "number"},
+                            "category": {
+                                "type": "string", 
+                                "enum": [
+                                    "general_purpose", "high_cube", "refrigerated", 
+                                    "open_top", "flat_rack", "tank", 
+                                    "ventilated", "bulk", "platform", "roro"
+                                ]
+                            }
+                        }
+                    },
+                    "seal_number": {"type": "string"},
+                    "weights": {
+                        "type": "object", 
+                        "properties": {
+                            "tare_weight_kg": {"type": "number"},
+                            "gross_weight_kg": {"type": "number"},
+                            "net_weight_kg": {"type": "number"}
+                        }
+                    },
+                    "loading_method": {
+                        "type": "string", 
+                        "enum": ["FCL", "LCL", "RORO", "BREAK_BULK"]
+                    },
+                    "arrival_details": {
+                        "type": "object", 
+                        "properties": {
+                            "estimated_arrival_date": {"type": "string", "format": "date-time"},
+                            "actual_arrival_date": {"type": "string", "format": "date-time"},
+                            "arrival_status": {"type": "string", "description": "Container arrival status"},
+                            "customs_clearance_date": {"type": "string", "format": "date-time"}
+                        }
+                    }
+                }
+            }
+        },
+        "metadata": {
+            "type": "object", 
+            "properties": {
+                "created_by": {"type": "string"},
+                "updated_by": {"type": "string"},
+                "created_at": {"type": "string", "format": "date-time"},
+                "updated_at": {"type": "string", "format": "date-time"},
+                "deleted_at": {"type": "string", "format": "date-time"}
+            }
+        }
+    }
+}
