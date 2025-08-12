@@ -74,7 +74,7 @@ const CACHE_VERSION = '1.0.0'
 // ============================================================================
 
 class MemoryCache {
-  private cache = new Map<string, CacheEntry<unknown>>()
+  private cache = new Map<string, CacheEntry<CacheData>>()
   private accessOrder = new Array<string>() // Pour LRU
   private readonly maxSize: number
 
@@ -117,7 +117,7 @@ class MemoryCache {
       version: CACHE_VERSION
     }
 
-    this.cache.set(key, entry as CacheEntry<unknown>)
+    this.cache.set(key, entry as CacheEntry<CacheData>)
     this.updateAccessOrder(key)
   }
 
