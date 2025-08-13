@@ -59,6 +59,12 @@
       "folderPriority": "Prioridad del expediente",
       "folderUrgency": "Urgencia del expediente",
       "processingStage": "Etapa de procesamiento"
+    },
+    "statusCategories": {
+      "active": "Expedientes Activos",
+      "completed": "Expedientes Completados",
+      "archived": "Expedientes Archivados",
+      "deleted": "Expedientes Eliminados"
     }
   }
 }

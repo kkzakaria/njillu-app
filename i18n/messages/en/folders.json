@@ -59,6 +59,12 @@
       "folderPriority": "Folder priority",
       "folderUrgency": "Folder urgency",
       "processingStage": "Processing stage"
+    },
+    "statusCategories": {
+      "active": "Active Folders",
+      "completed": "Completed Folders",
+      "archived": "Archived Folders",
+      "deleted": "Deleted Folders"
     }
   }
 }

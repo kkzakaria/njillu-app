@@ -1,5 +1,6 @@
-import { FoldersPage } from "./folders-page";
+import { redirect } from 'next/navigation';
 
 export default function Page() {
-  return <FoldersPage />;
+  // Redirect to active folders by default
+  redirect('/folders/active');
 }

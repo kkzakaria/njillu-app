@@ -58,6 +58,12 @@
       "folderStatus": "Statut du dossier",
       "folderPriority": "Priorité du dossier",
       "processingStage": "Étape de traitement"
+    },
+    "statusCategories": {
+      "active": "Dossiers en cours",
+      "completed": "Dossiers terminés",
+      "archived": "Dossiers archivés",
+      "deleted": "Dossiers supprimés"
     }
   }
 }

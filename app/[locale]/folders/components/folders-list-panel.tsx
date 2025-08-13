@@ -5,16 +5,19 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Search, Plus, Filter } from 'lucide-react';
 import { FolderCard } from './folder-card';
-import type { FolderSummary } from '@/types/folders';
+import type { FolderSummary, FolderStatus } from '@/types/folders';
 
 interface FoldersListPanelProps {
   selectedFolderId?: string;
   onFolderSelect?: (folder: FolderSummary) => void;
+  statusFilter?: FolderStatus[];
+  statusCategory?: string;
 }
 
-export function FoldersListPanel({ selectedFolderId, onFolderSelect }: FoldersListPanelProps) {
-  // Mock data pour la démonstration - adaptées au type FolderSummary
-  const folders: FolderSummary[] = [
+export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilter, statusCategory }: FoldersListPanelProps) {
+  // Mock data étendue pour tous les statuts
+  const allFolders: FolderSummary[] = [
+    // Active folders (open, processing)
     {
       id: '1',
       folder_number: 'M250113-000001',
@@ -39,16 +42,17 @@ export function FoldersListPanel({ selectedFolderId, onFolderSelect }: FoldersLi
       type: 'export',
       category: 'urgent',
       priority: 'normal',
-      status: 'on_hold',
-      processing_stage: 'revision_facture_commerciale',
-      health_status: 'warning',
+      status: 'open',
+      processing_stage: 'enregistrement',
+      health_status: 'healthy',
       client_name: 'Beta Industries',
       origin_name: 'Lyon, France',
       destination_name: 'New York, USA',
-      created_date: '2024-01-14T14:15:00Z',
-      expected_completion_date: '2024-01-20T12:00:00Z',
-      sla_compliance: 78,
+      created_date: '2024-01-16T08:00:00Z',
+      expected_completion_date: '2024-01-28T17:00:00Z',
+      sla_compliance: 88,
     },
+    // Completed folders (completed, closed)
     {
       id: '3',
       folder_number: 'M250113-000003',
@@ -66,7 +70,65 @@ export function FoldersListPanel({ selectedFolderId, onFolderSelect }: FoldersLi
       expected_completion_date: '2024-01-18T16:00:00Z',
       sla_compliance: 100,
     },
+    {
+      id: '4',
+      folder_number: 'M250113-000004',
+      reference_number: 'DELTA-2024-004',
+      type: 'export',
+      category: 'commercial',
+      priority: 'normal',
+      status: 'closed',
+      processing_stage: 'livraison',
+      health_status: 'healthy',
+      client_name: 'Delta Corp',
+      origin_name: 'Paris, France',
+      destination_name: 'Tokyo, Japan',
+      created_date: '2024-01-10T15:20:00Z',
+      expected_completion_date: '2024-01-15T12:00:00Z',
+      sla_compliance: 98,
+    },
+    // Archived folders (on_hold)
+    {
+      id: '5',
+      folder_number: 'M250113-000005',
+      reference_number: 'ECHO-2024-005',
+      type: 'import',
+      category: 'urgent',
+      priority: 'urgent',
+      status: 'on_hold',
+      processing_stage: 'revision_facture_commerciale',
+      health_status: 'warning',
+      client_name: 'Echo Enterprises',
+      origin_name: 'Hamburg, Germany',
+      destination_name: 'Bordeaux, France',
+      created_date: '2024-01-12T11:30:00Z',
+      expected_completion_date: '2024-01-22T14:00:00Z',
+      sla_compliance: 65,
+    },
+    // Deleted folders (cancelled)
+    {
+      id: '6',
+      folder_number: 'M250113-000006',
+      reference_number: 'FOXTROT-2024-006',
+      type: 'export',
+      category: 'commercial',
+      priority: 'low',
+      status: 'cancelled',
+      processing_stage: 'enregistrement',
+      health_status: 'critical',
+      client_name: 'Foxtrot Ltd',
+      origin_name: 'Marseille, France',
+      destination_name: 'Naples, Italy',
+      created_date: '2024-01-08T14:15:00Z',
+      expected_completion_date: '2024-01-20T10:00:00Z',
+      sla_compliance: 0,
+    },
   ];
+
+  // Filter folders based on status filter
+  const folders = statusFilter 
+    ? allFolders.filter(folder => statusFilter.includes(folder.status))
+    : allFolders;
 
   return (
     <div className="h-full flex flex-col p-4">
