@@ -180,7 +180,7 @@ export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilte
               primaryBLNumber={folder.reference_number}
               compact={true}
               showClient={true}
-              showActions={false}
+              showActions={true}
               statusCategory={statusCategory}
               className={selectedFolderId === folder.id ? 'border-l-2 border-primary bg-primary/5' : ''}
               onClick={(folder) => {

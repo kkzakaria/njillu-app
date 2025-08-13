@@ -10,14 +10,14 @@ interface PageProps {
 }
 
 // Valid folder statuses that can be accessed via URL
-const VALID_STATUSES: FolderStatus[] = [
-  'open',        // active folders - en cours
-  'processing',  // active folders - en cours  
-  'completed',   // completed folders - terminés
-  'closed',      // completed folders - terminés
-  'on_hold',     // archived folders - archivés
-  'cancelled'    // deleted folders - supprimés
-];
+// const VALID_STATUSES: FolderStatus[] = [
+//   'open',        // active folders - en cours
+//   'processing',  // active folders - en cours  
+//   'completed',   // completed folders - terminés
+//   'closed',      // completed folders - terminés
+//   'on_hold',     // archived folders - archivés
+//   'cancelled'    // deleted folders - supprimés
+// ];
 
 // Map URL status to folder statuses for filtering
 const STATUS_MAPPING: Record<string, FolderStatus[]> = {

@@ -8,6 +8,8 @@
       "archive": "Archivar",
       "duplicate": "Duplicar",
       "export": "Exportar",
+      "restore": "Restaurar",
+      "delete_permanently": "Eliminar Permanentemente",
       "moreActions": "Más acciones"
     },
     "status": {

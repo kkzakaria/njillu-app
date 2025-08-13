@@ -39,6 +39,7 @@ import { PriorityBadge } from '@/components/priority-badge';
 import { ProcessingStageBadge } from '@/components/processing-stage-badge';
 import { cn } from '@/lib/utils';
 import { useFolders } from '@/hooks/useTranslation';
+import { getFolderActions } from './folder-actions';
 
 import type { FolderSummary, FolderStatus } from '@/types/folders';
 
@@ -76,17 +77,17 @@ export interface FolderCardProps {
   showClient?: boolean;
 }
 
-// Default actions
-const defaultActions: FolderAction[] = [
-  { id: 'view', label: 'view', icon: Eye },
-  { id: 'edit', label: 'edit', icon: Edit },
-  { separator: true, id: 'sep1' },
-  { id: 'duplicate', label: 'duplicate', icon: Copy },
-  { id: 'export', label: 'export', icon: Download },
-  { id: 'archive', label: 'archive', icon: Archive },
-  { separator: true, id: 'sep2' },
-  { id: 'delete', label: 'delete', icon: Trash2, variant: 'destructive' },
-];
+// Default actions - now handled by getFolderActions helper
+// const defaultActions: FolderAction[] = [
+//   { id: 'view', label: 'view', icon: Eye },
+//   { id: 'edit', label: 'edit', icon: Edit },
+//   { separator: true, id: 'sep1' },
+//   { id: 'duplicate', label: 'duplicate', icon: Copy },
+//   { id: 'export', label: 'export', icon: Download },
+//   { id: 'archive', label: 'archive', icon: Archive },
+//   { separator: true, id: 'sep2' },
+//   { id: 'delete', label: 'delete', icon: Trash2, variant: 'destructive' },
+// ];
 
 // Get status icon and color
 const getStatusIcon = (status: FolderStatus) => {
@@ -175,7 +176,7 @@ export function FolderCard({
   className,
   compact = false,
   showActions = true,
-  actions = defaultActions,
+  actions,
   showStatus = true, // eslint-disable-line @typescript-eslint/no-unused-vars -- keeping for API compatibility
   showPriority = true,
   showProcessingStage = true,
@@ -188,7 +189,10 @@ export function FolderCard({
   // Determine contextual display logic
   const showProgressInfo = shouldShowProgressInfo(statusCategory);
   const contextualDate = getContextualDate(folder, statusCategory);
-  const dateLabelKey = getDateLabelKey(statusCategory);
+  // const dateLabelKey = getDateLabelKey(statusCategory); // Reserved for future accessibility enhancement
+  
+  // Get appropriate actions for this status category
+  const contextualActions = actions || getFolderActions(statusCategory);
 
 
   // Format date based on locale
@@ -222,7 +226,7 @@ export function FolderCard({
   };
 
   // Prepare translated actions
-  const translatedActions = actions.map((action) => ({
+  const translatedActions = contextualActions.map((action) => ({
     ...action,
     label: action.separator || !action.label ? '' : t(`actions.${action.label}`)
   }));
