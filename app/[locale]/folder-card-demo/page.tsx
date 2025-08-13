@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FolderCard } from '@/components/folder-card';
+import { FolderCard } from '@/app/[locale]/folders/components/folder-card';
 import type { FolderSummary } from '@/types/folders';
 
 // Sample data for testing

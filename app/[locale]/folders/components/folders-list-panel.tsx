@@ -1,58 +1,72 @@
 'use client'
 
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
 import { Search, Plus, Filter } from 'lucide-react';
+import { FolderCard } from './folder-card';
+import type { FolderSummary } from '@/types/folders';
 
-export function FoldersListPanel() {
-  // Mock data pour la démonstration
-  const folders = [
+interface FoldersListPanelProps {
+  selectedFolderId?: string;
+  onFolderSelect?: (folder: FolderSummary) => void;
+}
+
+export function FoldersListPanel({ selectedFolderId, onFolderSelect }: FoldersListPanelProps) {
+  // Mock data pour la démonstration - adaptées au type FolderSummary
+  const folders: FolderSummary[] = [
     {
       id: '1',
-      number: 'DOS-2024-001',
-      client: 'ACME Corporation',
-      status: 'En cours',
-      priority: 'Haute',
-      createdAt: '2024-01-15',
+      folder_number: 'M250113-000001',
+      reference_number: 'ACME-2024-001',
+      type: 'import',
+      category: 'commercial',
+      priority: 'urgent',
+      status: 'processing',
+      processing_stage: 'declaration_douaniere',
+      health_status: 'healthy',
+      client_name: 'ACME Corporation',
+      origin_name: 'Shanghai, China',
+      destination_name: 'Le Havre, France',
+      created_date: '2024-01-15T10:30:00Z',
+      expected_completion_date: '2024-01-25T18:00:00Z',
+      sla_compliance: 95,
     },
     {
       id: '2',
-      number: 'DOS-2024-002',
-      client: 'Beta Industries',
-      status: 'Attente',
-      priority: 'Moyenne',
-      createdAt: '2024-01-14',
+      folder_number: 'M250113-000002',
+      reference_number: 'BETA-2024-002',
+      type: 'export',
+      category: 'urgent',
+      priority: 'normal',
+      status: 'on_hold',
+      processing_stage: 'revision_facture_commerciale',
+      health_status: 'warning',
+      client_name: 'Beta Industries',
+      origin_name: 'Lyon, France',
+      destination_name: 'New York, USA',
+      created_date: '2024-01-14T14:15:00Z',
+      expected_completion_date: '2024-01-20T12:00:00Z',
+      sla_compliance: 78,
     },
     {
       id: '3',
-      number: 'DOS-2024-003',
-      client: 'Gamma Solutions',
-      status: 'Terminé',
-      priority: 'Basse',
-      createdAt: '2024-01-13',
+      folder_number: 'M250113-000003',
+      reference_number: 'GAMMA-2024-003',
+      type: 'import',
+      category: 'commercial',
+      priority: 'low',
+      status: 'completed',
+      processing_stage: 'livraison',
+      health_status: 'healthy',
+      client_name: 'Gamma Solutions',
+      origin_name: 'Barcelona, Spain',
+      destination_name: 'Marseille, France',
+      created_date: '2024-01-13T09:45:00Z',
+      expected_completion_date: '2024-01-18T16:00:00Z',
+      sla_compliance: 100,
     },
   ];
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'En cours': return 'bg-blue-100 text-blue-800';
-      case 'Attente': return 'bg-yellow-100 text-yellow-800';
-      case 'Terminé': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'Haute': return 'bg-red-100 text-red-800';
-      case 'Moyenne': return 'bg-orange-100 text-orange-800';
-      case 'Basse': return 'bg-gray-100 text-gray-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
 
   return (
     <div className="h-full flex flex-col p-4">
@@ -78,31 +92,20 @@ export function FoldersListPanel() {
 
       {/* Folders list */}
       <ScrollArea className="flex-1">
-        <div className="space-y-2">
+        <div className="space-y-3">
           {folders.map((folder) => (
-            <Card key={folder.id} className="cursor-pointer hover:shadow-md transition-shadow">
-              <CardContent className="p-4">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium text-sm">{folder.number}</span>
-                    <Badge className={`text-xs ${getPriorityColor(folder.priority)}`}>
-                      {folder.priority}
-                    </Badge>
-                  </div>
-                  
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{folder.client}</p>
-                    <p className="text-xs text-gray-500">Créé le {folder.createdAt}</p>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <Badge className={`text-xs ${getStatusColor(folder.status)}`}>
-                      {folder.status}
-                    </Badge>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <FolderCard
+              key={folder.id}
+              folder={folder}
+              primaryBLNumber={folder.reference_number}
+              compact={true}
+              showClient={true}
+              showActions={false}
+              className={selectedFolderId === folder.id ? 'ring-2 ring-primary bg-primary/5' : ''}
+              onClick={(folder) => {
+                onFolderSelect?.(folder);
+              }}
+            />
           ))}
         </div>
       </ScrollArea>
