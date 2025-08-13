@@ -5,7 +5,6 @@ import { MainAppLayout } from '@/components/layouts/main-app-layout';
 import { TwoColumnsLayout } from '@/components/layouts/two-columns-layout';
 import { FoldersListPanel } from './components/folders-list-panel';
 import { FolderDetailsPanel } from './components/folder-details-panel';
-import { useFoldersNavigationItems } from './components/folders-sidebar-config';
 import type { FolderSummary, FolderStatus } from '@/types/folders';
 
 interface FoldersPageProps {
@@ -15,19 +14,10 @@ interface FoldersPageProps {
 
 export function FoldersPage({ statusFilter, statusCategory }: FoldersPageProps) {
   const [selectedFolder, setSelectedFolder] = useState<FolderSummary | null>(null);
-  const navigationItems = useFoldersNavigationItems();
 
   return (
     <MainAppLayout 
       appTitle="Njillu App - Gestion des Dossiers"
-      navigationItems={navigationItems}
-      sidebarConfig={{
-        showHeader: true,
-        showFooter: true,
-        headerClickable: true,
-        animationDuration: 300,
-        hoverDelay: 100
-      }}
       className="p-0" // Pas de padding pour TwoColumnsLayout
     >
       <div className="h-full -m-4"> {/* Annule le padding du main */}
