@@ -92,7 +92,7 @@ export function FoldersListPanel({ selectedFolderId, onFolderSelect }: FoldersLi
 
       {/* Folders list */}
       <ScrollArea className="flex-1">
-        <div className="space-y-3">
+        <div className="space-y-2">
           {folders.map((folder) => (
             <FolderCard
               key={folder.id}
@@ -101,7 +101,7 @@ export function FoldersListPanel({ selectedFolderId, onFolderSelect }: FoldersLi
               compact={true}
               showClient={true}
               showActions={false}
-              className={selectedFolderId === folder.id ? 'ring-2 ring-primary bg-primary/5' : ''}
+              className={selectedFolderId === folder.id ? 'border-l-2 border-primary bg-primary/5' : ''}
               onClick={(folder) => {
                 onFolderSelect?.(folder);
               }}

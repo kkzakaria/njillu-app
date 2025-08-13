@@ -198,15 +198,34 @@ export function FolderCard({
       role="article"
       aria-label={t('accessibility.folderCard')}
     >
-      <CardHeader className={cn('flex flex-row items-start justify-between relative', compact && 'pb-2')}>
-        <div className="flex items-start gap-3">
+      <CardHeader className={cn(
+        'flex flex-row items-start justify-between relative',
+        compact ? 'p-3 pb-2' : 'p-4 pb-3'
+      )}>
+        <div className={cn(
+          'flex items-start',
+          compact ? 'gap-2' : 'gap-3'
+        )}>
           <StatusIcon 
-            className={cn('h-5 w-5 mt-0.5', colorClass)} 
+            className={cn(
+              'mt-0.5',
+              compact ? 'h-4 w-4' : 'h-5 w-5',
+              colorClass
+            )} 
             aria-hidden="true"
           />
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-base leading-none">
+          <div className={cn(
+            'flex flex-col',
+            compact ? 'gap-0.5' : 'gap-1'
+          )}>
+            <div className={cn(
+              'flex items-center',
+              compact ? 'gap-1.5' : 'gap-2'
+            )}>
+              <h3 className={cn(
+                'font-semibold leading-tight',
+                compact ? 'text-sm' : 'text-base'
+              )}>
                 {folder.folder_number}
               </h3>
               {showPriority && folder.priority && (
@@ -264,14 +283,28 @@ export function FolderCard({
         )}
       </CardHeader>
 
-      <CardContent className={cn('space-y-2', compact && 'py-2')}>
+      <CardContent className={cn(
+        compact ? 'p-3 pt-0 space-y-1' : 'p-4 pt-0 space-y-2'
+      )}>
         {primaryBLNumber ? (
-          <div className="flex items-center gap-2 text-sm">
-            <FileText className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-            <span className="font-mono">{primaryBLNumber}</span>
+          <div className={cn(
+            'flex items-center text-sm',
+            compact ? 'gap-1.5' : 'gap-2'
+          )}>
+            <FileText className={cn(
+              'text-muted-foreground',
+              compact ? 'h-3.5 w-3.5' : 'h-4 w-4'
+            )} aria-hidden="true" />
+            <span className={cn(
+              'font-mono',
+              compact ? 'text-xs' : 'text-sm'
+            )}>{primaryBLNumber}</span>
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground italic">
+          <p className={cn(
+            'text-muted-foreground italic',
+            compact ? 'text-xs' : 'text-sm'
+          )}>
             {t('labels.noBL')}
           </p>
         )}
@@ -285,7 +318,10 @@ export function FolderCard({
         )}
       </CardContent>
 
-      <CardFooter className={cn('justify-between', compact && 'pt-2')}>
+      <CardFooter className={cn(
+        'justify-between',
+        compact ? 'p-3 pt-1.5' : 'p-4 pt-2'
+      )}>
         {showProcessingStage && folder.processing_stage ? (
           <ProcessingStageBadge 
             stage={folder.processing_stage}
@@ -297,9 +333,16 @@ export function FolderCard({
           <div /> 
         )}
         
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <Calendar className="h-3 w-3" aria-hidden="true" />
-          <time dateTime={folder.created_date}>
+        <div className={cn(
+          'flex items-center text-muted-foreground',
+          compact ? 'gap-1 text-xs' : 'gap-2 text-xs'
+        )}>
+          <Calendar className={cn(
+            compact ? 'h-3 w-3' : 'h-3 w-3'
+          )} aria-hidden="true" />
+          <time dateTime={folder.created_date} className={cn(
+            compact ? 'text-xs leading-none' : 'text-xs'
+          )}>
             {formatDate(folder.created_date)}
           </time>
         </div>
