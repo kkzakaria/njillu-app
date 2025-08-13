@@ -12,7 +12,8 @@ import {
 // Types et interfaces
 import { 
   INavigationItem,
-  SidebarConfig 
+  SidebarConfig,
+  DEFAULT_SIDEBAR_CONFIG 
 } from '@/types/sidebar.types'
 
 // Providers pour le responsive
@@ -150,11 +151,15 @@ export const AppSidebarSimple: React.FC<AppSidebarSimpleProps> = ({
           isExpanded={sidebarState.isExpanded}
           isVisible={true}
           config={{
-            animationDuration: config.animationDuration,
-            hoverDelay: config.hoverDelay,
+            ...DEFAULT_SIDEBAR_CONFIG,
+            position: 'left', // S'assurer que c'est à gauche
+            animationDuration: config.animationDuration || 300,
+            hoverDelay: config.hoverDelay || 100,
             showHeader: false, // Pas de header
             showFooter: false, // Pas de footer
-            autoCollapse: config.autoCollapse
+            autoCollapse: config.autoCollapse !== undefined ? config.autoCollapse : true,
+            headerTitle: '',
+            headerClickable: false
           }}
           currentBreakpoint={currentBreakpoint}
           onMouseEnter={handleMouseEnter}
