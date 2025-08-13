@@ -57,6 +57,7 @@ export interface FolderCardProps {
   // Data
   folder: FolderSummary;
   primaryBLNumber?: string;
+  statusCategory?: string;
   
   // Behavior
   onClick?: (folder: FolderSummary) => void;
@@ -132,9 +133,43 @@ const getDateLocale = (locale: string) => {
   }
 };
 
+// Get contextual date based on status category
+const getContextualDate = (folder: FolderSummary, statusCategory?: string) => {
+  switch (statusCategory) {
+    case 'completed':
+      return folder.completion_date || folder.created_date;
+    case 'archived':
+      return folder.archived_date || folder.created_date;
+    case 'deleted':
+      return folder.deleted_date || folder.created_date;
+    default:
+      return folder.created_date;
+  }
+};
+
+// Get contextual date label key for translation
+const getDateLabelKey = (statusCategory?: string) => {
+  switch (statusCategory) {
+    case 'completed':
+      return 'completedOn';
+    case 'archived':
+      return 'archivedOn';
+    case 'deleted':
+      return 'deletedOn';
+    default:
+      return 'createdOn';
+  }
+};
+
+// Determine if priority and processing stage should be shown based on status
+const shouldShowProgressInfo = (statusCategory?: string) => {
+  return statusCategory === 'active' || !statusCategory;
+};
+
 export function FolderCard({
   folder,
   primaryBLNumber,
+  statusCategory,
   onClick,
   onActionClick,
   className,
@@ -149,6 +184,12 @@ export function FolderCard({
   const locale = useLocale();
   const t = useFolders();
   const dateLocale = getDateLocale(locale);
+  
+  // Determine contextual display logic
+  const showProgressInfo = shouldShowProgressInfo(statusCategory);
+  const contextualDate = getContextualDate(folder, statusCategory);
+  const dateLabelKey = getDateLabelKey(statusCategory);
+
 
   // Format date based on locale
   const formatDate = (dateString: string) => {
@@ -228,7 +269,7 @@ export function FolderCard({
               )}>
                 {folder.folder_number}
               </h3>
-              {showPriority && folder.priority && (
+              {showProgressInfo && showPriority && folder.priority && (
                 <PriorityBadge 
                   priority={folder.priority}
                   aria-label={`${t('accessibility.folderPriority')}: ${t(`priority.${folder.priority}`)}`}
@@ -322,7 +363,7 @@ export function FolderCard({
         'justify-between',
         compact ? 'p-3 pt-1.5' : 'p-4 pt-2'
       )}>
-        {showProcessingStage && folder.processing_stage ? (
+        {showProgressInfo && showProcessingStage && folder.processing_stage ? (
           <ProcessingStageBadge 
             stage={folder.processing_stage}
             aria-label={`${t('accessibility.processingStage')}: ${t(`processingStages.${folder.processing_stage}`)}`}
@@ -340,10 +381,10 @@ export function FolderCard({
           <Calendar className={cn(
             compact ? 'h-3 w-3' : 'h-3 w-3'
           )} aria-hidden="true" />
-          <time dateTime={folder.created_date} className={cn(
+          <time dateTime={contextualDate} className={cn(
             compact ? 'text-xs leading-none' : 'text-xs'
           )}>
-            {formatDate(folder.created_date)}
+            {formatDate(contextualDate)}
           </time>
         </div>
       </CardFooter>

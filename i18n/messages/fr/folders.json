@@ -27,6 +27,9 @@
     "labels": {
       "createdOn": "Créé le",
       "modifiedOn": "Modifié le",
+      "completedOn": "Terminé le",
+      "archivedOn": "Archivé le",
+      "deletedOn": "Supprimé le",
       "blNumber": "Numéro BL",
       "folderNumber": "N° Dossier",
       "client": "Client",

@@ -27,6 +27,9 @@
     "labels": {
       "createdOn": "Created on",
       "modifiedOn": "Modified on",
+      "completedOn": "Completed on",
+      "archivedOn": "Archived on",
+      "deletedOn": "Deleted on",
       "blNumber": "BL Number",
       "folderNumber": "Folder No.",
       "client": "Client",

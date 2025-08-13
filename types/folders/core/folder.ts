@@ -127,6 +127,11 @@ export interface FolderSummary {
   created_date: string;
   expected_completion_date?: string;
   sla_compliance?: number;
+  
+  // Dates contextuelles selon le statut
+  completion_date?: string;  // Date de finalisation (pour completed/closed)
+  archived_date?: string;    // Date d'archivage (pour on_hold)
+  deleted_date?: string;     // Date de suppression (pour cancelled)
 }
 
 /**

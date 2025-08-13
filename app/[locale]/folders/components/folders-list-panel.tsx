@@ -68,6 +68,7 @@ export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilte
       destination_name: 'Marseille, France',
       created_date: '2024-01-13T09:45:00Z',
       expected_completion_date: '2024-01-18T16:00:00Z',
+      completion_date: '2024-01-18T14:30:00Z',
       sla_compliance: 100,
     },
     {
@@ -85,6 +86,7 @@ export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilte
       destination_name: 'Tokyo, Japan',
       created_date: '2024-01-10T15:20:00Z',
       expected_completion_date: '2024-01-15T12:00:00Z',
+      completion_date: '2024-01-15T11:45:00Z',
       sla_compliance: 98,
     },
     // Archived folders (on_hold)
@@ -103,6 +105,7 @@ export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilte
       destination_name: 'Bordeaux, France',
       created_date: '2024-01-12T11:30:00Z',
       expected_completion_date: '2024-01-22T14:00:00Z',
+      archived_date: '2024-01-14T16:45:00Z',
       sla_compliance: 65,
     },
     // Deleted folders (cancelled)
@@ -121,6 +124,7 @@ export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilte
       destination_name: 'Naples, Italy',
       created_date: '2024-01-08T14:15:00Z',
       expected_completion_date: '2024-01-20T10:00:00Z',
+      deleted_date: '2024-01-09T10:20:00Z',
       sla_compliance: 0,
     },
   ];
@@ -163,6 +167,7 @@ export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilte
               compact={true}
               showClient={true}
               showActions={false}
+              statusCategory={statusCategory}
               className={selectedFolderId === folder.id ? 'border-l-2 border-primary bg-primary/5' : ''}
               onClick={(folder) => {
                 onFolderSelect?.(folder);
