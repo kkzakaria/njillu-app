@@ -19,14 +19,18 @@ export function FoldersPage({ statusFilter, statusCategory }: FoldersPageProps) 
 
   return (
     <MainAppLayout 
+      appTitle="Njillu App - Gestion des Dossiers"
       navigationItems={navigationItems}
       sidebarConfig={{
         showHeader: true,
         showFooter: true,
-        headerTitle: "Njillu App"
+        headerClickable: true,
+        animationDuration: 300,
+        hoverDelay: 100
       }}
+      className="p-0" // Pas de padding pour TwoColumnsLayout
     >
-      <div className="h-full">
+      <div className="h-full -m-4"> {/* Annule le padding du main */}
         <TwoColumnsLayout
           left={
             <FoldersListPanel 
