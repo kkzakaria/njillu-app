@@ -68,6 +68,9 @@
       "completed": "Expedientes Completados",
       "archived": "Expedientes Archivados",
       "deleted": "Expedientes Eliminados"
+    },
+    "banners": {
+      "autoArchiveNotice": "Los expedientes completados se archivan automáticamente después de 30 días"
     }
   }
 }

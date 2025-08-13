@@ -68,6 +68,9 @@
       "completed": "Completed Folders",
       "archived": "Archived Folders",
       "deleted": "Deleted Folders"
+    },
+    "banners": {
+      "autoArchiveNotice": "Completed folders are automatically archived after 30 days"
     }
   }
 }

@@ -67,6 +67,9 @@
       "completed": "Dossiers terminés",
       "archived": "Dossiers archivés",
       "deleted": "Dossiers supprimés"
+    },
+    "banners": {
+      "autoArchiveNotice": "Les dossiers terminés sont automatiquement archivés après 30 jours"
     }
   }
 }

@@ -3,8 +3,10 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Search, Plus, Filter } from 'lucide-react';
+import { Search, Plus, Filter, Archive } from 'lucide-react';
 import { FolderCard } from './folder-card';
+import { InfoBanner } from './info-banner';
+import { useFolders } from '@/hooks/useTranslation';
 import type { FolderSummary, FolderStatus } from '@/types/folders';
 
 interface FoldersListPanelProps {
@@ -15,6 +17,7 @@ interface FoldersListPanelProps {
 }
 
 export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilter, statusCategory }: FoldersListPanelProps) {
+  const t = useFolders();
   // Mock data étendue pour tous les statuts
   const allFolders: FolderSummary[] = [
     // Active folders (open, processing)
@@ -155,6 +158,17 @@ export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilte
           </Button>
         </div>
       </div>
+
+      {/* Info banner for completed folders */}
+      {statusCategory === 'completed' && (
+        <div className="mb-3">
+          <InfoBanner
+            message={t('banners.autoArchiveNotice')}
+            icon={Archive}
+            variant="info"
+          />
+        </div>
+      )}
 
       {/* Folders list */}
       <ScrollArea className="flex-1">
