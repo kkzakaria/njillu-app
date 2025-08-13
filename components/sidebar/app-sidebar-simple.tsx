@@ -12,7 +12,6 @@ import {
 // Types et interfaces
 import { 
   INavigationItem,
-  SidebarConfig,
   DEFAULT_SIDEBAR_CONFIG 
 } from '@/types/sidebar.types'
 
@@ -179,7 +178,12 @@ export const AppSidebarSimple: React.FC<AppSidebarSimpleProps> = ({
         isOpen={sidebarState.isSheetOpen}
         onClose={() => sidebarState.setSheetOpen(false)}
         config={{
-          animationDuration: config.animationDuration
+          ...DEFAULT_SIDEBAR_CONFIG,
+          position: 'left',
+          animationDuration: config.animationDuration || 300,
+          autoCollapse: true,
+          showHeader: false,
+          showFooter: false
         }}
         title="Navigation"
       >
@@ -187,7 +191,6 @@ export const AppSidebarSimple: React.FC<AppSidebarSimpleProps> = ({
           isExpanded={true} // Toujours étendu en mode sheet
           navigationItems={navigationItems}
           onItemClick={handleItemClick}
-          isSheet={true}
         />
       </SidebarSheet>
     </>
@@ -202,14 +205,12 @@ interface SidebarContentProps {
   isExpanded: boolean
   navigationItems: INavigationItem[]
   onItemClick: (item: INavigationItem) => void
-  isSheet?: boolean
 }
 
 const SidebarContent: React.FC<SidebarContentProps> = ({
   isExpanded,
   navigationItems,
-  onItemClick,
-  isSheet = false
+  onItemClick
 }) => {
   return (
     <div className="flex flex-col h-full">

@@ -1,5 +1,5 @@
-// Nouveau composant AppSidebar utilisant l'architecture SOLID
-// Ce fichier remplace l'ancienne version pour une compatibilité totale
+// Composant AppSidebar utilisant l'architecture simplifiée
+// Ce fichier assure la compatibilité avec l'ancienne API
 'use client'
 
-export { AppSidebar } from './sidebar/app-sidebar-solid'
+export { AppSidebar } from './sidebar/app-sidebar-simple'

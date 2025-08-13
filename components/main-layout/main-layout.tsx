@@ -1,6 +1,6 @@
 "use client"
 
-import { DynamicSidebar } from "@/components/sidebar"
+import { AppSidebarSimple } from "@/components/sidebar/app-sidebar-simple"
 import { AppBar } from "@/components/appbar"
 
 export interface MainLayoutProps {
@@ -59,19 +59,13 @@ export function MainLayout({
       <AppBar />
       
       {/* Sidebar positionnée sous l'AppBar (par son propre positionnement fixed) */}
-      <DynamicSidebar
-        debugMode={debugMode}
+      <AppSidebarSimple
         config={{
           animationDuration: sidebarConfig.animationDuration,
           hoverDelay: sidebarConfig.hoverDelay,
-          showHeader: false, // Pas de header dans la sidebar
-          showFooter: false, // Pas de footer dans la sidebar
-          headerTitle: appTitle,
-          headerClickable: sidebarConfig.headerClickable
+          autoCollapse: true
         }}
         onItemClick={handleNavigationClick}
-        onUserContextChange={handleUserContextChange}
-        onNavigationItemsChange={handleNavigationItemsChange}
       />
       
       {/* Zone de contenu principal avec marge pour la sidebar */}
