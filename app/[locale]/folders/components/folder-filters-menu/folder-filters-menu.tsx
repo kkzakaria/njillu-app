@@ -17,6 +17,7 @@ import { Filter, RotateCcw, CheckCircle2 } from 'lucide-react';
 import type { FolderFiltersMenuProps } from './folder-filter.types';
 import { FILTER_CONFIGS } from './folder-filter-configs';
 import { createFilterHandlers } from './folder-filter-handlers';
+import { useFolderFilters } from '@/hooks/useTranslation';
 
 // Imports des composants de section
 import { UrgencySection } from './sections/urgency-section';
@@ -39,6 +40,7 @@ export function FolderFiltersMenu({
   activeFiltersCount = 0 
 }: FolderFiltersMenuProps): React.ReactElement {
   const [isOpen, setIsOpen] = useState(false);
+  const t = useFolderFilters();
   
   const config = FILTER_CONFIGS[statusCategory];
   const { updateFilters, toggleArrayFilter, clearAllFilters } = createFilterHandlers(
@@ -55,7 +57,7 @@ export function FolderFiltersMenu({
       <div key={section.id}>
         <DropdownMenuLabel className="text-xs font-medium text-muted-foreground px-2 py-1">
           <SectionIcon className="w-3 h-3 mr-1 inline" />
-          {section.label}
+          {t(section.label)}
         </DropdownMenuLabel>
         {renderSectionContent(section.id)}
       </div>
@@ -68,7 +70,8 @@ export function FolderFiltersMenu({
       filters,
       config,
       onUpdateFilters: updateFilters,
-      onToggleArrayFilter: toggleArrayFilter
+      onToggleArrayFilter: toggleArrayFilter,
+      t
     };
 
     switch (sectionId) {
@@ -119,7 +122,7 @@ export function FolderFiltersMenu({
       <DropdownMenuContent className="w-80" align="end">
         {/* Header */}
         <DropdownMenuLabel className="flex items-center justify-between">
-          <span>Filtres - {statusCategory}</span>
+          <span>{t('ui.categoryTitle', { category: statusCategory })}</span>
           {activeFiltersCount > 0 && (
             <Button 
               variant="ghost" 
@@ -128,7 +131,7 @@ export function FolderFiltersMenu({
               className="h-6 px-2 text-xs"
             >
               <RotateCcw className="w-3 h-3 mr-1" />
-              Reset
+              {t('ui.reset')}
             </Button>
           )}
         </DropdownMenuLabel>
@@ -152,7 +155,7 @@ export function FolderFiltersMenu({
           onSelect={(e) => e.preventDefault()}
         >
           <CheckCircle2 className="w-4 h-4 mr-2" />
-          Filtres actifs ({activeFiltersCount})
+          {t('ui.activeFilters', { count: activeFiltersCount })}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

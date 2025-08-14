@@ -11,7 +11,8 @@ import type { FilterSectionProps } from '../folder-filter.types';
 export function WorkflowSection({ 
   filters, 
   config, 
-  onToggleArrayFilter 
+  onToggleArrayFilter,
+  t
 }: FilterSectionProps): React.ReactElement {
   return (
     <>
@@ -20,7 +21,7 @@ export function WorkflowSection({
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
             <Truck className="w-4 h-4 mr-2" />
-            Mode de transport
+            {t('labels.transportMode')}
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
             {config.options.transport_mode.map((option) => {
@@ -32,7 +33,7 @@ export function WorkflowSection({
                   onCheckedChange={() => onToggleArrayFilter('transport_mode', option.value, filters.transport_mode)}
                 >
                   {Icon && <Icon className="w-4 h-4 mr-2" />}
-                  {option.label}
+                  {t(option.label)}
                 </DropdownMenuCheckboxItem>
               );
             })}
@@ -45,7 +46,7 @@ export function WorkflowSection({
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
             <MoveHorizontal className="w-4 h-4 mr-2" />
-            Type de transit
+            {t('labels.transitType')}
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
             {config.options.transit_type.map((option) => (
@@ -54,7 +55,7 @@ export function WorkflowSection({
                 checked={filters.transit_type?.includes(option.value) ?? false}
                 onCheckedChange={() => onToggleArrayFilter('transit_type', option.value, filters.transit_type)}
               >
-                {option.label}
+                {t(option.label)}
               </DropdownMenuCheckboxItem>
             ))}
           </DropdownMenuSubContent>
@@ -66,7 +67,7 @@ export function WorkflowSection({
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
             <CheckCircle2 className="w-4 h-4 mr-2" />
-            Étape de traitement
+            {t('labels.processingStage')}
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
             {config.options.processing_stage.map((option) => (
@@ -75,7 +76,7 @@ export function WorkflowSection({
                 checked={filters.processing_stage?.includes(option.value) ?? false}
                 onCheckedChange={() => onToggleArrayFilter('processing_stage', option.value, filters.processing_stage)}
               >
-                {option.label}
+                {t(option.label)}
               </DropdownMenuCheckboxItem>
             ))}
           </DropdownMenuSubContent>

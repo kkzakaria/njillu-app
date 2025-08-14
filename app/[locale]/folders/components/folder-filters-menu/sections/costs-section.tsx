@@ -5,7 +5,8 @@ import type { FilterSectionProps } from '../folder-filter.types';
 export function CostsSection({ 
   filters, 
   config, 
-  onUpdateFilters 
+  onUpdateFilters,
+  t
 }: FilterSectionProps): React.ReactElement | null {
   if (!config.options.cost_vs_estimated) return null;
 
@@ -20,7 +21,7 @@ export function CostsSection({
             cost_vs_estimated: filters.cost_vs_estimated === option.value ? undefined : option.value as 'under' | 'on_budget' | 'over'
           })}
         >
-          {option.description} {option.label}
+          {t(option.description)} {t(option.label)}
         </DropdownMenuCheckboxItem>
       ))}
     </>

@@ -104,4 +104,5 @@ export interface FilterSectionProps {
     value: T,
     currentArray?: T[]
   ) => void;
+  t: (key: string, params?: Record<string, string | number>) => string;
 }
