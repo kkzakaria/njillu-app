@@ -1,0 +1,92 @@
+{
+  "ui": {
+    "title": "Filters",
+    "reset": "Reset",
+    "activeFilters": "Active filters ({count})",
+    "categoryTitle": "Filters - {category}"
+  },
+  "sections": {
+    "urgency": "URGENCY & PRIORITY",
+    "workflow": "WORKFLOW",
+    "deadlines": "DEADLINES",
+    "client": "CLIENT & TYPE",
+    "period": "PERIOD",
+    "performance": "PERFORMANCE",
+    "costs": "COSTS",
+    "timing": "TIMING"
+  },
+  "options": {
+    "priority": {
+      "urgent": "Urgent",
+      "normal": "Normal",
+      "low": "Low"
+    },
+    "processing_stage": {
+      "enregistrement": "Registration",
+      "revision_facture_commerciale": "Invoice Review",
+      "elaboration_fdi": "FDI Preparation",
+      "elaboration_rfcv": "RFCV Preparation",
+      "declaration_douaniere": "Customs Declaration",
+      "service_exploitation": "Operations Service",
+      "facturation_client": "Client Billing",
+      "livraison": "Delivery"
+    },
+    "deadline_proximity": {
+      "today": "Today",
+      "week": "This week",
+      "month": "This month"
+    },
+    "transport_mode": {
+      "maritime": "Maritime",
+      "terrestre": "Land",
+      "aerien": "Air"
+    },
+    "transit_type": {
+      "import": "Import",
+      "export": "Export"
+    },
+    "type": {
+      "import": "Import",
+      "export": "Export",
+      "transit": "Transit"
+    },
+    "completion_period": {
+      "today": "Today",
+      "3_days": "Last 3 days",
+      "week": "This week",
+      "2_weeks": "Last 2 weeks",
+      "month": "This month (max 30 days)"
+    },
+    "archive_age": {
+      "recent": "Recent (< 1 month)",
+      "month": "1-3 months",
+      "quarter": "3-6 months",
+      "semester": "6-12 months",
+      "old": "Old (> 1 year)"
+    },
+    "deletion_period": {
+      "today": "Today",
+      "3_days": "Last 3 days",
+      "week": "This week",
+      "2_weeks": "Last 2 weeks",
+      "month": "This month",
+      "quarter": "This quarter"
+    }
+  },
+  "descriptions": {
+    "deadline_proximity": {
+      "today": "Due within 24h",
+      "week": "Due within 7 days",
+      "month": "Due within 30 days"
+    }
+  },
+  "labels": {
+    "priorityLevel": "Priority level",
+    "transportMode": "Transport mode",
+    "transitType": "Transit type",
+    "processingStage": "Processing stage",
+    "overdue": "🚨 Overdue",
+    "upcomingDeadline": "Upcoming deadline",
+    "durationVsPlanned": "Duration vs planned"
+  }
+}

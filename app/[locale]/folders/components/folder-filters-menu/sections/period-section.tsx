@@ -5,7 +5,8 @@ import type { FilterSectionProps } from '../folder-filter.types';
 export function PeriodSection({ 
   filters, 
   config, 
-  onUpdateFilters 
+  onUpdateFilters,
+  t
 }: FilterSectionProps): React.ReactElement | null {
   if (!config.options.completion_period) return null;
 
@@ -20,7 +21,7 @@ export function PeriodSection({
             completion_period: filters.completion_period === option.value ? undefined : option.value as 'week' | 'month' | 'quarter' | 'year'
           })}
         >
-          {option.label}
+          {t(option.label)}
         </DropdownMenuCheckboxItem>
       ))}
     </>

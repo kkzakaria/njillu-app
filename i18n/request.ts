@@ -21,6 +21,7 @@ async function loadMessages(locale: string) {
       customsRfcv,
       languageSwitcher,
       folders,
+      folderFilters,
       demo
     ] = await Promise.all([
       import(`./messages/${locale}/metadata/app.json`),
@@ -38,6 +39,7 @@ async function loadMessages(locale: string) {
       import(`./messages/${locale}/customs/rfcv.json`),
       import(`./messages/${locale}/language/switcher.json`),
       import(`./messages/${locale}/folders.json`),
+      import(`./messages/${locale}/folder-filters.json`),
       import(`./messages/${locale}/demo.json`)
     ]);
 
@@ -62,6 +64,7 @@ async function loadMessages(locale: string) {
       },
       language: languageSwitcher.default,
       folders: folders.default,
+      'folder-filters': folderFilters.default,
       demo: demo.default
     };
   } catch (error) {

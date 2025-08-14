@@ -1,0 +1,92 @@
+{
+  "ui": {
+    "title": "Filtros",
+    "reset": "Restablecer",
+    "activeFilters": "Filtros activos ({count})",
+    "categoryTitle": "Filtros - {category}"
+  },
+  "sections": {
+    "urgency": "URGENCIA & PRIORIDAD",
+    "workflow": "FLUJO DE TRABAJO",
+    "deadlines": "FECHAS LÍMITE",
+    "client": "CLIENTE & TIPO",
+    "period": "PERÍODO",
+    "performance": "RENDIMIENTO",
+    "costs": "COSTOS",
+    "timing": "CRONOGRAMA"
+  },
+  "options": {
+    "priority": {
+      "urgent": "Urgente",
+      "normal": "Normal",
+      "low": "Baja"
+    },
+    "processing_stage": {
+      "enregistrement": "Registro",
+      "revision_facture_commerciale": "Revisión de factura",
+      "elaboration_fdi": "Preparación FDI",
+      "elaboration_rfcv": "Preparación RFCV",
+      "declaration_douaniere": "Declaración aduanera",
+      "service_exploitation": "Servicio de operaciones",
+      "facturation_client": "Facturación cliente",
+      "livraison": "Entrega"
+    },
+    "deadline_proximity": {
+      "today": "Hoy",
+      "week": "Esta semana",
+      "month": "Este mes"
+    },
+    "transport_mode": {
+      "maritime": "Marítimo",
+      "terrestre": "Terrestre",
+      "aerien": "Aéreo"
+    },
+    "transit_type": {
+      "import": "Importación",
+      "export": "Exportación"
+    },
+    "type": {
+      "import": "Importación",
+      "export": "Exportación",
+      "transit": "Tránsito"
+    },
+    "completion_period": {
+      "today": "Hoy",
+      "3_days": "Últimos 3 días",
+      "week": "Esta semana",
+      "2_weeks": "Últimas 2 semanas",
+      "month": "Este mes (máx 30 días)"
+    },
+    "archive_age": {
+      "recent": "Reciente (< 1 mes)",
+      "month": "1-3 meses",
+      "quarter": "3-6 meses",
+      "semester": "6-12 meses",
+      "old": "Antiguo (> 1 año)"
+    },
+    "deletion_period": {
+      "today": "Hoy",
+      "3_days": "Últimos 3 días",
+      "week": "Esta semana",
+      "2_weeks": "Últimas 2 semanas",
+      "month": "Este mes",
+      "quarter": "Este trimestre"
+    }
+  },
+  "descriptions": {
+    "deadline_proximity": {
+      "today": "Vence en 24h",
+      "week": "Vence en 7 días",
+      "month": "Vence en 30 días"
+    }
+  },
+  "labels": {
+    "priorityLevel": "Nivel de prioridad",
+    "transportMode": "Modo de transporte",
+    "transitType": "Tipo de tránsito",
+    "processingStage": "Etapa de procesamiento",
+    "overdue": "🚨 Atrasado",
+    "upcomingDeadline": "Fecha límite próxima",
+    "durationVsPlanned": "Duración vs planificado"
+  }
+}

@@ -11,7 +11,8 @@ import type { FilterSectionProps } from '../folder-filter.types';
 export function DeadlinesSection({ 
   filters, 
   config, 
-  onUpdateFilters 
+  onUpdateFilters,
+  t
 }: FilterSectionProps): React.ReactElement {
   return (
     <>
@@ -20,7 +21,7 @@ export function DeadlinesSection({
         checked={filters.is_overdue ?? false}
         onCheckedChange={(checked) => onUpdateFilters({ is_overdue: checked || undefined })}
       >
-        🚨 En retard
+        {t('labels.overdue')}
       </DropdownMenuCheckboxItem>
 
       {/* Échéance proche */}
@@ -28,7 +29,7 @@ export function DeadlinesSection({
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
             <Clock className="w-4 h-4 mr-2" />
-            Échéance proche
+            {t('labels.upcomingDeadline')}
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
             {config.options.deadline_proximity.map((option) => (
@@ -39,10 +40,10 @@ export function DeadlinesSection({
                   deadline_proximity: filters.deadline_proximity === option.value ? undefined : option.value as 'today' | 'week' | 'month'
                 })}
               >
-                {option.label}
+                {t(option.label)}
                 {option.description && (
                   <span className="text-xs text-muted-foreground ml-1">
-                    {option.description}
+                    {t(option.description)}
                   </span>
                 )}
               </DropdownMenuCheckboxItem>

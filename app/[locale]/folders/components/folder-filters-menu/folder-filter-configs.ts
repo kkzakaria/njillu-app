@@ -12,51 +12,52 @@ import type { StatusCategory, FilterConfig } from './folder-filter.types';
 
 // ============================================================================
 // Configurations des filtres par catégorie de statut
+// Note: Les labels utilisent maintenant des clés de traduction
 // ============================================================================
 
 export const FILTER_CONFIGS: Record<StatusCategory, FilterConfig> = {
   // Configuration pour dossiers EN COURS
   active: {
     sections: [
-      { id: 'urgency', label: 'URGENCE & PRIORITÉ', icon: AlertTriangle, priority: 1 },
-      { id: 'workflow', label: 'WORKFLOW', icon: Building2, priority: 2 },
-      { id: 'deadlines', label: 'ÉCHÉANCES', icon: Calendar, priority: 3 },
-      { id: 'client', label: 'CLIENT & TYPE', icon: User, priority: 4 }
+      { id: 'urgency', label: 'sections.urgency', icon: AlertTriangle, priority: 1 },
+      { id: 'workflow', label: 'sections.workflow', icon: Building2, priority: 2 },
+      { id: 'deadlines', label: 'sections.deadlines', icon: Calendar, priority: 3 },
+      { id: 'client', label: 'sections.client', icon: User, priority: 4 }
     ],
     options: {
       priority: [
-        { value: 'urgent', label: 'Urgent', color: 'bg-red-100 text-red-800' },
-        { value: 'normal', label: 'Normal', color: 'bg-blue-100 text-blue-800' },
-        { value: 'low', label: 'Faible', color: 'bg-green-100 text-green-800' },
+        { value: 'urgent', label: 'options.priority.urgent', color: 'bg-red-100 text-red-800' },
+        { value: 'normal', label: 'options.priority.normal', color: 'bg-blue-100 text-blue-800' },
+        { value: 'low', label: 'options.priority.low', color: 'bg-green-100 text-green-800' },
       ],
       processing_stage: [
-        { value: 'enregistrement', label: 'Enregistrement' },
-        { value: 'revision_facture_commerciale', label: 'Révision facture commerciale' },
-        { value: 'elaboration_fdi', label: 'Élaboration FDI' },
-        { value: 'elaboration_rfcv', label: 'Élaboration RFCV' },
-        { value: 'declaration_douaniere', label: 'Déclaration douanière' },
-        { value: 'service_exploitation', label: 'Service exploitation' },
-        { value: 'facturation_client', label: 'Facturation client' },
-        { value: 'livraison', label: 'Livraison' },
+        { value: 'enregistrement', label: 'options.processing_stage.enregistrement' },
+        { value: 'revision_facture_commerciale', label: 'options.processing_stage.revision_facture_commerciale' },
+        { value: 'elaboration_fdi', label: 'options.processing_stage.elaboration_fdi' },
+        { value: 'elaboration_rfcv', label: 'options.processing_stage.elaboration_rfcv' },
+        { value: 'declaration_douaniere', label: 'options.processing_stage.declaration_douaniere' },
+        { value: 'service_exploitation', label: 'options.processing_stage.service_exploitation' },
+        { value: 'facturation_client', label: 'options.processing_stage.facturation_client' },
+        { value: 'livraison', label: 'options.processing_stage.livraison' },
       ],
       deadline_proximity: [
-        { value: 'today', label: 'Aujourd\'hui', description: 'Échéance dans 24h' },
-        { value: 'week', label: 'Cette semaine', description: 'Échéance dans 7 jours' },
-        { value: 'month', label: 'Ce mois', description: 'Échéance dans 30 jours' },
+        { value: 'today', label: 'options.deadline_proximity.today', description: 'descriptions.deadline_proximity.today' },
+        { value: 'week', label: 'options.deadline_proximity.week', description: 'descriptions.deadline_proximity.week' },
+        { value: 'month', label: 'options.deadline_proximity.month', description: 'descriptions.deadline_proximity.month' },
       ],
       transport_mode: [
-        { value: 'maritime', label: 'Maritime', icon: Ship },
-        { value: 'terrestre', label: 'Terrestre', icon: Truck },
-        { value: 'aerien', label: 'Aérien', icon: Plane },
+        { value: 'maritime', label: 'options.transport_mode.maritime', icon: Ship },
+        { value: 'terrestre', label: 'options.transport_mode.terrestre', icon: Truck },
+        { value: 'aerien', label: 'options.transport_mode.aerien', icon: Plane },
       ],
       transit_type: [
-        { value: 'import', label: 'Import' },
-        { value: 'export', label: 'Export' },
+        { value: 'import', label: 'options.transit_type.import' },
+        { value: 'export', label: 'options.transit_type.export' },
       ],
       type: [
-        { value: 'import', label: 'Import', icon: Truck },
-        { value: 'export', label: 'Export', icon: Truck },
-        { value: 'transit', label: 'Transit', icon: Truck },
+        { value: 'import', label: 'options.type.import', icon: Truck },
+        { value: 'export', label: 'options.type.export', icon: Truck },
+        { value: 'transit', label: 'options.type.transit', icon: Truck },
       ]
     }
   },
@@ -65,15 +66,15 @@ export const FILTER_CONFIGS: Record<StatusCategory, FilterConfig> = {
   // Note: Les dossiers sont archivés automatiquement après 1 mois
   completed: {
     sections: [
-      { id: 'period', label: 'PÉRIODE', icon: Calendar, priority: 1 }
+      { id: 'period', label: 'sections.period', icon: Calendar, priority: 1 }
     ],
     options: {
       completion_period: [
-        { value: 'today', label: 'Aujourd\'hui' },
-        { value: '3_days', label: '3 derniers jours' },
-        { value: 'week', label: 'Cette semaine' },
-        { value: '2_weeks', label: '2 dernières semaines' },
-        { value: 'month', label: 'Ce mois (max 30 jours)' },
+        { value: 'today', label: 'options.completion_period.today' },
+        { value: '3_days', label: 'options.completion_period.3_days' },
+        { value: 'week', label: 'options.completion_period.week' },
+        { value: '2_weeks', label: 'options.completion_period.2_weeks' },
+        { value: 'month', label: 'options.completion_period.month' },
       ]
     }
   },
@@ -82,15 +83,15 @@ export const FILTER_CONFIGS: Record<StatusCategory, FilterConfig> = {
   // Note: Les dossiers archivés nécessitent des périodes adaptées à leur ancienneté
   archived: {
     sections: [
-      { id: 'period', label: 'PÉRIODE', icon: Calendar, priority: 1 }
+      { id: 'period', label: 'sections.period', icon: Calendar, priority: 1 }
     ],
     options: {
       archive_age: [
-        { value: 'recent', label: 'Récent (< 1 mois)' },
-        { value: 'month', label: '1-3 mois' },
-        { value: 'quarter', label: '3-6 mois' },
-        { value: 'semester', label: '6-12 mois' },
-        { value: 'old', label: 'Ancien (> 1 an)' },
+        { value: 'recent', label: 'options.archive_age.recent' },
+        { value: 'month', label: 'options.archive_age.month' },
+        { value: 'quarter', label: 'options.archive_age.quarter' },
+        { value: 'semester', label: 'options.archive_age.semester' },
+        { value: 'old', label: 'options.archive_age.old' },
       ]
     }
   },
@@ -99,16 +100,16 @@ export const FILTER_CONFIGS: Record<StatusCategory, FilterConfig> = {
   // Note: Les dossiers supprimés sont conservés pour audit, périodes courtes pertinentes
   deleted: {
     sections: [
-      { id: 'period', label: 'PÉRIODE', icon: Calendar, priority: 1 }
+      { id: 'period', label: 'sections.period', icon: Calendar, priority: 1 }
     ],
     options: {
       deletion_period: [
-        { value: 'today', label: 'Aujourd\'hui' },
-        { value: '3_days', label: '3 derniers jours' },
-        { value: 'week', label: 'Cette semaine' },
-        { value: '2_weeks', label: '2 dernières semaines' },
-        { value: 'month', label: 'Ce mois' },
-        { value: 'quarter', label: 'Ce trimestre' },
+        { value: 'today', label: 'options.deletion_period.today' },
+        { value: '3_days', label: 'options.deletion_period.3_days' },
+        { value: 'week', label: 'options.deletion_period.week' },
+        { value: '2_weeks', label: 'options.deletion_period.2_weeks' },
+        { value: 'month', label: 'options.deletion_period.month' },
+        { value: 'quarter', label: 'options.deletion_period.quarter' },
       ]
     }
   }

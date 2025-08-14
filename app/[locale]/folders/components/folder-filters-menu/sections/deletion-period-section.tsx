@@ -5,7 +5,8 @@ import type { FilterSectionProps } from '../folder-filter.types';
 export function DeletionPeriodSection({ 
   filters, 
   config, 
-  onUpdateFilters 
+  onUpdateFilters,
+  t
 }: FilterSectionProps): React.ReactElement | null {
   if (!config.options.deletion_period) return null;
 
@@ -20,7 +21,7 @@ export function DeletionPeriodSection({
             deletion_period: filters.deletion_period === option.value ? undefined : option.value as 'today' | '3_days' | 'week' | '2_weeks' | 'month' | 'quarter'
           })}
         >
-          {option.label}
+          {t(option.label)}
         </DropdownMenuCheckboxItem>
       ))}
     </>

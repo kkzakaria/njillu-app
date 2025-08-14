@@ -5,7 +5,8 @@ import type { FilterSectionProps } from '../folder-filter.types';
 export function ArchivePeriodSection({ 
   filters, 
   config, 
-  onUpdateFilters 
+  onUpdateFilters,
+  t
 }: FilterSectionProps): React.ReactElement | null {
   if (!config.options.archive_age) return null;
 
@@ -20,7 +21,7 @@ export function ArchivePeriodSection({
             archive_age: filters.archive_age === option.value ? undefined : option.value as 'recent' | 'month' | 'quarter' | 'semester' | 'old'
           })}
         >
-          {option.label}
+          {t(option.label)}
         </DropdownMenuCheckboxItem>
       ))}
     </>

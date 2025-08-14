@@ -1,0 +1,92 @@
+{
+  "ui": {
+    "title": "Filtres",
+    "reset": "Reset",
+    "activeFilters": "Filtres actifs ({count})",
+    "categoryTitle": "Filtres - {category}"
+  },
+  "sections": {
+    "urgency": "URGENCE & PRIORITÉ",
+    "workflow": "WORKFLOW",
+    "deadlines": "ÉCHÉANCES",
+    "client": "CLIENT & TYPE",
+    "period": "PÉRIODE",
+    "performance": "PERFORMANCE",
+    "costs": "COÛTS",
+    "timing": "TIMING"
+  },
+  "options": {
+    "priority": {
+      "urgent": "Urgent",
+      "normal": "Normal",
+      "low": "Faible"
+    },
+    "processing_stage": {
+      "enregistrement": "Enregistrement",
+      "revision_facture_commerciale": "Révision facture commerciale",
+      "elaboration_fdi": "Élaboration FDI",
+      "elaboration_rfcv": "Élaboration RFCV",
+      "declaration_douaniere": "Déclaration douanière",
+      "service_exploitation": "Service exploitation",
+      "facturation_client": "Facturation client",
+      "livraison": "Livraison"
+    },
+    "deadline_proximity": {
+      "today": "Aujourd'hui",
+      "week": "Cette semaine",
+      "month": "Ce mois"
+    },
+    "transport_mode": {
+      "maritime": "Maritime",
+      "terrestre": "Terrestre",
+      "aerien": "Aérien"
+    },
+    "transit_type": {
+      "import": "Import",
+      "export": "Export"
+    },
+    "type": {
+      "import": "Import",
+      "export": "Export",
+      "transit": "Transit"
+    },
+    "completion_period": {
+      "today": "Aujourd'hui",
+      "3_days": "3 derniers jours",
+      "week": "Cette semaine",
+      "2_weeks": "2 dernières semaines",
+      "month": "Ce mois (max 30 jours)"
+    },
+    "archive_age": {
+      "recent": "Récent (< 1 mois)",
+      "month": "1-3 mois",
+      "quarter": "3-6 mois",
+      "semester": "6-12 mois",
+      "old": "Ancien (> 1 an)"
+    },
+    "deletion_period": {
+      "today": "Aujourd'hui",
+      "3_days": "3 derniers jours",
+      "week": "Cette semaine",
+      "2_weeks": "2 dernières semaines",
+      "month": "Ce mois",
+      "quarter": "Ce trimestre"
+    }
+  },
+  "descriptions": {
+    "deadline_proximity": {
+      "today": "Échéance dans 24h",
+      "week": "Échéance dans 7 jours",
+      "month": "Échéance dans 30 jours"
+    }
+  },
+  "labels": {
+    "priorityLevel": "Niveau de priorité",
+    "transportMode": "Mode de transport",
+    "transitType": "Type de transit",
+    "processingStage": "Étape de traitement",
+    "overdue": "🚨 En retard",
+    "upcomingDeadline": "Échéance proche",
+    "durationVsPlanned": "Délais vs prévu"
+  }
+}

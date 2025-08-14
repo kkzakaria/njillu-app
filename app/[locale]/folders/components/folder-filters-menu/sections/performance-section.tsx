@@ -11,7 +11,8 @@ import type { FilterSectionProps } from '../folder-filter.types';
 export function PerformanceSection({ 
   filters, 
   config, 
-  onUpdateFilters 
+  onUpdateFilters,
+  t
 }: FilterSectionProps): React.ReactElement {
   return (
     <>
@@ -25,7 +26,7 @@ export function PerformanceSection({
           })}
         >
           <span className={`px-2 py-1 rounded text-xs mr-2 ${option.color}`}>
-            {option.label}
+            {t(option.label)}
           </span>
         </DropdownMenuCheckboxItem>
       ))}
@@ -35,7 +36,7 @@ export function PerformanceSection({
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
             <Clock className="w-4 h-4 mr-2" />
-            Délais vs prévu
+            {t('labels.durationVsPlanned')}
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
             {config.options.duration_vs_planned.map((option) => (
@@ -46,7 +47,7 @@ export function PerformanceSection({
                   duration_vs_planned: filters.duration_vs_planned === option.value ? undefined : option.value as 'faster' | 'on_time' | 'delayed'
                 })}
               >
-                {option.description} {option.label}
+                {t(option.description)} {t(option.label)}
               </DropdownMenuCheckboxItem>
             ))}
           </DropdownMenuSubContent>
