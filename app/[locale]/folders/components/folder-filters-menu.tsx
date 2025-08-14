@@ -144,11 +144,11 @@ const FILTER_CONFIGS: Record<StatusCategory, FilterConfig> = {
         { value: 'warning', label: 'Attention', icon: AlertTriangle },
         { value: 'healthy', label: 'Sain', icon: CheckCircle2 },
       ],
-      sla_threshold: [
-        { value: 'low', label: 'Critique (< 70%)', description: '🚨' },
-        { value: 'medium', label: 'Attention (70-90%)', description: '⚠️' },
-        { value: 'high', label: 'Bon (> 90%)', description: '✅' },
-      ],
+      // sla_threshold: [
+      //   { value: 'low', label: 'Critique (< 70%)', description: '🚨' },
+      //   { value: 'medium', label: 'Attention (70-90%)', description: '⚠️' },
+      //   { value: 'high', label: 'Bon (> 90%)', description: '✅' },
+      // ],
       processing_stage: [
         { value: 'enregistrement', label: 'Enregistrement' },
         { value: 'declaration_douaniere', label: 'Déclaration douanière' },
@@ -360,28 +360,7 @@ export function FolderFiltersMenu({
               );
             })}
 
-            {/* SLA Threshold */}
-            {config.options.sla_threshold && (
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger>
-                  <Clock className="w-4 h-4 mr-2" />
-                  Conformité SLA
-                </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent>
-                  {config.options.sla_threshold.map((option) => (
-                    <DropdownMenuCheckboxItem
-                      key={option.value}
-                      checked={filters.sla_threshold === option.value}
-                      onCheckedChange={() => updateFilters({ 
-                        sla_threshold: filters.sla_threshold === option.value ? undefined : option.value 
-                      })}
-                    >
-                      {option.description} {option.label}
-                    </DropdownMenuCheckboxItem>
-                  ))}
-                </DropdownMenuSubContent>
-              </DropdownMenuSub>
-            )}
+            {/* SLA Threshold - Temporairement désactivé pour réorganisation des filtres */}
           </>
         );
 
