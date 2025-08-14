@@ -333,32 +333,52 @@ export function FolderFiltersMenu({
         return (
           <>
             {/* Priorités */}
-            {config.options.priority?.map((option) => (
-              <DropdownMenuCheckboxItem
-                key={option.value}
-                checked={filters.priority?.includes(option.value) ?? false}
-                onCheckedChange={() => toggleArrayFilter('priority', option.value, filters.priority)}
-              >
-                <span className={`px-2 py-1 rounded text-xs mr-2 ${option.color}`}>
-                  {option.label}
-                </span>
-              </DropdownMenuCheckboxItem>
-            ))}
+            {config.options.priority && (
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <AlertTriangle className="w-4 h-4 mr-2" />
+                  Priorité
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  {config.options.priority.map((option) => (
+                    <DropdownMenuCheckboxItem
+                      key={option.value}
+                      checked={filters.priority?.includes(option.value) ?? false}
+                      onCheckedChange={() => toggleArrayFilter('priority', option.value, filters.priority)}
+                    >
+                      <span className={`px-2 py-1 rounded text-xs mr-2 ${option.color}`}>
+                        {option.label}
+                      </span>
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+            )}
             
             {/* État de santé */}
-            {config.options.health_status?.map((option) => {
-              const Icon = option.icon;
-              return (
-                <DropdownMenuCheckboxItem
-                  key={option.value}
-                  checked={filters.health_status?.includes(option.value) ?? false}
-                  onCheckedChange={() => toggleArrayFilter('health_status', option.value, filters.health_status)}
-                >
-                  {Icon && <Icon className="w-4 h-4 mr-2" />}
-                  {option.label}
-                </DropdownMenuCheckboxItem>
-              );
-            })}
+            {config.options.health_status && (
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                  État de santé
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  {config.options.health_status.map((option) => {
+                    const Icon = option.icon;
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={option.value}
+                        checked={filters.health_status?.includes(option.value) ?? false}
+                        onCheckedChange={() => toggleArrayFilter('health_status', option.value, filters.health_status)}
+                      >
+                        {Icon && <Icon className="w-4 h-4 mr-2" />}
+                        {option.label}
+                      </DropdownMenuCheckboxItem>
+                    );
+                  })}
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+            )}
 
             {/* SLA Threshold - Temporairement désactivé pour réorganisation des filtres */}
           </>
