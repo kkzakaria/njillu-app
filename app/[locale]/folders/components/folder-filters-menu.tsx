@@ -139,11 +139,6 @@ const FILTER_CONFIGS: Record<StatusCategory, FilterConfig> = {
         { value: 'normal', label: 'Normal', color: 'bg-blue-100 text-blue-800' },
         { value: 'low', label: 'Faible', color: 'bg-green-100 text-green-800' },
       ],
-      health_status: [
-        { value: 'critical', label: 'Critique', icon: AlertCircle },
-        { value: 'warning', label: 'Attention', icon: AlertTriangle },
-        { value: 'healthy', label: 'Sain', icon: CheckCircle2 },
-      ],
       // sla_threshold: [
       //   { value: 'low', label: 'Critique (< 70%)', description: '🚨' },
       //   { value: 'medium', label: 'Attention (70-90%)', description: '⚠️' },
@@ -337,7 +332,7 @@ export function FolderFiltersMenu({
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>
                   <AlertTriangle className="w-4 h-4 mr-2" />
-                  Priorité
+                  Niveau de priorité
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent>
                   {config.options.priority.map((option) => (
@@ -354,33 +349,6 @@ export function FolderFiltersMenu({
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
             )}
-            
-            {/* État de santé */}
-            {config.options.health_status && (
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger>
-                  <CheckCircle2 className="w-4 h-4 mr-2" />
-                  État de santé
-                </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent>
-                  {config.options.health_status.map((option) => {
-                    const Icon = option.icon;
-                    return (
-                      <DropdownMenuCheckboxItem
-                        key={option.value}
-                        checked={filters.health_status?.includes(option.value) ?? false}
-                        onCheckedChange={() => toggleArrayFilter('health_status', option.value, filters.health_status)}
-                      >
-                        {Icon && <Icon className="w-4 h-4 mr-2" />}
-                        {option.label}
-                      </DropdownMenuCheckboxItem>
-                    );
-                  })}
-                </DropdownMenuSubContent>
-              </DropdownMenuSub>
-            )}
-
-            {/* SLA Threshold - Temporairement désactivé pour réorganisation des filtres */}
           </>
         );
 

@@ -34,12 +34,6 @@ const matchesPriorityFilter = (folder: FolderSummary, priorities: string[]): boo
   return priorities.length === 0 || priorities.includes(folder.priority);
 };
 
-/**
- * Vérifie si un dossier correspond à un filtre d'état de santé
- */
-const matchesHealthStatusFilter = (folder: FolderSummary, healthStatuses: string[]): boolean => {
-  return healthStatuses.length === 0 || healthStatuses.includes(folder.health_status);
-};
 
 /**
  * Vérifie si un dossier correspond à un filtre de type
@@ -215,10 +209,6 @@ export function useFolderFilters({
           return false;
         }
 
-        // État de santé
-        if (filters.health_status && !matchesHealthStatusFilter(folder, filters.health_status)) {
-          return false;
-        }
 
         // Étapes de traitement
         if (filters.processing_stage && !matchesProcessingStageFilter(folder, filters.processing_stage)) {
