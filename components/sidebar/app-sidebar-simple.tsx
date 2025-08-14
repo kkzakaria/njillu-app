@@ -138,9 +138,9 @@ export const AppSidebarSimple: React.FC<AppSidebarSimpleProps> = ({
       {showMobileButton && (
         <button
           onClick={() => sidebarState.setSheetOpen(true)}
-          className="fixed top-2 left-4 z-50 p-2 bg-background border border-border rounded-lg shadow-md lg:hidden hover:bg-accent transition-colors"
+          className="fixed top-2 left-4 z-50 p-2 bg-background border border-border rounded-lg shadow-md lg:hidden hover:bg-gray-200 dark:hover:bg-gray-800 hover:shadow-lg hover:scale-105 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary/20 group"
         >
-          <Menu className="w-6 h-6 text-foreground" />
+          <Menu className="w-6 h-6 text-foreground/80 group-hover:text-foreground transition-colors duration-200" />
         </button>
       )}
 

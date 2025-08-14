@@ -41,10 +41,10 @@ export const SidebarContainer: React.FC<SidebarContainerProps> = ({
     animationDuration
   } = config
 
-  // Classes CSS dynamiques basées sur la configuration
+  // Classes CSS dynamiques basées sur la configuration - cohérentes avec l'AppBar
   const containerClasses = [
-    'fixed top-14 h-[calc(100vh-3.5rem)] bg-white dark:bg-gray-900',
-    'border-gray-200 dark:border-gray-700 z-50',
+    'fixed top-14 h-[calc(100vh-3.5rem)] bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60',
+    'border-border z-50',
     'transition-all ease-in-out',
     position === 'left' ? 'left-0 border-r' : 'right-0 border-l',
     isVisible ? 'translate-x-0' : position === 'left' ? '-translate-x-full' : 'translate-x-full',
@@ -136,7 +136,7 @@ export const SidebarSheet: React.FC<SidebarSheetProps> = ({
   const { position, expandedWidth, animationDuration } = config
 
   const sheetClasses = [
-    'fixed top-0 h-full bg-white dark:bg-gray-900 shadow-xl z-[60]',
+    'fixed top-0 h-full bg-background shadow-xl z-[60]',
     'transform transition-transform ease-in-out lg:hidden',
     position === 'left' ? 'left-0' : 'right-0',
     isOpen ? 'translate-x-0' : position === 'left' ? '-translate-x-full' : 'translate-x-full',
@@ -157,16 +157,16 @@ export const SidebarSheet: React.FC<SidebarSheetProps> = ({
         style={sheetStyle}
       >
         {/* En-tête du sheet */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+        <div className="flex items-center justify-between p-4 border-b border-border">
+          <h2 className="text-lg font-semibold text-foreground">
             {title}
           </h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-800 hover:shadow-sm rounded-lg transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary/20 group"
           >
             <svg 
-              className="w-5 h-5 text-gray-700 dark:text-gray-300" 
+              className="w-5 h-5 text-foreground/70 group-hover:text-foreground group-hover:scale-110 transition-all duration-200 ease-in-out" 
               fill="none" 
               stroke="currentColor" 
               viewBox="0 0 24 24"
