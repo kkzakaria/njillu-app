@@ -69,7 +69,7 @@ export function MainLayout({
       />
       
       {/* Zone de contenu principal avec marge pour la sidebar */}
-      <main className="lg:ml-16 pt-14 min-h-screen p-4">
+      <main className="lg:ml-14 pt-14 min-h-screen p-4">
         {children}
       </main>
         

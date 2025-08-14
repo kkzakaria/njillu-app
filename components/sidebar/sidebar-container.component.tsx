@@ -198,8 +198,8 @@ export const useSidebarDimensions = (
   return {
     width: isExpanded ? expandedWidth : collapsedWidth,
     marginClass: config.position === 'left' 
-      ? `ml-${isExpanded ? Math.floor(expandedWidth / 4) : Math.floor(collapsedWidth / 4)}`
-      : `mr-${isExpanded ? Math.floor(expandedWidth / 4) : Math.floor(collapsedWidth / 4)}`,
+      ? isExpanded ? 'ml-64' : 'ml-14'  // 256px : 56px
+      : isExpanded ? 'mr-64' : 'mr-14', // 256px : 56px
     widthPx: isExpanded ? expandedWidth : collapsedWidth
   }
 }

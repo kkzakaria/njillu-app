@@ -44,7 +44,7 @@ export const NavigationItem: React.FC<NavigationItemProps> = ({
       href={href}
       onClick={handleClick}
       className={`
-        flex items-center px-2 py-2 rounded-lg group
+        flex items-center py-2 rounded-lg group
         text-gray-700 hover:text-gray-900 hover:bg-gray-100
         dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-gray-800
         transition-colors duration-300
@@ -52,27 +52,27 @@ export const NavigationItem: React.FC<NavigationItemProps> = ({
         ${className}
       `}
     >
-      {/* Icône - toujours visible */}
-      <div className="w-5 h-5 flex-shrink-0 relative">
-        <Icon className="w-5 h-5" />
-        {badge && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-            {typeof badge === 'number' && badge > 99 ? '99+' : badge}
-          </span>
-        )}
+      {/* Zone icône TOUJOURS fixe (48px) pour position stable */}
+      <div className="w-12 flex justify-center items-center flex-shrink-0">
+        <div className="w-5 h-5 relative">
+          <Icon className="w-5 h-5" />
+          {badge && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+              {typeof badge === 'number' && badge > 99 ? '99+' : badge}
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* Label - visible selon l'état d'expansion */}
-      <span 
-        className={`
-          ml-3 text-sm font-medium whitespace-nowrap
-          transition-all duration-300 ease-in-out
-          ${isExpanded 
-            ? 'opacity-100 w-auto' 
-            : 'opacity-0 w-0 overflow-hidden'
-          }
-        `}
-      >
+      {/* Label - synchronisé avec l'expansion du background */}
+      <span className={`
+        ml-2 text-sm font-medium whitespace-nowrap
+        transition-all duration-300 ease-in-out
+        ${isExpanded 
+          ? 'opacity-100 translate-x-0 transition-delay-150' 
+          : 'opacity-0 -translate-x-2 transition-delay-0'
+        }
+      `}>
         {labelKey}
       </span>
     </a>

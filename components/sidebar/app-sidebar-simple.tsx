@@ -215,7 +215,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
   return (
     <div className="flex flex-col h-full">
       {/* Navigation principale - tout l'espace disponible */}
-      <div className="flex-1 p-4">
+      <div className={`flex-1 ${isExpanded ? 'py-4 px-2' : 'py-4 px-1'}`}>
         <NavigationList
           items={navigationItems}
           isExpanded={isExpanded}

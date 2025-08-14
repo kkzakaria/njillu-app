@@ -102,7 +102,7 @@ types/sidebar.types.ts               # Types essentiels
 ## 🎨 Fonctionnalités
 
 ### Responsive Design
-- **Desktop** : Mode restreint (icônes) → étendu (icônes + labels) au survol
+- **Desktop** : Mode restreint 56px (icônes) → étendu 256px (icônes + labels) au survol
 - **Mobile/Tablet** : Bouton menu → Sheet overlay avec navigation complète
 - **Breakpoints** : Mobile (<768px), Tablet (768-1024px), Desktop (>1024px)
 
@@ -116,6 +116,7 @@ La sidebar inclut une navigation pré-configurée pour la gestion des dossiers :
 ### État et animations
 - **Expansion automatique** : Survol sur desktop pour révéler les labels
 - **Collapse automatique** : Retour en mode restreint quand la souris quitte
+- **Icônes position absolue fixe** : Zone 48px constante pour éliminer tout déplacement visuel
 - **Animations configurables** : Durée et délais personnalisables
 - **Sheet mobile** : Ouverture/fermeture avec overlay backdrop
 
@@ -169,6 +170,7 @@ La migration est **automatique et transparente** :
 
 - **Fichiers** : 9 → 5 (-44%)
 - **Lignes de code** : ~1200 → ~500 (-58%)
+- **Largeur sidebar** : 64px → 56px (cohérent avec AppBar h-14)
 - **Complexité** : ⭐⭐⭐⭐⭐ → ⭐⭐ (plus simple)
 - **Performance** : ⭐⭐⭐ → ⭐⭐⭐⭐⭐ (plus rapide)
 - **Maintenabilité** : ⭐⭐⭐ → ⭐⭐⭐⭐⭐ (plus facile)
