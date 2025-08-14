@@ -6,6 +6,7 @@
  * - bl/          → Bills of Lading
  * - folders/     → Gestion des dossiers
  * - containers/  → Suivi des conteneurs et arrivées
+ * - clients/     → Gestion des clients (particuliers et entreprises)
  * - shared/      → Types communs et utilitaires
  */
 
@@ -92,6 +93,25 @@ export type {
   ContainerHealthStatus
 } from './containers/enums';
 
+// Interfaces principales Clients
+export type {
+  Client,
+  IndividualClient,
+  BusinessClient,
+  ClientSummary,
+  ClientDetail,
+  ContactInfo,
+  CommercialInfo
+} from './clients/core';
+
+export type {
+  ClientType,
+  ClientStatus,
+  Industry,
+  ClientPriority,
+  PaymentTerms
+} from './clients/enums';
+
 // Système de soft delete (architecture modulaire v2.0)
 export type {
   SoftDeletable,
@@ -115,6 +135,9 @@ export * as Dossiers from './folders';
 // Module Containers complet
 export * as Containers from './containers';
 export * as Conteneurs from './containers';
+
+// Module Clients complet
+export * as Clients from './clients';
 
 // Module Shared complet
 export * as Shared from './shared';
@@ -147,6 +170,11 @@ export * as ContainerDashboards from './containers/dashboards';
 // Note: containers modules ont été décomposés en architecture modulaire
 export * as ContainerOperations from './containers';
 
+// Sous-modules Clients
+export * as ClientEnums from './clients/enums';
+export * as ClientCore from './clients/core';
+export * as ClientOperations from './clients/operations';
+
 // Sous-modules Shared (architecture modulaire v2.0)
 export * as SharedCore from './shared/core';
 export * as SharedAudit from './shared/audit';
@@ -168,7 +196,8 @@ export * as SharedSoftDelete from './shared/soft-delete';
 export const Enums = {
   BL: () => import('./bl/enums'),
   Folders: () => import('./folders/constants'),
-  Containers: () => import('./containers/enums')
+  Containers: () => import('./containers/enums'),
+  Clients: () => import('./clients/enums')
 } as const;
 
 /**
@@ -178,6 +207,7 @@ export const Core = {
   BL: () => import('./bl/core'),
   Folders: () => import('./folders/core'),
   Containers: () => import('./containers/tracking-core'),
+  Clients: () => import('./clients/core'),
   Shared: () => import('./shared')
 } as const;
 
@@ -187,7 +217,8 @@ export const Core = {
 export const Operations = {
   BL: () => import('./bl'),
   Folders: () => import('./folders/operations'),
-  Containers: () => import('./containers')
+  Containers: () => import('./containers'),
+  Clients: () => import('./clients/operations')
 } as const;
 
 /**
@@ -241,7 +272,10 @@ export type EntityType =
   | 'folder'
   | 'folder_alert'
   | 'folder_document'
-  | 'container_arrival_tracking';
+  | 'container_arrival_tracking'
+  | 'client'
+  | 'individual_client'
+  | 'business_client';
 
 /**
  * Mapping entre types d'entité et leurs interfaces
@@ -256,6 +290,9 @@ export interface EntityTypeMap {
   folder_alert: import('./folders/alerts').FolderAlert;
   folder_document: import('./folders/core').FolderDocument;
   container_arrival_tracking: import('./containers/tracking-core').ContainerArrivalTracking;
+  client: import('./clients/core').Client;
+  individual_client: import('./clients/core').IndividualClient;
+  business_client: import('./clients/core').BusinessClient;
 }
 
 /**
@@ -296,6 +333,11 @@ export const TypeSystemMetadata = {
       files: ['enums', 'arrival-tracking', 'dashboard', 'operations'],
       entities: ['ContainerArrivalTracking', 'ContainerDelayAlert', 'ArrivalPerformanceMetrics']
     },
+    clients: {
+      description: 'Clients - Gestion des clients particuliers et entreprises',
+      files: ['enums', 'core', 'operations'],
+      entities: ['Client', 'IndividualClient', 'BusinessClient', 'ContactInfo', 'CommercialInfo']
+    },
     shared: {
       description: 'Shared - Types communs et utilitaires système (architecture modulaire v2.0)',
       files: ['core', 'audit', 'pagination', 'filtering', 'validation', 'api', 'events', 'search', 'soft-delete'],
@@ -305,11 +347,11 @@ export const TypeSystemMetadata = {
   
   // Statistiques (approximatives)
   statistics: {
-    total_files: 40,
-    total_interfaces: 240,
-    total_enums: 65,
-    total_types: 350,
-    lines_of_code: 7300
+    total_files: 43,
+    total_interfaces: 275,
+    total_enums: 75,
+    total_types: 385,
+    lines_of_code: 8200
   }
 } as const;
 
