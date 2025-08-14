@@ -2,7 +2,7 @@
 
 import { useRef, useMemo, useCallback } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { FolderCard } from '@/components/folder-card'
+import { FolderCard } from './folder-card'
 import { useFolderStore, useFolderActions } from '@/lib/stores/folder-store'
 import { Loader2, AlertCircle, FolderOpen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -54,7 +54,7 @@ function VirtualizedFolderItem({
     onFolderAction?.(action, folder)
   }, [onFolderAction])
 
-  const handleSelectionToggle = useCallback((e: React.MouseEvent) => {
+  const handleSelectionToggle = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation()
     onToggleSelection(folder.id)
   }, [folder.id, onToggleSelection])
