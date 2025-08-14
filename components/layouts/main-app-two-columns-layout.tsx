@@ -60,7 +60,7 @@ export function MainAppTwoColumnsLayout({
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-screen bg-background overflow-hidden">
       {/* AppBar fixe en haut */}
       <AppBar />
       
@@ -72,9 +72,9 @@ export function MainAppTwoColumnsLayout({
       />
       
       {/* Zone de contenu principal avec TwoColumnsLayout */}
-      <main className={`lg:ml-14 pt-14 min-h-screen ${className || ''}`}>
+      <main className={`lg:ml-14 h-screen overflow-hidden absolute top-0 left-0 right-0 pt-14 ${className || ''}`}>
         {/* Container avec hauteur contrainte pour permettre le scroll isolé */}
-        <div className="h-[calc(100vh-3.5rem)] w-full">
+        <div className="h-full w-full">
           <TwoColumnsLayout
             left={leftColumn}
             right={rightColumn}
