@@ -688,14 +688,12 @@ export function FolderFiltersMenu({
       <DropdownMenuTrigger asChild>
         <Button 
           size="sm" 
-          variant={activeFiltersCount > 0 ? "default" : "outline"}
           className="relative"
         >
           <Filter className="w-4 h-4" />
           {activeFiltersCount > 0 && (
             <Badge 
-              variant="secondary" 
-              className="absolute -top-1 -right-1 px-1 min-w-[1rem] h-4 text-xs"
+              className="absolute -top-1 -right-1 px-1 min-w-[1rem] h-4 text-xs bg-green-500 text-white hover:bg-green-600"
             >
               {activeFiltersCount}
             </Badge>
