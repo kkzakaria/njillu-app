@@ -1,0 +1,85 @@
+# Staging-optimized Dockerfile with development tools
+# Includes debugging capabilities and development dependencies
+
+FROM node:20-alpine AS base
+LABEL maintainer="njillu-app-staging" \
+      version="1.0.0" \
+      description="Client Management System - Staging Container"
+
+# Install development tools and security updates
+RUN apk update && \
+    apk upgrade && \
+    apk add --no-cache \
+    dumb-init \
+    curl \
+    ca-certificates \
+    git \
+    bash && \
+    rm -rf /var/cache/apk/*
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nextjs -u 1001
+
+# Environment variables
+ENV NODE_ENV=staging \
+    NEXT_TELEMETRY_DISABLED=1 \
+    NPM_CONFIG_CACHE=/tmp/.npm \
+    PNPM_HOME=/usr/local/bin
+
+# Install pnpm
+RUN npm install -g pnpm@latest
+
+# Stage 2: Dependencies
+FROM base AS deps
+WORKDIR /app
+
+COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml* ./
+RUN --mount=type=cache,target=/root/.pnpm \
+    pnpm config set store-dir /root/.pnpm && \
+    pnpm install --frozen-lockfile
+
+# Stage 3: Builder
+FROM base AS builder
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Build with staging optimizations (source maps enabled)
+ENV NODE_ENV=staging
+RUN pnpm build
+
+# Stage 4: Runtime
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV=staging \
+    PORT=3000 \
+    HOSTNAME="0.0.0.0"
+
+# Copy built application
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+
+# Copy package.json for debugging
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./
+
+# Create health check directory
+RUN mkdir -p /app/health && \
+    chown nextjs:nodejs /app/health
+
+# Less restrictive permissions for staging
+RUN chmod -R 755 /app
+
+USER nextjs
+
+# Health check with more detailed output for staging
+HEALTHCHECK --interval=15s --timeout=5s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:3000/api/health || exit 1
+
+EXPOSE 3000
+
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["node", "server.js"]

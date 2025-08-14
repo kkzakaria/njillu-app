@@ -31,3 +31,7 @@ export function useDemo() {
 export function useFolderFilters() {
   return useTranslations('folder-filters');
 }
+
+export function useClients() {
+  return useTranslations('clients');
+}

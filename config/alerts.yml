@@ -1,0 +1,188 @@
+# Prometheus alerting rules for production monitoring
+
+groups:
+  - name: application_alerts
+    rules:
+      # Application availability
+      - alert: ApplicationDown
+        expr: up{job="njillu-app"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: njillu-app
+        annotations:
+          summary: "Application is down"
+          description: "The njillu-app application has been down for more than 1 minute."
+
+      # High error rate
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{job="njillu-app",status=~"5.."}[5m]) > 0.1
+        for: 2m
+        labels:
+          severity: warning
+          service: njillu-app
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value }} errors per second for the last 5 minutes."
+
+      # High response time
+      - alert: HighResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="njillu-app"}[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+          service: njillu-app
+        annotations:
+          summary: "High response time"
+          description: "95th percentile response time is {{ $value }}s for the last 5 minutes."
+
+      # Memory usage
+      - alert: HighMemoryUsage
+        expr: process_resident_memory_bytes{job="njillu-app"} / 1024 / 1024 > 800
+        for: 5m
+        labels:
+          severity: warning
+          service: njillu-app
+        annotations:
+          summary: "High memory usage"
+          description: "Application memory usage is {{ $value }}MB."
+
+      # CPU usage
+      - alert: HighCPUUsage
+        expr: rate(process_cpu_seconds_total{job="njillu-app"}[5m]) * 100 > 80
+        for: 10m
+        labels:
+          severity: warning
+          service: njillu-app
+        annotations:
+          summary: "High CPU usage"
+          description: "Application CPU usage is {{ $value }}%."
+
+  - name: database_alerts
+    rules:
+      # Database connection issues
+      - alert: DatabaseConnectionHigh
+        expr: db_connections_active{job="njillu-app"} > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: database
+        annotations:
+          summary: "High database connections"
+          description: "Active database connections: {{ $value }}"
+
+      # Slow queries
+      - alert: SlowDatabaseQueries
+        expr: db_query_duration_seconds{job="njillu-app",quantile="0.95"} > 5
+        for: 3m
+        labels:
+          severity: warning
+          service: database
+        annotations:
+          summary: "Slow database queries"
+          description: "95th percentile query time is {{ $value }}s"
+
+  - name: infrastructure_alerts
+    rules:
+      # Redis down
+      - alert: RedisDown
+        expr: up{job="redis"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: redis
+        annotations:
+          summary: "Redis is down"
+          description: "Redis service has been down for more than 1 minute."
+
+      # High Redis memory usage
+      - alert: RedisHighMemory
+        expr: redis_memory_used_bytes / redis_memory_max_bytes * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: redis
+        annotations:
+          summary: "Redis high memory usage"
+          description: "Redis memory usage is {{ $value }}%."
+
+      # Disk space
+      - alert: DiskSpaceHigh
+        expr: (node_filesystem_size_bytes - node_filesystem_free_bytes) / node_filesystem_size_bytes * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "High disk usage"
+          description: "Disk usage is {{ $value }}% on {{ $labels.device }}"
+
+      # Load average
+      - alert: HighLoadAverage
+        expr: node_load1 > 2
+        for: 10m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "High load average"
+          description: "Load average is {{ $value }} for the last 1 minute."
+
+  - name: business_alerts
+    rules:
+      # Bill of lading processing errors
+      - alert: BLProcessingErrors
+        expr: increase(bl_processing_errors_total[5m]) > 5
+        for: 1m
+        labels:
+          severity: warning
+          service: business
+        annotations:
+          summary: "Bill of lading processing errors"
+          description: "{{ $value }} BL processing errors in the last 5 minutes."
+
+      # Folder creation failures
+      - alert: FolderCreationFailures
+        expr: increase(folder_creation_failures_total[10m]) > 3
+        for: 2m
+        labels:
+          severity: warning
+          service: business
+        annotations:
+          summary: "Folder creation failures"
+          description: "{{ $value }} folder creation failures in the last 10 minutes."
+
+      # Authentication failures
+      - alert: HighAuthFailures
+        expr: increase(auth_failures_total[5m]) > 10
+        for: 2m
+        labels:
+          severity: warning
+          service: security
+        annotations:
+          summary: "High authentication failures"
+          description: "{{ $value }} authentication failures in the last 5 minutes."
+
+  - name: security_alerts
+    rules:
+      # Suspicious activity
+      - alert: SuspiciousActivity
+        expr: increase(security_events_total{type="suspicious"}[10m]) > 5
+        for: 1m
+        labels:
+          severity: critical
+          service: security
+        annotations:
+          summary: "Suspicious activity detected"
+          description: "{{ $value }} suspicious security events in the last 10 minutes."
+
+      # Failed login attempts
+      - alert: BruteForceAttempt
+        expr: increase(auth_failures_total{reason="invalid_credentials"}[5m]) > 20
+        for: 1m
+        labels:
+          severity: critical
+          service: security
+        annotations:
+          summary: "Potential brute force attack"
+          description: "{{ $value }} failed login attempts in the last 5 minutes."

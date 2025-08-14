@@ -6,7 +6,10 @@ import {
   FolderCheck, 
   Archive, 
   Trash2,
-  Menu
+  Menu,
+  Users,
+  UserCheck,
+  UserX
 } from 'lucide-react'
 
 // Types et interfaces
@@ -26,7 +29,7 @@ import { SidebarContainer, SidebarSheet } from './sidebar-container.component'
 import { NavigationList } from './navigation-list.component'
 
 // Hooks pour traductions
-import { useFolders } from '@/hooks/useTranslation'
+import { useFolders, useClients } from '@/hooks/useTranslation'
 
 /**
  * Props pour la sidebar simplifiée
@@ -62,6 +65,7 @@ export const AppSidebarSimple: React.FC<AppSidebarSimpleProps> = ({
   className = ''
 }) => {
   const tFolders = useFolders()
+  const tClients = useClients()
   
   // Hook responsive
   const responsiveProvider = useResponsiveProvider(768, 1024)
@@ -69,7 +73,7 @@ export const AppSidebarSimple: React.FC<AppSidebarSimpleProps> = ({
   // State management
   const sidebarState = useSidebarState()
   
-  // Navigation par défaut centrée sur les dossiers
+  // Navigation par défaut avec dossiers et clients
   const defaultNavigationItems: INavigationItem[] = useMemo(() => [
     { 
       id: 'folders-active', 
@@ -94,8 +98,26 @@ export const AppSidebarSimple: React.FC<AppSidebarSimpleProps> = ({
       icon: Trash2, 
       labelKey: tFolders('statusCategories.deleted'), 
       href: '/folders/deleted' 
+    },
+    { 
+      id: 'clients-active', 
+      icon: UserCheck, 
+      labelKey: tClients('navigation.active'), 
+      href: '/clients/active'
+    },
+    { 
+      id: 'clients-inactive', 
+      icon: UserX, 
+      labelKey: tClients('navigation.inactive'), 
+      href: '/clients/inactive' 
+    },
+    { 
+      id: 'clients-archived', 
+      icon: Users, 
+      labelKey: tClients('navigation.archived'), 
+      href: '/clients/archived' 
     }
-  ], [tFolders])
+  ], [tFolders, tClients])
   
   const navigationItems = customNavigationItems || defaultNavigationItems
   
