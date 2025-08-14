@@ -2,7 +2,8 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Plus, Filter } from 'lucide-react';
+import { Search, Plus } from 'lucide-react';
+import { FolderFiltersMenu, type FolderFilters } from './folder-filters-menu';
 
 // ============================================================================
 // Types et interfaces
@@ -11,9 +12,12 @@ import { Search, Plus, Filter } from 'lucide-react';
 interface FolderSearchBarProps {
   placeholder?: string;
   className?: string;
+  statusCategory?: 'active' | 'completed' | 'archived' | 'deleted';
+  filters?: FolderFilters;
   onSearch?: (value: string) => void;
-  onFilter?: () => void;
+  onFiltersChange?: (filters: FolderFilters) => void;
   onAdd?: () => void;
+  activeFiltersCount?: number;
 }
 
 // ============================================================================
@@ -23,17 +27,20 @@ interface FolderSearchBarProps {
 export function FolderSearchBar({
   placeholder = 'Rechercher un dossier...',
   className = '',
+  statusCategory = 'active',
+  filters = {},
   onSearch,
-  onFilter,
-  onAdd
+  onFiltersChange,
+  onAdd,
+  activeFiltersCount = 0
 }: FolderSearchBarProps) {
   
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onSearch?.(e.target.value);
   };
 
-  const handleFilterClick = () => {
-    onFilter?.();
+  const handleFiltersChange = (newFilters: FolderFilters) => {
+    onFiltersChange?.(newFilters);
   };
 
   const handleAddClick = () => {
@@ -52,9 +59,12 @@ export function FolderSearchBar({
             onChange={handleSearchChange}
           />
         </div>
-        <Button size="sm" onClick={handleFilterClick}>
-          <Filter className="w-4 h-4" />
-        </Button>
+        <FolderFiltersMenu
+          statusCategory={statusCategory}
+          filters={filters}
+          onFiltersChange={handleFiltersChange}
+          activeFiltersCount={activeFiltersCount}
+        />
         <Button size="sm" onClick={handleAddClick}>
           <Plus className="w-4 h-4" />
         </Button>

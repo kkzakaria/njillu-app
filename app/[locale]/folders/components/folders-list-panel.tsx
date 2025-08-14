@@ -6,6 +6,7 @@ import { FolderCard } from './folder-card';
 import { InfoBanner } from './info-banner';
 import { FolderSearchBar } from './folder-search-bar';
 import { useFolders } from '@/hooks/useTranslation';
+import { useFolderFilters } from '@/hooks/useFolderFilters';
 import type { FolderSummary, FolderStatus } from '@/types/folders';
 
 interface FoldersListPanelProps {
@@ -18,20 +19,20 @@ interface FoldersListPanelProps {
 export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilter, statusCategory }: FoldersListPanelProps) {
   const t = useFolders();
 
-  // Handlers pour la barre de recherche
-  const handleSearch = (value: string) => {
-    // TODO: Implémenter la logique de recherche
-    console.log('Search:', value);
-  };
-
-  const handleFilter = () => {
-    // TODO: Implémenter la logique de filtres
-    console.log('Filter clicked');
-  };
-
-  const handleAdd = () => {
-    // TODO: Implémenter la logique d'ajout
-    console.log('Add clicked');
+  // Déduction de la statusCategory pour le hook de filtres
+  const getStatusCategory = (category?: string): 'active' | 'completed' | 'archived' | 'deleted' => {
+    switch (category) {
+      case 'active':
+        return 'active';
+      case 'completed':
+        return 'completed';
+      case 'archived':
+        return 'archived';
+      case 'deleted':
+        return 'deleted';
+      default:
+        return 'active';
+    }
   };
   // Mock data étendue pour tous les statuts
   const allFolders: FolderSummary[] = [
@@ -147,19 +148,50 @@ export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilte
     },
   ];
 
-  // Filter folders based on status filter
-  const folders = statusFilter 
+  // Filter folders based on status filter first
+  const statusFilteredFolders = statusFilter 
     ? allFolders.filter(folder => statusFilter.includes(folder.status))
     : allFolders;
+
+  // Hook de filtrage avec état de recherche
+  const {
+    filters,
+    setFilters,
+    activeFiltersCount,
+    filteredFolders,
+    clearAllFilters
+  } = useFolderFilters({
+    folders: statusFilteredFolders,
+    statusCategory: getStatusCategory(statusCategory),
+    searchQuery: '' // TODO: Gérer la recherche textuelle
+  });
+
+  // Handlers pour la barre de recherche
+  const handleSearch = (value: string) => {
+    // TODO: Implémenter la logique de recherche textuelle
+    console.log('Search:', value);
+  };
+
+  const handleFiltersChange = (newFilters: typeof filters) => {
+    setFilters(newFilters);
+  };
+
+  const handleAdd = () => {
+    // TODO: Implémenter la logique d'ajout
+    console.log('Add clicked');
+  };
 
   return (
     <div className="h-full flex flex-col p-4">
       {/* Header avec barre de recherche */}
       <FolderSearchBar
         placeholder="Rechercher un dossier..."
+        statusCategory={getStatusCategory(statusCategory)}
+        filters={filters}
         onSearch={handleSearch}
-        onFilter={handleFilter}
+        onFiltersChange={handleFiltersChange}
         onAdd={handleAdd}
+        activeFiltersCount={activeFiltersCount}
       />
 
       {/* Info banner for completed folders */}
@@ -173,10 +205,24 @@ export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilte
         </div>
       )}
 
+      {/* Affichage des filtres actifs */}
+      {activeFiltersCount > 0 && (
+        <div className="mb-3 text-xs text-muted-foreground">
+          <span className="font-medium">{activeFiltersCount}</span> filtre(s) appliqué(s) • 
+          <span className="font-medium"> {filteredFolders.length}</span> résultat(s)
+          <button 
+            onClick={clearAllFilters}
+            className="ml-2 text-primary hover:underline"
+          >
+            Effacer
+          </button>
+        </div>
+      )}
+
       {/* Folders list */}
       <ScrollArea className="flex-1">
         <div className="space-y-2">
-          {folders.map((folder) => (
+          {filteredFolders.map((folder) => (
             <FolderCard
               key={folder.id}
               folder={folder}
@@ -191,13 +237,33 @@ export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilte
               }}
             />
           ))}
+          
+          {/* Message si aucun résultat */}
+          {filteredFolders.length === 0 && (
+            <div className="text-center py-8 text-muted-foreground">
+              <p className="text-sm">Aucun dossier ne correspond aux critères</p>
+              {activeFiltersCount > 0 && (
+                <button 
+                  onClick={clearAllFilters}
+                  className="mt-2 text-primary hover:underline text-xs"
+                >
+                  Effacer les filtres
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </ScrollArea>
       
       {/* Footer stats */}
       <div className="mt-4 pt-4 border-t">
         <div className="text-xs text-gray-500 text-center">
-          {folders.length} dossier(s) au total
+          {filteredFolders.length} sur {statusFilteredFolders.length} dossier(s)
+          {activeFiltersCount > 0 && (
+            <span className="ml-2 text-primary">
+              ({activeFiltersCount} filtre{activeFiltersCount > 1 ? 's' : ''})
+            </span>
+          )}
         </div>
       </div>
     </div>
