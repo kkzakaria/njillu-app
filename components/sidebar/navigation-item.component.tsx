@@ -44,35 +44,43 @@ export const NavigationItem: React.FC<NavigationItemProps> = ({
       href={href}
       onClick={handleClick}
       className={`
-        flex items-center px-2 py-2 rounded-lg group
-        text-gray-700 hover:text-gray-900 hover:bg-gray-100
-        dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-gray-800
-        transition-colors duration-300
-        ${isActive ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400' : ''}
+        flex items-center py-2 rounded-lg group relative
+        text-foreground/70 hover:text-foreground 
+        hover:bg-gray-200 dark:hover:bg-gray-800 hover:shadow-sm
+        focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-gray-50 dark:focus:bg-gray-900
+        transition-all duration-200 ease-in-out
+        before:absolute before:left-0 before:top-0 before:h-full before:w-1 before:bg-primary 
+        before:rounded-r-full before:scale-y-0 hover:before:scale-y-100 
+        before:transition-transform before:duration-200 before:ease-in-out
+        ${isActive ? 
+          'bg-primary/10 text-primary hover:bg-primary/20 before:scale-y-100' :   
+          ''
+        }
         ${className}
       `}
     >
-      {/* Icône - toujours visible */}
-      <div className="w-5 h-5 flex-shrink-0 relative">
-        <Icon className="w-5 h-5" />
-        {badge && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-            {typeof badge === 'number' && badge > 99 ? '99+' : badge}
-          </span>
-        )}
+      {/* Zone icône TOUJOURS fixe (48px) pour position stable */}
+      <div className="w-12 flex justify-center items-center flex-shrink-0">
+        <div className="w-5 h-5 relative">
+          <Icon className="w-5 h-5 group-hover:scale-110 transition-transform duration-200 ease-in-out" />
+          {badge && (
+            <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center shadow-sm animate-pulse">
+              {typeof badge === 'number' && badge > 99 ? '99+' : badge}
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* Label - visible selon l'état d'expansion */}
-      <span 
-        className={`
-          ml-3 text-sm font-medium whitespace-nowrap
-          transition-all duration-300 ease-in-out
-          ${isExpanded 
-            ? 'opacity-100 w-auto' 
-            : 'opacity-0 w-0 overflow-hidden'
-          }
-        `}
-      >
+      {/* Label - synchronisé avec l'expansion du background */}
+      <span className={`
+        ml-2 text-sm font-medium whitespace-nowrap
+        transition-all duration-300 ease-in-out
+        group-hover:text-foreground
+        ${isExpanded 
+          ? 'opacity-100 translate-x-0 transition-delay-150' 
+          : 'opacity-0 -translate-x-2 transition-delay-0'
+        }
+      `}>
         {labelKey}
       </span>
     </a>
@@ -86,7 +94,7 @@ export const NavigationItem: React.FC<NavigationItemProps> = ({
 export const NavigationSeparator: React.FC<{ className?: string }> = ({ 
   className = '' 
 }) => (
-  <div className={`my-2 border-t border-gray-200 dark:border-gray-700 ${className}`} />
+  <div className={`my-2 border-t border-border/50 ${className}`} />
 )
 
 /**
@@ -108,7 +116,7 @@ export const NavigationGroup: React.FC<NavigationGroupProps> = ({
 }) => (
   <div className={`space-y-2 ${className}`}>
     {isExpanded && (
-      <h3 className="px-2 text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+      <h3 className="px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
         {title}
       </h3>
     )}

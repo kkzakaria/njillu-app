@@ -1,4 +1,6 @@
-import { MainLayout } from "@/components/main-layout";
+'use client';
+
+import { MainAppLayout } from "@/components/layouts/main-app-layout";
 
 export default function ProtectedLayout({
   children,
@@ -6,11 +8,11 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <MainLayout 
+    <MainAppLayout 
       debugMode={false}
-      appTitle="Mon Application"
+      appTitle="Njillu App - Espace Protégé"
     >
       {children}
-    </MainLayout>
+    </MainAppLayout>
   );
 }

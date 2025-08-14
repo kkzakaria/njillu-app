@@ -134,7 +134,7 @@ export interface SidebarProps {
 export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
   position: 'left',
   theme: 'auto',
-  collapsedWidth: 64, // 16 * 4 = w-16
+  collapsedWidth: 56, // 14 * 4 = w-14 (cohérent avec AppBar h-14)
   expandedWidth: 256, // 64 * 4 = w-64
   mobileBreakpoint: 1024, // lg
   tabletBreakpoint: 768, // md

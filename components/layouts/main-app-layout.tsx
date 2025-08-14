@@ -2,55 +2,50 @@
 
 import { AppSidebarSimple } from "@/components/sidebar/app-sidebar-simple"
 import { AppBar } from "@/components/appbar"
+import { INavigationItem } from '@/types/sidebar.types';
 
-export interface MainLayoutProps {
+export interface MainAppLayoutProps {
   children: React.ReactNode
   /** Mode debug pour le développement */
   debugMode?: boolean
   /** Titre de l'application dans l'appbar */
   appTitle?: string
-  /** Configuration personnalisée pour la sidebar */
+  /** Configuration simplifiée pour la sidebar */
   sidebarConfig?: {
     animationDuration?: number
     hoverDelay?: number
-    headerClickable?: boolean
+    autoCollapse?: boolean
   }
+  /** Items de navigation personnalisés */
+  navigationItems?: INavigationItem[]
   /** Callback pour les clics sur les éléments de navigation */
-  onNavigationClick?: (item: { labelKey: string; href: string }) => void
-  /** Callback pour les changements de contexte utilisateur */
-  onUserContextChange?: (context: any) => void
+  onNavigationClick?: (item: INavigationItem) => void
+  /** Classe CSS personnalisée pour le contenu principal */
+  className?: string
 }
 
-export function MainLayout({ 
+/**
+ * Layout principal de l'application avec sidebar simplifiée et appbar
+ * Interface épurée mais avec toutes les fonctionnalités UX
+ */
+export function MainAppLayout({ 
   children, 
   debugMode = false,
   appTitle = "Njillu App",
   sidebarConfig = {
     animationDuration: 300,
     hoverDelay: 100,
-    headerClickable: true
+    autoCollapse: true
   },
+  navigationItems,
   onNavigationClick,
-  onUserContextChange
-}: MainLayoutProps) {
-  const handleNavigationClick = (item: { labelKey: string; href: string }) => {
+  className
+}: MainAppLayoutProps) {
+  const handleNavigationClick = (item: INavigationItem) => {
     if (debugMode) {
       console.log('🎯 Navigation vers:', item.labelKey, '→', item.href)
     }
     onNavigationClick?.(item)
-  }
-
-  const handleUserContextChange = (context: any) => {
-    if (debugMode) {
-      console.log('👤 Contexte utilisateur changé:', context)
-    }
-    onUserContextChange?.(context)
-  }
-
-  const handleNavigationItemsChange = (items: any[]) => {
-    if (debugMode) {
-      console.log('📋 Éléments de navigation mis à jour:', items.length, 'éléments')
-    }
   }
 
   return (
@@ -58,18 +53,15 @@ export function MainLayout({
       {/* AppBar fixe en haut */}
       <AppBar />
       
-      {/* Sidebar positionnée sous l'AppBar (par son propre positionnement fixed) */}
+      {/* Sidebar simplifiée positionnée sous l'AppBar */}
       <AppSidebarSimple
-        config={{
-          animationDuration: sidebarConfig.animationDuration,
-          hoverDelay: sidebarConfig.hoverDelay,
-          autoCollapse: true
-        }}
+        navigationItems={navigationItems}
+        config={sidebarConfig}
         onItemClick={handleNavigationClick}
       />
       
       {/* Zone de contenu principal avec marge pour la sidebar */}
-      <main className="lg:ml-14 pt-14 min-h-screen p-4">
+      <main className={`lg:ml-14 pt-14 min-h-screen p-4 ${className || ''}`}>
         {children}
       </main>
         
@@ -77,12 +69,18 @@ export function MainLayout({
       {debugMode && (
         <div className="fixed bottom-4 right-4 z-50 bg-card p-4 rounded-lg shadow-lg border min-w-80">
           <h3 className="text-lg font-semibold mb-2 text-foreground">
-            🔧 Mode Debug
+            🔧 Mode Debug - Sidebar Simplifiée
           </h3>
           <p className="text-sm text-muted-foreground">
-            MainLayout actif avec AppBar et Sidebar
+            MainAppLayout avec AppSidebarSimple
             <br />
             <strong>App:</strong> {appTitle}
+            {navigationItems && (
+              <>
+                <br />
+                <strong>Navigation:</strong> {navigationItems.length} items
+              </>
+            )}
           </p>
         </div>
       )}

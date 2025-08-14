@@ -8,6 +8,8 @@
       "archive": "Archiver",
       "duplicate": "Dupliquer",
       "export": "Exporter",
+      "restore": "Restaurer",
+      "delete_permanently": "Supprimer définitivement",
       "moreActions": "Plus d'actions"
     },
     "status": {
@@ -27,6 +29,9 @@
     "labels": {
       "createdOn": "Créé le",
       "modifiedOn": "Modifié le",
+      "completedOn": "Terminé le",
+      "archivedOn": "Archivé le",
+      "deletedOn": "Supprimé le",
       "blNumber": "Numéro BL",
       "folderNumber": "N° Dossier",
       "client": "Client",
@@ -58,6 +63,15 @@
       "folderStatus": "Statut du dossier",
       "folderPriority": "Priorité du dossier",
       "processingStage": "Étape de traitement"
+    },
+    "statusCategories": {
+      "active": "Dossiers en cours",
+      "completed": "Dossiers terminés",
+      "archived": "Dossiers archivés",
+      "deleted": "Dossiers supprimés"
+    },
+    "banners": {
+      "autoArchiveNotice": "Les dossiers terminés sont automatiquement archivés après 30 jours"
     }
   }
 }

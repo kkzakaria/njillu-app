@@ -21,7 +21,7 @@ export function TwoColumnsLayout({ left, right, className }: TwoColumnsLayoutPro
       className={`flex h-full w-full ${isMobile ? 'flex-col' : 'flex-row'} ${className ?? ''}`}
     >
       <aside
-        className={`h-full flex flex-col min-h-0 flex-shrink-0 basis-1/4 min-w-[300px] max-w-[400px] border-r border-border bg-muted ${isMobile ? 'border-b border-r-0 max-w-full w-full min-w-0 basis-auto' : ''}`}
+        className={`h-full flex flex-col min-h-0 flex-shrink-0 basis-1/4 min-w-[300px] max-w-[400px] border-r border-border bg-muted overflow-auto ${isMobile ? 'border-b border-r-0 max-w-full w-full min-w-0 basis-auto' : ''}`}
         style={{ boxSizing: 'border-box' }}
       >
         {left}
