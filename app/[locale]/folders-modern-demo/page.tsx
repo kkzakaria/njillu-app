@@ -281,8 +281,9 @@ function FoldersModernDemoContent() {
               {/* Barre de recherche et filtres */}
               <FolderSearchBar 
                 placeholder="Rechercher par numéro, client, référence..."
-                showAdvancedFilters
-                showViewControls
+                onSearch={(value) => console.log('Search:', value)}
+                onFilter={() => console.log('Filter clicked')}
+                onAdd={() => console.log('Add clicked')}
               />
             </CardHeader>
             <CardContent className="p-0 h-full">

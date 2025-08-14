@@ -1,11 +1,10 @@
 'use client'
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Search, Plus, Filter, Archive } from 'lucide-react';
+import { Archive } from 'lucide-react';
 import { FolderCard } from './folder-card';
 import { InfoBanner } from './info-banner';
+import { FolderSearchBar } from './folder-search-bar';
 import { useFolders } from '@/hooks/useTranslation';
 import type { FolderSummary, FolderStatus } from '@/types/folders';
 
@@ -18,6 +17,22 @@ interface FoldersListPanelProps {
 
 export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilter, statusCategory }: FoldersListPanelProps) {
   const t = useFolders();
+
+  // Handlers pour la barre de recherche
+  const handleSearch = (value: string) => {
+    // TODO: Implémenter la logique de recherche
+    console.log('Search:', value);
+  };
+
+  const handleFilter = () => {
+    // TODO: Implémenter la logique de filtres
+    console.log('Filter clicked');
+  };
+
+  const handleAdd = () => {
+    // TODO: Implémenter la logique d'ajout
+    console.log('Add clicked');
+  };
   // Mock data étendue pour tous les statuts
   const allFolders: FolderSummary[] = [
     // Active folders (open, processing)
@@ -139,25 +154,13 @@ export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilte
 
   return (
     <div className="h-full flex flex-col p-4">
-      {/* Header */}
-      <div className="mb-4">
-        {/* Search and action buttons */}
-        <div className="flex items-center gap-2">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <Input
-              placeholder="Rechercher un dossier..."
-              className="pl-9"
-            />
-          </div>
-          <Button size="sm" variant="outline">
-            <Filter className="w-4 h-4" />
-          </Button>
-          <Button size="sm">
-            <Plus className="w-4 h-4" />
-          </Button>
-        </div>
-      </div>
+      {/* Header avec barre de recherche */}
+      <FolderSearchBar
+        placeholder="Rechercher un dossier..."
+        onSearch={handleSearch}
+        onFilter={handleFilter}
+        onAdd={handleAdd}
+      />
 
       {/* Info banner for completed folders */}
       {statusCategory === 'completed' && (
