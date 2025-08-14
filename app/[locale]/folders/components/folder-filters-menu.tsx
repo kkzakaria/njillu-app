@@ -31,7 +31,9 @@ import {
   Archive,
   Trash2,
   AlertCircle,
-  MoveHorizontal
+  MoveHorizontal,
+  Ship,
+  Plane
 } from 'lucide-react';
 
 import type { 
@@ -161,9 +163,9 @@ const FILTER_CONFIGS: Record<StatusCategory, FilterConfig> = {
         { value: 'month', label: 'Ce mois', description: 'Échéance dans 30 jours' },
       ],
       transport_mode: [
-        { value: 'maritime', label: 'Maritime' },
-        { value: 'terrestre', label: 'Terrestre' },
-        { value: 'aerien', label: 'Aérien' },
+        { value: 'maritime', label: 'Maritime', icon: Ship },
+        { value: 'terrestre', label: 'Terrestre', icon: Truck },
+        { value: 'aerien', label: 'Aérien', icon: Plane },
       ],
       transit_type: [
         { value: 'import', label: 'Import' },
@@ -209,9 +211,9 @@ const FILTER_CONFIGS: Record<StatusCategory, FilterConfig> = {
         { value: 'over', label: 'Hors budget', description: '🚨' },
       ],
       transport_mode: [
-        { value: 'maritime', label: 'Maritime' },
-        { value: 'terrestre', label: 'Terrestre' },
-        { value: 'aerien', label: 'Aérien' },
+        { value: 'maritime', label: 'Maritime', icon: Ship },
+        { value: 'terrestre', label: 'Terrestre', icon: Truck },
+        { value: 'aerien', label: 'Aérien', icon: Plane },
       ],
       transit_type: [
         { value: 'import', label: 'Import' },
@@ -252,9 +254,9 @@ const FILTER_CONFIGS: Record<StatusCategory, FilterConfig> = {
         { value: 'low', label: 'Priorité faible', color: 'bg-green-100 text-green-800' },
       ],
       transport_mode: [
-        { value: 'maritime', label: 'Maritime' },
-        { value: 'terrestre', label: 'Terrestre' },
-        { value: 'aerien', label: 'Aérien' },
+        { value: 'maritime', label: 'Maritime', icon: Ship },
+        { value: 'terrestre', label: 'Terrestre', icon: Truck },
+        { value: 'aerien', label: 'Aérien', icon: Plane },
       ],
       transit_type: [
         { value: 'import', label: 'Import' },
@@ -294,9 +296,9 @@ const FILTER_CONFIGS: Record<StatusCategory, FilterConfig> = {
         { value: 'high', label: 'Impact élevé', color: 'bg-red-100 text-red-800' },
       ],
       transport_mode: [
-        { value: 'maritime', label: 'Maritime' },
-        { value: 'terrestre', label: 'Terrestre' },
-        { value: 'aerien', label: 'Aérien' },
+        { value: 'maritime', label: 'Maritime', icon: Ship },
+        { value: 'terrestre', label: 'Terrestre', icon: Truck },
+        { value: 'aerien', label: 'Aérien', icon: Plane },
       ],
       transit_type: [
         { value: 'import', label: 'Import' },
@@ -404,15 +406,19 @@ export function FolderFiltersMenu({
                   Mode de transport
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent>
-                  {config.options.transport_mode.map((option) => (
-                    <DropdownMenuCheckboxItem
-                      key={option.value}
-                      checked={filters.transport_mode?.includes(option.value) ?? false}
-                      onCheckedChange={() => toggleArrayFilter('transport_mode', option.value, filters.transport_mode)}
-                    >
-                      {option.label}
-                    </DropdownMenuCheckboxItem>
-                  ))}
+                  {config.options.transport_mode.map((option) => {
+                    const Icon = option.icon;
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={option.value}
+                        checked={filters.transport_mode?.includes(option.value) ?? false}
+                        onCheckedChange={() => toggleArrayFilter('transport_mode', option.value, filters.transport_mode)}
+                      >
+                        {Icon && <Icon className="w-4 h-4 mr-2" />}
+                        {option.label}
+                      </DropdownMenuCheckboxItem>
+                    );
+                  })}
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
             )}
