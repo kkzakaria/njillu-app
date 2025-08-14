@@ -77,15 +77,14 @@ export type ComplianceStatus =
 // ============================================================================
 
 export type ProcessingStage = 
-  | 'intake'           // Prise en charge initiale
-  | 'documentation'    // Préparation documentaire
-  | 'customs_clearance' // Dédouanement
-  | 'inspection'       // Contrôle/inspection
-  | 'storage'          // Mise en stockage
-  | 'preparation'      // Préparation à la livraison
-  | 'delivery'         // Livraison
-  | 'invoicing'        // Facturation
-  | 'closure';         // Clôture du dossier
+  | 'enregistrement'              // Enregistrement (séquence 1)
+  | 'revision_facture_commerciale' // Révision facture commerciale (séquence 2)
+  | 'elaboration_fdi'             // Élaboration FDI (séquence 3)
+  | 'elaboration_rfcv'            // Élaboration RFCV (séquence 4)
+  | 'declaration_douaniere'       // Déclaration douanière (séquence 5)
+  | 'service_exploitation'        // Service exploitation (séquence 6)
+  | 'facturation_client'          // Facturation client (séquence 7)
+  | 'livraison';                  // Livraison (séquence 8)
 
 export type DocumentStatus = 
   | 'missing'          // Document manquant
