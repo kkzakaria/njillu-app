@@ -35,8 +35,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { PriorityBadge } from '@/components/priority-badge';
-import { ProcessingStageBadge } from '@/components/processing-stage-badge';
+import { PriorityBadge } from './priority-badge';
+import { ProcessingStageBadge } from './processing-stage-badge';
 import { cn } from '@/lib/utils';
 import { useFolders } from '@/hooks/useTranslation';
 import { getFolderActions } from './folder-actions';

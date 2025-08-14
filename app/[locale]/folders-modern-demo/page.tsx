@@ -2,8 +2,8 @@
 
 import { Suspense } from 'react'
 import { QueryProvider } from '@/lib/providers/query-provider'
-import FolderListVirtualized from '@/components/folder-list-virtualized'
-import { FolderSearchBar } from '@/components/folder-search-bar'
+import FolderListVirtualized from '@/app/[locale]/folders/components/folder-list-virtualized'
+import { FolderSearchBar } from '@/app/[locale]/folders/components/folder-search-bar'
 import { useFolderStore } from '@/lib/stores/folder-store'
 import { useFolderCounters, useFoldersAttention, useFolderMutations } from '@/hooks/use-folders'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'

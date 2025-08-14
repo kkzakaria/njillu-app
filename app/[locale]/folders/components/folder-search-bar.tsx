@@ -298,7 +298,7 @@ export function FolderSearchBar({
         <div className="flex flex-wrap gap-2">
           {filters.search && (
             <Badge variant="secondary" className="gap-1">
-              Recherche: "{filters.search}"
+              Recherche: &quot;{filters.search}&quot;
               <Button
                 variant="ghost"
                 size="sm"
