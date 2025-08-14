@@ -55,6 +55,8 @@ export interface FolderFilters {
   priority?: FolderPriority[];
   health_status?: HealthStatus[];
   processing_stage?: ProcessingStage[];
+  transport_mode?: ('maritime' | 'terrestre' | 'aerien')[];
+  transit_type?: ('import' | 'export')[];
   sla_threshold?: 'low' | 'medium' | 'high';
   deadline_proximity?: 'today' | 'week' | 'month';
   is_overdue?: boolean;
@@ -114,6 +116,8 @@ interface FilterConfig {
     type?: FilterOption<FolderType>[];
     category?: FilterOption<FolderCategory>[];
     processing_stage?: FilterOption<ProcessingStage>[];
+    transport_mode?: FilterOption<'maritime' | 'terrestre' | 'aerien'>[];
+    transit_type?: FilterOption<'import' | 'export'>[];
     sla_threshold?: FilterOption<'low' | 'medium' | 'high'>[];
     deadline_proximity?: FilterOption<'today' | 'week' | 'month'>[];
     completion_period?: FilterOption<'week' | 'month' | 'quarter' | 'year'>[];
@@ -155,6 +159,15 @@ const FILTER_CONFIGS: Record<StatusCategory, FilterConfig> = {
         { value: 'week', label: 'Cette semaine', description: 'Échéance dans 7 jours' },
         { value: 'month', label: 'Ce mois', description: 'Échéance dans 30 jours' },
       ],
+      transport_mode: [
+        { value: 'maritime', label: 'Maritime' },
+        { value: 'terrestre', label: 'Terrestre' },
+        { value: 'aerien', label: 'Aérien' },
+      ],
+      transit_type: [
+        { value: 'import', label: 'Import' },
+        { value: 'export', label: 'Export' },
+      ],
       type: [
         { value: 'import', label: 'Import', icon: Truck },
         { value: 'export', label: 'Export', icon: Truck },
@@ -194,6 +207,15 @@ const FILTER_CONFIGS: Record<StatusCategory, FilterConfig> = {
         { value: 'on_budget', label: 'Dans le budget', description: '✅' },
         { value: 'over', label: 'Hors budget', description: '🚨' },
       ],
+      transport_mode: [
+        { value: 'maritime', label: 'Maritime' },
+        { value: 'terrestre', label: 'Terrestre' },
+        { value: 'aerien', label: 'Aérien' },
+      ],
+      transit_type: [
+        { value: 'import', label: 'Import' },
+        { value: 'export', label: 'Export' },
+      ],
       type: [
         { value: 'import', label: 'Import', icon: Truck },
         { value: 'export', label: 'Export', icon: Truck },
@@ -228,6 +250,15 @@ const FILTER_CONFIGS: Record<StatusCategory, FilterConfig> = {
         { value: 'medium', label: 'Priorité moyenne', color: 'bg-yellow-100 text-yellow-800' },
         { value: 'low', label: 'Priorité faible', color: 'bg-green-100 text-green-800' },
       ],
+      transport_mode: [
+        { value: 'maritime', label: 'Maritime' },
+        { value: 'terrestre', label: 'Terrestre' },
+        { value: 'aerien', label: 'Aérien' },
+      ],
+      transit_type: [
+        { value: 'import', label: 'Import' },
+        { value: 'export', label: 'Export' },
+      ],
       type: [
         { value: 'import', label: 'Import', icon: Truck },
         { value: 'export', label: 'Export', icon: Truck },
@@ -260,6 +291,15 @@ const FILTER_CONFIGS: Record<StatusCategory, FilterConfig> = {
         { value: 'low', label: 'Impact faible', color: 'bg-green-100 text-green-800' },
         { value: 'medium', label: 'Impact moyen', color: 'bg-yellow-100 text-yellow-800' },
         { value: 'high', label: 'Impact élevé', color: 'bg-red-100 text-red-800' },
+      ],
+      transport_mode: [
+        { value: 'maritime', label: 'Maritime' },
+        { value: 'terrestre', label: 'Terrestre' },
+        { value: 'aerien', label: 'Aérien' },
+      ],
+      transit_type: [
+        { value: 'import', label: 'Import' },
+        { value: 'export', label: 'Export' },
       ],
       type: [
         { value: 'import', label: 'Import', icon: Truck },
@@ -355,27 +395,44 @@ export function FolderFiltersMenu({
       case 'workflow':
         return (
           <>
-            {/* Types */}
-            {config.options.type && (
+            {/* Mode de transport */}
+            {config.options.transport_mode && (
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>
                   <Truck className="w-4 h-4 mr-2" />
-                  Type de dossier
+                  Mode de transport
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent>
-                  {config.options.type.map((option) => {
-                    const Icon = option.icon;
-                    return (
-                      <DropdownMenuCheckboxItem
-                        key={option.value}
-                        checked={filters.type?.includes(option.value) ?? false}
-                        onCheckedChange={() => toggleArrayFilter('type', option.value, filters.type)}
-                      >
-                        {Icon && <Icon className="w-4 h-4 mr-2" />}
-                        {option.label}
-                      </DropdownMenuCheckboxItem>
-                    );
-                  })}
+                  {config.options.transport_mode.map((option) => (
+                    <DropdownMenuCheckboxItem
+                      key={option.value}
+                      checked={filters.transport_mode?.includes(option.value) ?? false}
+                      onCheckedChange={() => toggleArrayFilter('transport_mode', option.value, filters.transport_mode)}
+                    >
+                      {option.label}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+            )}
+
+            {/* Type de transit */}
+            {config.options.transit_type && (
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <RotateCcw className="w-4 h-4 mr-2" />
+                  Type de transit
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  {config.options.transit_type.map((option) => (
+                    <DropdownMenuCheckboxItem
+                      key={option.value}
+                      checked={filters.transit_type?.includes(option.value) ?? false}
+                      onCheckedChange={() => toggleArrayFilter('transit_type', option.value, filters.transit_type)}
+                    >
+                      {option.label}
+                    </DropdownMenuCheckboxItem>
+                  ))}
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
             )}

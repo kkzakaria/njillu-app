@@ -234,6 +234,26 @@ export function useFolderFilters({
         if (filters.created_recently && !matchesCreatedRecentlyFilter(folder, filters.created_recently)) {
           return false;
         }
+
+        // Mode de transport - Simulation basée sur les données existantes
+        if (filters.transport_mode && filters.transport_mode.length > 0) {
+          // Simulation: maritime pour import, terrestre pour export, aérien pour transit
+          let simulatedTransportMode: string;
+          if (folder.type === 'import') simulatedTransportMode = 'maritime';
+          else if (folder.type === 'export') simulatedTransportMode = 'terrestre';
+          else simulatedTransportMode = 'aerien';
+          
+          if (!filters.transport_mode.includes(simulatedTransportMode as any)) {
+            return false;
+          }
+        }
+
+        // Type de transit 
+        if (filters.transit_type && filters.transit_type.length > 0) {
+          if (!filters.transit_type.includes(folder.type as any)) {
+            return false;
+          }
+        }
       }
 
       // Filtres spécifiques aux dossiers TERMINÉS
