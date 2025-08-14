@@ -30,7 +30,8 @@ import {
   DollarSign,
   Archive,
   Trash2,
-  AlertCircle
+  AlertCircle,
+  MoveHorizontal
 } from 'lucide-react';
 
 import type { 
@@ -420,7 +421,7 @@ export function FolderFiltersMenu({
             {config.options.transit_type && (
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>
-                  <RotateCcw className="w-4 h-4 mr-2" />
+                  <MoveHorizontal className="w-4 h-4 mr-2" />
                   Type de transit
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent>
