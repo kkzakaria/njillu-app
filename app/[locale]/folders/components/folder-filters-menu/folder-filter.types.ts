@@ -28,21 +28,19 @@ export interface FolderFilters {
   created_recently?: 'today' | 'week';
   
   // Filtres spécifiques COMPLETED (terminés)
-  completion_period?: 'week' | 'month' | 'quarter' | 'year';
+  // Note: Les dossiers sont archivés automatiquement après 1 mois
+  completion_period?: 'today' | '3_days' | 'week' | '2_weeks' | 'month';
   performance_rating?: 'excellent' | 'good' | 'average' | 'poor';
   duration_vs_planned?: 'faster' | 'on_time' | 'delayed';
   cost_vs_estimated?: 'under' | 'on_budget' | 'over';
   
   // Filtres spécifiques ARCHIVED (archivés)
-  archive_reason?: 'client_wait' | 'missing_docs' | 'customs_hold' | 'payment_pending' | 'other';
-  archive_age?: 'recent' | 'month' | 'quarter' | 'old';
-  reactivation_priority?: 'high' | 'medium' | 'low';
+  // Note: Simplifiés pour ne garder que les périodes pertinentes
+  archive_age?: 'recent' | 'month' | 'quarter' | 'semester' | 'old';
   
   // Filtres spécifiques DELETED (supprimés)
-  deletion_reason?: 'cancelled' | 'duplicate' | 'error' | 'client_request' | 'other';
-  deleted_by?: string;
-  deletion_period?: 'today' | 'week' | 'month';
-  financial_impact?: 'low' | 'medium' | 'high';
+  // Note: Simplifiés pour ne garder que les périodes d'audit pertinentes
+  deletion_period?: 'today' | '3_days' | 'week' | '2_weeks' | 'month' | 'quarter';
 }
 
 export type StatusCategory = 'active' | 'completed' | 'archived' | 'deleted';
@@ -78,10 +76,10 @@ export interface FilterConfig {
     transit_type?: FilterOption<'import' | 'export'>[];
     sla_threshold?: FilterOption<'low' | 'medium' | 'high'>[];
     deadline_proximity?: FilterOption<'today' | 'week' | 'month'>[];
-    completion_period?: FilterOption<'week' | 'month' | 'quarter' | 'year'>[];
+    completion_period?: FilterOption<'today' | '3_days' | 'week' | '2_weeks' | 'month'>[];
     performance_rating?: FilterOption<'excellent' | 'good' | 'average' | 'poor'>[];
-    archive_reason?: FilterOption<string>[];
-    deletion_reason?: FilterOption<string>[];
+    archive_age?: FilterOption<'recent' | 'month' | 'quarter' | 'semester' | 'old'>[];
+    deletion_period?: FilterOption<'today' | '3_days' | 'week' | '2_weeks' | 'month' | 'quarter'>[];
     [key: string]: FilterOption<string | number | boolean>[] | undefined;
   };
 }

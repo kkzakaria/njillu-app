@@ -135,6 +135,7 @@ const matchesCreatedRecentlyFilter = (folder: FolderSummary, recently: string): 
 
 /**
  * Vérifie si un dossier correspond à une période de complétion
+ * Note: Les dossiers terminés sont archivés automatiquement après 1 mois
  */
 const matchesCompletionPeriodFilter = (folder: FolderSummary, period: string): boolean => {
   const completionDate = folder.completion_date || folder.actual_completion_date;
@@ -145,14 +146,16 @@ const matchesCompletionPeriodFilter = (folder: FolderSummary, period: string): b
   const diffDays = Math.ceil((now.getTime() - completed.getTime()) / (1000 * 60 * 60 * 24));
   
   switch (period) {
+    case 'today':
+      return diffDays <= 1;
+    case '3_days':
+      return diffDays <= 3;
     case 'week':
       return diffDays <= 7;
+    case '2_weeks':
+      return diffDays <= 14;
     case 'month':
-      return diffDays <= 30;
-    case 'quarter':
-      return diffDays <= 90;
-    case 'year':
-      return diffDays <= 365;
+      return diffDays <= 30; // Maximum avant archivage automatique
     default:
       return true;
   }
@@ -309,15 +312,6 @@ export function useFolderFilters({
 
       // Filtres spécifiques aux dossiers ARCHIVÉS
       if (statusCategory === 'archived') {
-        // Archive reason - Simulation basée sur d'autres propriétés
-        if (filters.archive_reason) {
-          // Pour la démo, on simule des raisons d'archivage
-          const simulatedReason = folder.health_status === 'warning' ? 'client_wait' : 'missing_docs';
-          if (simulatedReason !== filters.archive_reason) {
-            return false;
-          }
-        }
-
         // Archive age - Basé sur archived_date ou created_date
         if (filters.archive_age) {
           const archiveDate = folder.archived_date || folder.created_date;
@@ -330,38 +324,28 @@ export function useFolderFilters({
           let matches = false;
           switch (filters.archive_age) {
             case 'recent':
-              matches = diffDays <= 30;
+              matches = diffDays <= 30; // < 1 mois
               break;
             case 'month':
-              matches = diffDays > 30 && diffDays <= 90;
+              matches = diffDays > 30 && diffDays <= 90; // 1-3 mois
               break;
             case 'quarter':
-              matches = diffDays > 90 && diffDays <= 180;
+              matches = diffDays > 90 && diffDays <= 180; // 3-6 mois
+              break;
+            case 'semester':
+              matches = diffDays > 180 && diffDays <= 365; // 6-12 mois
               break;
             case 'old':
-              matches = diffDays > 180;
+              matches = diffDays > 365; // > 1 an
               break;
           }
           
           if (!matches) return false;
         }
-
-        // Reactivation priority - Simulation basée sur la priorité originale
-        if (filters.reactivation_priority && filters.reactivation_priority !== folder.priority) {
-          return false;
-        }
       }
 
       // Filtres spécifiques aux dossiers SUPPRIMÉS
       if (statusCategory === 'deleted') {
-        // Deletion reason - Simulation
-        if (filters.deletion_reason) {
-          const simulatedReason = folder.sla_compliance === 0 ? 'cancelled' : 'error';
-          if (simulatedReason !== filters.deletion_reason) {
-            return false;
-          }
-        }
-
         // Deletion period - Basé sur deleted_date ou created_date
         if (filters.deletion_period) {
           const deletionDate = folder.deleted_date || folder.created_date;
@@ -376,32 +360,24 @@ export function useFolderFilters({
             case 'today':
               matches = diffDays <= 1;
               break;
+            case '3_days':
+              matches = diffDays <= 3;
+              break;
             case 'week':
               matches = diffDays <= 7;
+              break;
+            case '2_weeks':
+              matches = diffDays <= 14;
               break;
             case 'month':
               matches = diffDays <= 30;
               break;
+            case 'quarter':
+              matches = diffDays <= 90;
+              break;
           }
           
           if (!matches) return false;
-        }
-
-        // Financial impact - Simulation basée sur la priorité et le type
-        if (filters.financial_impact) {
-          let impact: string;
-          
-          if (folder.priority === 'urgent' && folder.category === 'vip') {
-            impact = 'high';
-          } else if (folder.priority === 'normal') {
-            impact = 'medium';
-          } else {
-            impact = 'low';
-          }
-          
-          if (impact !== filters.financial_impact) {
-            return false;
-          }
         }
       }
 

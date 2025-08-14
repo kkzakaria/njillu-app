@@ -25,8 +25,8 @@ import { DeadlinesSection } from './sections/deadlines-section';
 import { PerformanceSection } from './sections/performance-section';
 import { CostsSection } from './sections/costs-section';
 import { PeriodSection } from './sections/period-section';
-import { ArchiveSection } from './sections/archive-section';
-import { DeletionSection } from './sections/deletion-section';
+import { ArchivePeriodSection } from './sections/archive-period-section';
+import { DeletionPeriodSection } from './sections/deletion-period-section';
 
 // ============================================================================
 // Composant principal refactorisé
@@ -85,15 +85,14 @@ export function FolderFiltersMenu({
       case 'costs':
         return <CostsSection {...sectionProps} />;
       case 'period':
-        return <PeriodSection {...sectionProps} />;
-      case 'archive_info':
-      case 'original':
-      case 'reactivation':
-        return <ArchiveSection {...sectionProps} />;
-      case 'deletion_info':
-      case 'audit':
-      case 'impact':
-        return <DeletionSection {...sectionProps} />;
+        if (statusCategory === 'completed') {
+          return <PeriodSection {...sectionProps} />;
+        } else if (statusCategory === 'archived') {
+          return <ArchivePeriodSection {...sectionProps} />;
+        } else if (statusCategory === 'deleted') {
+          return <DeletionPeriodSection {...sectionProps} />;
+        }
+        return null;
       default:
         return null;
     }

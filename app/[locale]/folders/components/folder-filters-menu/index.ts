@@ -34,5 +34,5 @@ export { DeadlinesSection } from './sections/deadlines-section';
 export { PerformanceSection } from './sections/performance-section';
 export { CostsSection } from './sections/costs-section';
 export { PeriodSection } from './sections/period-section';
-export { ArchiveSection } from './sections/archive-section';
-export { DeletionSection } from './sections/deletion-section';
+export { ArchivePeriodSection } from './sections/archive-period-section';
+export { DeletionPeriodSection } from './sections/deletion-period-section';

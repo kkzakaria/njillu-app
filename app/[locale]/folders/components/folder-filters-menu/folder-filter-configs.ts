@@ -1,14 +1,8 @@
 import { 
   AlertTriangle,
-  Clock,
   User,
   Building2,
   Calendar,
-  DollarSign,
-  Archive,
-  Trash2,
-  AlertCircle,
-  CheckCircle2,
   Ship,
   Truck,
   Plane
@@ -68,101 +62,53 @@ export const FILTER_CONFIGS: Record<StatusCategory, FilterConfig> = {
   },
 
   // Configuration pour dossiers TERMINÉS
+  // Note: Les dossiers sont archivés automatiquement après 1 mois
   completed: {
     sections: [
       { id: 'period', label: 'PÉRIODE', icon: Calendar, priority: 1 }
     ],
     options: {
       completion_period: [
+        { value: 'today', label: 'Aujourd\'hui' },
+        { value: '3_days', label: '3 derniers jours' },
         { value: 'week', label: 'Cette semaine' },
-        { value: 'month', label: 'Ce mois' },
-        { value: 'quarter', label: 'Ce trimestre' },
-        { value: 'year', label: 'Cette année' },
+        { value: '2_weeks', label: '2 dernières semaines' },
+        { value: 'month', label: 'Ce mois (max 30 jours)' },
       ]
     }
   },
 
   // Configuration pour dossiers ARCHIVÉS
+  // Note: Les dossiers archivés nécessitent des périodes adaptées à leur ancienneté
   archived: {
     sections: [
-      { id: 'archive_info', label: 'ARCHIVAGE', icon: Archive, priority: 1 },
-      { id: 'original', label: 'INFORMATIONS ORIGINALES', icon: Building2, priority: 2 },
-      { id: 'reactivation', label: 'RÉACTIVATION', icon: CheckCircle2, priority: 3 }
+      { id: 'period', label: 'PÉRIODE', icon: Calendar, priority: 1 }
     ],
     options: {
-      archive_reason: [
-        { value: 'client_wait', label: 'Attente client' },
-        { value: 'missing_docs', label: 'Documents manquants' },
-        { value: 'customs_hold', label: 'Retenue douanière' },
-        { value: 'payment_pending', label: 'Paiement en attente' },
-        { value: 'other', label: 'Autre raison' },
-      ],
       archive_age: [
         { value: 'recent', label: 'Récent (< 1 mois)' },
         { value: 'month', label: '1-3 mois' },
         { value: 'quarter', label: '3-6 mois' },
-        { value: 'old', label: 'Ancien (> 6 mois)' },
-      ],
-      reactivation_priority: [
-        { value: 'high', label: 'Priorité haute', color: 'bg-red-100 text-red-800' },
-        { value: 'medium', label: 'Priorité moyenne', color: 'bg-yellow-100 text-yellow-800' },
-        { value: 'low', label: 'Priorité faible', color: 'bg-green-100 text-green-800' },
-      ],
-      transport_mode: [
-        { value: 'maritime', label: 'Maritime', icon: Ship },
-        { value: 'terrestre', label: 'Terrestre', icon: Truck },
-        { value: 'aerien', label: 'Aérien', icon: Plane },
-      ],
-      transit_type: [
-        { value: 'import', label: 'Import' },
-        { value: 'export', label: 'Export' },
-      ],
-      type: [
-        { value: 'import', label: 'Import', icon: Truck },
-        { value: 'export', label: 'Export', icon: Truck },
-        { value: 'transit', label: 'Transit', icon: Truck },
+        { value: 'semester', label: '6-12 mois' },
+        { value: 'old', label: 'Ancien (> 1 an)' },
       ]
     }
   },
 
   // Configuration pour dossiers SUPPRIMÉS
+  // Note: Les dossiers supprimés sont conservés pour audit, périodes courtes pertinentes
   deleted: {
     sections: [
-      { id: 'deletion_info', label: 'SUPPRESSION', icon: Trash2, priority: 1 },
-      { id: 'audit', label: 'AUDIT', icon: AlertCircle, priority: 2 },
-      { id: 'impact', label: 'IMPACT', icon: DollarSign, priority: 3 }
+      { id: 'period', label: 'PÉRIODE', icon: Calendar, priority: 1 }
     ],
     options: {
-      deletion_reason: [
-        { value: 'cancelled', label: 'Annulé par le client' },
-        { value: 'duplicate', label: 'Dossier dupliqué' },
-        { value: 'error', label: 'Erreur de saisie' },
-        { value: 'client_request', label: 'Demande client' },
-        { value: 'other', label: 'Autre raison' },
-      ],
       deletion_period: [
         { value: 'today', label: 'Aujourd\'hui' },
+        { value: '3_days', label: '3 derniers jours' },
         { value: 'week', label: 'Cette semaine' },
+        { value: '2_weeks', label: '2 dernières semaines' },
         { value: 'month', label: 'Ce mois' },
-      ],
-      financial_impact: [
-        { value: 'low', label: 'Impact faible', color: 'bg-green-100 text-green-800' },
-        { value: 'medium', label: 'Impact moyen', color: 'bg-yellow-100 text-yellow-800' },
-        { value: 'high', label: 'Impact élevé', color: 'bg-red-100 text-red-800' },
-      ],
-      transport_mode: [
-        { value: 'maritime', label: 'Maritime', icon: Ship },
-        { value: 'terrestre', label: 'Terrestre', icon: Truck },
-        { value: 'aerien', label: 'Aérien', icon: Plane },
-      ],
-      transit_type: [
-        { value: 'import', label: 'Import' },
-        { value: 'export', label: 'Export' },
-      ],
-      type: [
-        { value: 'import', label: 'Import', icon: Truck },
-        { value: 'export', label: 'Export', icon: Truck },
-        { value: 'transit', label: 'Transit', icon: Truck },
+        { value: 'quarter', label: 'Ce trimestre' },
       ]
     }
   }
