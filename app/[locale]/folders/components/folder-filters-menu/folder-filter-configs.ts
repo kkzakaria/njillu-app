@@ -4,7 +4,6 @@ import {
   User,
   Building2,
   Calendar,
-  TrendingUp,
   DollarSign,
   Archive,
   Trash2,
@@ -71,10 +70,7 @@ export const FILTER_CONFIGS: Record<StatusCategory, FilterConfig> = {
   // Configuration pour dossiers TERMINÉS
   completed: {
     sections: [
-      { id: 'performance', label: 'PERFORMANCE', icon: TrendingUp, priority: 1 },
-      { id: 'timing', label: 'DÉLAIS', icon: Clock, priority: 2 },
-      { id: 'costs', label: 'COÛTS', icon: DollarSign, priority: 3 },
-      { id: 'period', label: 'PÉRIODE', icon: Calendar, priority: 4 }
+      { id: 'period', label: 'PÉRIODE', icon: Calendar, priority: 1 }
     ],
     options: {
       completion_period: [
@@ -82,36 +78,6 @@ export const FILTER_CONFIGS: Record<StatusCategory, FilterConfig> = {
         { value: 'month', label: 'Ce mois' },
         { value: 'quarter', label: 'Ce trimestre' },
         { value: 'year', label: 'Cette année' },
-      ],
-      performance_rating: [
-        { value: 'excellent', label: 'Excellent', color: 'bg-green-100 text-green-800' },
-        { value: 'good', label: 'Bon', color: 'bg-blue-100 text-blue-800' },
-        { value: 'average', label: 'Moyen', color: 'bg-yellow-100 text-yellow-800' },
-        { value: 'poor', label: 'Médiocre', color: 'bg-red-100 text-red-800' },
-      ],
-      duration_vs_planned: [
-        { value: 'faster', label: 'Plus rapide que prévu', description: '⚡' },
-        { value: 'on_time', label: 'Dans les délais', description: '✅' },
-        { value: 'delayed', label: 'En retard', description: '🚨' },
-      ],
-      cost_vs_estimated: [
-        { value: 'under', label: 'Sous budget', description: '💚' },
-        { value: 'on_budget', label: 'Dans le budget', description: '✅' },
-        { value: 'over', label: 'Hors budget', description: '🚨' },
-      ],
-      transport_mode: [
-        { value: 'maritime', label: 'Maritime', icon: Ship },
-        { value: 'terrestre', label: 'Terrestre', icon: Truck },
-        { value: 'aerien', label: 'Aérien', icon: Plane },
-      ],
-      transit_type: [
-        { value: 'import', label: 'Import' },
-        { value: 'export', label: 'Export' },
-      ],
-      type: [
-        { value: 'import', label: 'Import', icon: Truck },
-        { value: 'export', label: 'Export', icon: Truck },
-        { value: 'transit', label: 'Transit', icon: Truck },
       ]
     }
   },
