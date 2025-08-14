@@ -691,17 +691,15 @@ export function FolderFiltersMenu({
           variant={activeFiltersCount > 0 ? "default" : "outline"}
           className="relative"
         >
-          <Filter className="w-4 h-4 mr-1" />
-          Filtres
+          <Filter className="w-4 h-4" />
           {activeFiltersCount > 0 && (
             <Badge 
               variant="secondary" 
-              className="ml-1 px-1 min-w-[1rem] h-4 text-xs"
+              className="absolute -top-1 -right-1 px-1 min-w-[1rem] h-4 text-xs"
             >
               {activeFiltersCount}
             </Badge>
           )}
-          <ChevronDown className="w-3 h-3 ml-1" />
         </Button>
       </DropdownMenuTrigger>
       
