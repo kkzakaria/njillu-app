@@ -214,12 +214,10 @@ export async function POST(request: NextRequest) {
               // Update existing client
               try {
                 const existingClient = existingClientByEmail || existingClientBySiret;
-                // Remove creation fields from update data
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                const { created_at, created_by, ...updateData } = clientData;
+                // Update existing client with import data
                 await ClientService.update({
                   client_id: existingClient!.id,
-                  data: updateData
+                  data: clientData
                 });
                 result.updated_ids.push(existingClient!.id);
                 result.updated_count++;
