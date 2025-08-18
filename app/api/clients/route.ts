@@ -7,7 +7,20 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { ClientService, ClientSearchService, ClientValidationService } from '@/lib/services/clients';
 import type { CreateClientData, ClientSearchParams } from '@/types/clients/operations';
-import type { ApiResponse } from '@/types/shared';
+import type { 
+  ClientType, 
+  ClientStatus, 
+  CountryCode, 
+  Industry, 
+  ClientPriority, 
+  LanguageCode,
+  ClientSortField 
+} from '@/types/clients/enums';
+import { 
+  createErrorResponse, 
+  createSuccessResponse, 
+  createValidationErrorResponse 
+} from '@/lib/utils/api-responses';
 
 // CORS headers for all responses
 const corsHeaders = {
@@ -37,11 +50,7 @@ export async function GET(request: NextRequest) {
     
     if (authError || !authData?.claims) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Unauthorized',
-          message: 'Authentication required'
-        } as ApiResponse<null>,
+        createErrorResponse(401, 'Authentication required'),
         { status: 401, headers: corsHeaders }
       );
     }
@@ -51,13 +60,13 @@ export async function GET(request: NextRequest) {
     
     const params: ClientSearchParams = {
       search_term: searchParams.get('search') || undefined,
-      client_types: searchParams.get('client_types')?.split(',').filter(Boolean) as any[] || undefined,
-      statuses: searchParams.get('statuses')?.split(',').filter(Boolean) as any[] || undefined,
-      countries: searchParams.get('countries')?.split(',').filter(Boolean) as any[] || undefined,
-      industries: searchParams.get('industries')?.split(',').filter(Boolean) as any[] || undefined,
-      priorities: searchParams.get('priorities')?.split(',').filter(Boolean) as any[] || undefined,
-      languages: searchParams.get('languages')?.split(',').filter(Boolean) as any[] || undefined,
-      sort_field: (searchParams.get('sort_field') as any) || 'created_at',
+      client_types: searchParams.get('client_types')?.split(',').filter(Boolean) as ClientType[] || undefined,
+      statuses: searchParams.get('statuses')?.split(',').filter(Boolean) as ClientStatus[] || undefined,
+      countries: searchParams.get('countries')?.split(',').filter(Boolean) as CountryCode[] || undefined,
+      industries: searchParams.get('industries')?.split(',').filter(Boolean) as Industry[] || undefined,
+      priorities: searchParams.get('priorities')?.split(',').filter(Boolean) as ClientPriority[] || undefined,
+      languages: searchParams.get('languages')?.split(',').filter(Boolean) as LanguageCode[] || undefined,
+      sort_field: (searchParams.get('sort_field') as ClientSortField) || 'created_at',
       sort_direction: (searchParams.get('sort_direction') as 'asc' | 'desc') || 'desc',
       page: parseInt(searchParams.get('page') || '1'),
       page_size: Math.min(parseInt(searchParams.get('page_size') || '50'), 100),
@@ -92,11 +101,7 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(
-      {
-        success: true,
-        data: result,
-        message: `Found ${result.total_count} clients`
-      } as ApiResponse<typeof result>,
+      createSuccessResponse(result, `Found ${result.total_count} clients`),
       { 
         status: 200,
         headers: {
@@ -112,11 +117,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('GET /api/clients error:', error);
     return NextResponse.json(
-      {
-        success: false,
-        error: 'Internal Server Error',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
-      } as ApiResponse<null>,
+      createErrorResponse(500, error instanceof Error ? error.message : 'Unknown error occurred'),
       { status: 500, headers: corsHeaders }
     );
   }
@@ -133,11 +134,7 @@ export async function POST(request: NextRequest) {
     
     if (authError || !authData?.claims) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Unauthorized',
-          message: 'Authentication required'
-        } as ApiResponse<null>,
+        createErrorResponse(401, 'Authentication required'),
         { status: 401, headers: corsHeaders }
       );
     }
@@ -148,13 +145,9 @@ export async function POST(request: NextRequest) {
     let createData: CreateClientData;
     try {
       createData = await request.json();
-    } catch (parseError) {
+    } catch {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Invalid JSON in request body'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Invalid JSON in request body'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -169,15 +162,10 @@ export async function POST(request: NextRequest) {
 
     if (!validation.is_valid) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Validation Error',
-          message: 'Client data validation failed',
-          details: {
-            errors: validation.errors,
-            warnings: validation.warnings
-          }
-        } as ApiResponse<null>,
+        createValidationErrorResponse(
+          validation.errors,
+          validation.warnings
+        ),
         { status: 422, headers: corsHeaders }
       );
     }
@@ -186,11 +174,7 @@ export async function POST(request: NextRequest) {
     const client = await ClientService.create(createData, userId);
 
     return NextResponse.json(
-      {
-        success: true,
-        data: client,
-        message: 'Client created successfully'
-      } as ApiResponse<typeof client>,
+      createSuccessResponse(client, 'Client created successfully'),
       { 
         status: 201,
         headers: {
@@ -207,22 +191,14 @@ export async function POST(request: NextRequest) {
     if (error instanceof Error) {
       if (error.message.includes('duplicate key') || error.message.includes('already exists')) {
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Conflict',
-            message: 'Client with this email or SIRET already exists'
-          } as ApiResponse<null>,
+          createErrorResponse(409, 'Client with this email or SIRET already exists'),
           { status: 409, headers: corsHeaders }
         );
       }
     }
 
     return NextResponse.json(
-      {
-        success: false,
-        error: 'Internal Server Error',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
-      } as ApiResponse<null>,
+      createErrorResponse(500, error instanceof Error ? error.message : 'Unknown error occurred'),
       { status: 500, headers: corsHeaders }
     );
   }

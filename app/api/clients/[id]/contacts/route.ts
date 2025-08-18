@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { ContactService } from '@/lib/services/clients';
 import type { ContactPerson } from '@/types/clients/core';
-import type { ApiResponse } from '@/types/shared';
+import { createErrorResponse, createSuccessResponse } from '@/lib/utils/api-responses';
 
 // CORS headers for all responses
 const corsHeaders = {
@@ -17,9 +17,9 @@ const corsHeaders = {
 };
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 /**
@@ -46,23 +46,15 @@ export async function POST(
     
     if (authError || !authData?.claims) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Unauthorized',
-          message: 'Authentication required'
-        } as ApiResponse<null>,
+        createErrorResponse(401, 'Authentication required'),
         { status: 401, headers: corsHeaders }
       );
     }
 
-    const clientId = params.id;
+    const { id: clientId } = await params;
     if (!clientId) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Client ID is required'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Client ID is required'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -71,13 +63,9 @@ export async function POST(
     let contactData: Omit<ContactPerson, 'is_active'> & { is_active?: boolean };
     try {
       contactData = await request.json();
-    } catch (parseError) {
+    } catch {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Invalid JSON in request body'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Invalid JSON in request body'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -85,33 +73,21 @@ export async function POST(
     // Validate required fields
     if (!contactData.first_name?.trim()) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'First name is required'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'First name is required'),
         { status: 400, headers: corsHeaders }
       );
     }
 
     if (!contactData.last_name?.trim()) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Last name is required'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Last name is required'),
         { status: 400, headers: corsHeaders }
       );
     }
 
     if (!contactData.contact_type) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Contact type is required'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Contact type is required'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -126,19 +102,11 @@ export async function POST(
     const newContact = updatedClient.business_info.contacts[updatedClient.business_info.contacts.length - 1];
 
     return NextResponse.json(
-      {
-        success: true,
-        data: {
-          client: updatedClient,
-          contact: newContact,
-          contact_index: updatedClient.business_info.contacts.length - 1
-        },
-        message: 'Contact added successfully'
-      } as ApiResponse<{
-        client: typeof updatedClient;
-        contact: ContactPerson;
-        contact_index: number;
-      }>,
+      createSuccessResponse({
+        client: updatedClient,
+        contact: newContact,
+        contact_index: updatedClient.business_info.contacts.length - 1
+      }, 'Contact added successfully'),
       { 
         status: 201,
         headers: {
@@ -149,50 +117,35 @@ export async function POST(
     );
 
   } catch (error) {
-    console.error(`POST /api/clients/${params.id}/contacts error:`, error);
+    const { id: clientId } = await params;
+    console.error(`POST /api/clients/${clientId}/contacts error:`, error);
     
     // Handle specific known errors
     if (error instanceof Error) {
       if (error.message.includes('not found')) {
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Not Found',
-            message: 'Client not found'
-          } as ApiResponse<null>,
+          createErrorResponse(404, 'Client not found'),
           { status: 404, headers: corsHeaders }
         );
       }
       
       if (error.message.includes('business clients')) {
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Bad Request',
-            message: 'Can only add contacts to business clients'
-          } as ApiResponse<null>,
+          createErrorResponse(400, 'Can only add contacts to business clients'),
           { status: 400, headers: corsHeaders }
         );
       }
       
       if (error.message.includes('validation')) {
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Validation Error',
-            message: error.message
-          } as ApiResponse<null>,
+          createErrorResponse(422, error.message),
           { status: 422, headers: corsHeaders }
         );
       }
     }
 
     return NextResponse.json(
-      {
-        success: false,
-        error: 'Internal Server Error',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
-      } as ApiResponse<null>,
+      createErrorResponse(500, error instanceof Error ? error.message : 'Unknown error occurred'),
       { status: 500, headers: corsHeaders }
     );
   }

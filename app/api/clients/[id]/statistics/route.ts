@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { ClientService } from '@/lib/services/clients';
-import type { ApiResponse } from '@/types/shared';
+import { createErrorResponse, createSuccessResponse } from '@/lib/utils/api-responses';
 
 // CORS headers for all responses
 const corsHeaders = {
@@ -16,9 +16,9 @@ const corsHeaders = {
 };
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 /**
@@ -45,23 +45,15 @@ export async function GET(
     
     if (authError || !authData?.claims) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Unauthorized',
-          message: 'Authentication required'
-        } as ApiResponse<null>,
+        createErrorResponse(401, 'Authentication required'),
         { status: 401, headers: corsHeaders }
       );
     }
 
-    const clientId = params.id;
+    const { id: clientId } = await params;
     if (!clientId) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Client ID is required'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Client ID is required'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -70,11 +62,7 @@ export async function GET(
     const client = await ClientService.getById(clientId);
     if (!client) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Not Found',
-          message: 'Client not found'
-        } as ApiResponse<null>,
+        createErrorResponse(404, 'Client not found'),
         { status: 404, headers: corsHeaders }
       );
     }
@@ -83,22 +71,15 @@ export async function GET(
     const statistics = await ClientService.getStatistics(clientId);
 
     return NextResponse.json(
-      {
-        success: true,
-        data: statistics,
-        message: 'Client statistics retrieved successfully'
-      } as ApiResponse<typeof statistics>,
+      createSuccessResponse(statistics, 'Client statistics retrieved successfully'),
       { status: 200, headers: corsHeaders }
     );
 
   } catch (error) {
-    console.error(`GET /api/clients/${params.id}/statistics error:`, error);
+    const { id: clientId } = await params;
+    console.error(`GET /api/clients/${clientId}/statistics error:`, error);
     return NextResponse.json(
-      {
-        success: false,
-        error: 'Internal Server Error',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
-      } as ApiResponse<null>,
+      createErrorResponse(500, error instanceof Error ? error.message : 'Unknown error occurred'),
       { status: 500, headers: corsHeaders }
     );
   }

@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { ContactService } from '@/lib/services/clients';
 import type { ContactPerson } from '@/types/clients/core';
-import type { ApiResponse } from '@/types/shared';
+import { createErrorResponse, createSuccessResponse } from '@/lib/utils/api-responses';
 
 // CORS headers for all responses
 const corsHeaders = {
@@ -17,10 +17,10 @@ const corsHeaders = {
 };
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string;
     contactId: string;
-  };
+  }>;
 }
 
 /**
@@ -47,25 +47,16 @@ export async function PUT(
     
     if (authError || !authData?.claims) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Unauthorized',
-          message: 'Authentication required'
-        } as ApiResponse<null>,
+        createErrorResponse(401, 'Authentication required'),
         { status: 401, headers: corsHeaders }
       );
     }
 
-    const clientId = params.id;
-    const contactId = params.contactId;
+    const { id: clientId, contactId } = await params;
     
     if (!clientId || !contactId) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Client ID and Contact ID are required'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Client ID and Contact ID are required'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -73,11 +64,7 @@ export async function PUT(
     const contactIndex = parseInt(contactId);
     if (isNaN(contactIndex) || contactIndex < 0) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Invalid contact ID. Must be a valid index number.'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Invalid contact ID. Must be a valid index number.'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -86,13 +73,9 @@ export async function PUT(
     let updates: Partial<ContactPerson>;
     try {
       updates = await request.json();
-    } catch (parseError) {
+    } catch {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Invalid JSON in request body'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Invalid JSON in request body'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -101,11 +84,7 @@ export async function PUT(
     const existingContact = await ContactService.getContact(clientId, contactIndex);
     if (!existingContact) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Not Found',
-          message: 'Contact not found'
-        } as ApiResponse<null>,
+        createErrorResponse(404, 'Contact not found'),
         { status: 404, headers: corsHeaders }
       );
     }
@@ -120,78 +99,51 @@ export async function PUT(
     const updatedContact = updatedClient.business_info.contacts[contactIndex];
 
     return NextResponse.json(
-      {
-        success: true,
-        data: {
-          client: updatedClient,
-          contact: updatedContact,
-          contact_index: contactIndex
-        },
-        message: 'Contact updated successfully'
-      } as ApiResponse<{
-        client: typeof updatedClient;
-        contact: ContactPerson;
-        contact_index: number;
-      }>,
+      createSuccessResponse({
+        client: updatedClient,
+        contact: updatedContact,
+        contact_index: contactIndex
+      }, 'Contact updated successfully'),
       { status: 200, headers: corsHeaders }
     );
 
   } catch (error) {
-    console.error(`PUT /api/clients/${params.id}/contacts/${params.contactId} error:`, error);
+    const { id: clientId, contactId } = await params;
+    console.error(`PUT /api/clients/${clientId}/contacts/${contactId} error:`, error);
     
     // Handle specific known errors
     if (error instanceof Error) {
       if (error.message.includes('not found')) {
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Not Found',
-            message: 'Client or contact not found'
-          } as ApiResponse<null>,
+          createErrorResponse(404, 'Client or contact not found'),
           { status: 404, headers: corsHeaders }
         );
       }
       
       if (error.message.includes('business clients')) {
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Bad Request',
-            message: 'Can only update contacts for business clients'
-          } as ApiResponse<null>,
+          createErrorResponse(400, 'Can only update contacts for business clients'),
           { status: 400, headers: corsHeaders }
         );
       }
       
       if (error.message.includes('Invalid contact index')) {
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Bad Request',
-            message: 'Invalid contact index'
-          } as ApiResponse<null>,
+          createErrorResponse(400, 'Invalid contact index'),
           { status: 400, headers: corsHeaders }
         );
       }
       
       if (error.message.includes('validation')) {
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Validation Error',
-            message: error.message
-          } as ApiResponse<null>,
+          createErrorResponse(422, error.message),
           { status: 422, headers: corsHeaders }
         );
       }
     }
 
     return NextResponse.json(
-      {
-        success: false,
-        error: 'Internal Server Error',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
-      } as ApiResponse<null>,
+      createErrorResponse(500, error instanceof Error ? error.message : 'Unknown error occurred'),
       { status: 500, headers: corsHeaders }
     );
   }
@@ -211,25 +163,16 @@ export async function DELETE(
     
     if (authError || !authData?.claims) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Unauthorized',
-          message: 'Authentication required'
-        } as ApiResponse<null>,
+        createErrorResponse(401, 'Authentication required'),
         { status: 401, headers: corsHeaders }
       );
     }
 
-    const clientId = params.id;
-    const contactId = params.contactId;
+    const { id: clientId, contactId } = await params;
     
     if (!clientId || !contactId) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Client ID and Contact ID are required'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Client ID and Contact ID are required'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -237,11 +180,7 @@ export async function DELETE(
     const contactIndex = parseInt(contactId);
     if (isNaN(contactIndex) || contactIndex < 0) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Invalid contact ID. Must be a valid index number.'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Invalid contact ID. Must be a valid index number.'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -254,11 +193,7 @@ export async function DELETE(
     const existingContact = await ContactService.getContact(clientId, contactIndex);
     if (!existingContact) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Not Found',
-          message: 'Contact not found'
-        } as ApiResponse<null>,
+        createErrorResponse(404, 'Contact not found'),
         { status: 404, headers: corsHeaders }
       );
     }
@@ -271,78 +206,51 @@ export async function DELETE(
     });
 
     return NextResponse.json(
-      {
-        success: true,
-        data: {
-          client: updatedClient,
-          action: deactivateOnly ? 'deactivated' : 'removed',
-          remaining_contacts: updatedClient.business_info.contacts.length
-        },
-        message: `Contact ${deactivateOnly ? 'deactivated' : 'removed'} successfully`
-      } as ApiResponse<{
-        client: typeof updatedClient;
-        action: string;
-        remaining_contacts: number;
-      }>,
+      createSuccessResponse({
+        client: updatedClient,
+        action: deactivateOnly ? 'deactivated' : 'removed',
+        remaining_contacts: updatedClient.business_info.contacts.length
+      }, `Contact ${deactivateOnly ? 'deactivated' : 'removed'} successfully`),
       { status: 200, headers: corsHeaders }
     );
 
   } catch (error) {
-    console.error(`DELETE /api/clients/${params.id}/contacts/${params.contactId} error:`, error);
+    const { id: clientId, contactId } = await params;
+    console.error(`DELETE /api/clients/${clientId}/contacts/${contactId} error:`, error);
     
     // Handle specific known errors
     if (error instanceof Error) {
       if (error.message.includes('not found')) {
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Not Found',
-            message: 'Client or contact not found'
-          } as ApiResponse<null>,
+          createErrorResponse(404, 'Client or contact not found'),
           { status: 404, headers: corsHeaders }
         );
       }
       
       if (error.message.includes('business clients')) {
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Bad Request',
-            message: 'Can only remove contacts from business clients'
-          } as ApiResponse<null>,
+          createErrorResponse(400, 'Can only remove contacts from business clients'),
           { status: 400, headers: corsHeaders }
         );
       }
       
       if (error.message.includes('last active contact')) {
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Conflict',
-            message: 'Cannot remove last active contact. At least one active contact is required.'
-          } as ApiResponse<null>,
+          createErrorResponse(409, 'Cannot remove last active contact. At least one active contact is required.'),
           { status: 409, headers: corsHeaders }
         );
       }
       
       if (error.message.includes('Invalid contact index')) {
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Bad Request',
-            message: 'Invalid contact index'
-          } as ApiResponse<null>,
+          createErrorResponse(400, 'Invalid contact index'),
           { status: 400, headers: corsHeaders }
         );
       }
     }
 
     return NextResponse.json(
-      {
-        success: false,
-        error: 'Internal Server Error',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
-      } as ApiResponse<null>,
+      createErrorResponse(500, error instanceof Error ? error.message : 'Unknown error occurred'),
       { status: 500, headers: corsHeaders }
     );
   }
