@@ -1,0 +1,223 @@
+{
+  "title": "Gestión de Clientes",
+  "subtitle": "Gestión completa de su cartera de clientes",
+  "navigation": {
+    "active": "Clientes Activos",
+    "inactive": "Clientes Inactivos", 
+    "archived": "Clientes Archivados",
+    "all": "Todos los Clientes"
+  },
+  "actions": {
+    "create": "Crear Cliente",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "archive": "Archivar",
+    "unarchive": "Desarchivar",
+    "activate": "Activar",
+    "deactivate": "Desactivar",
+    "export": "Exportar",
+    "import": "Importar",
+    "select_all": "Seleccionar Todo",
+    "deselect_all": "Deseleccionar Todo",
+    "bulk_actions": "Acciones en Lote",
+    "view_details": "Ver Detalles",
+    "add_contact": "Agregar Contacto",
+    "remove_contact": "Eliminar Contacto",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior"
+  },
+  "search": {
+    "placeholder": "Buscar clientes...",
+    "filters": "Filtros",
+    "clear_filters": "Limpiar Filtros",
+    "advanced_search": "Búsqueda Avanzada",
+    "no_results": "No se encontraron resultados",
+    "results_count": "{count} resultado(s) encontrado(s)"
+  },
+  "filters": {
+    "type": "Tipo de Cliente",
+    "status": "Estado",
+    "country": "País",
+    "priority": "Prioridad",
+    "risk_level": "Nivel de Riesgo",
+    "industry": "Industria",
+    "payment_terms": "Términos de Pago",
+    "created_date": "Fecha de Creación",
+    "updated_date": "Fecha de Modificación"
+  },
+  "types": {
+    "individual": "Individual",
+    "business": "Empresa"
+  },
+  "statuses": {
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "archived": "Archivado"
+  },
+  "priorities": {
+    "low": "Baja",
+    "normal": "Normal",
+    "high": "Alta",
+    "critical": "Crítica"
+  },
+  "risk_levels": {
+    "low": "Bajo",
+    "medium": "Medio",
+    "high": "Alto"
+  },
+  "fields": {
+    "name": "Nombre",
+    "first_name": "Nombre",
+    "last_name": "Apellido",
+    "company_name": "Nombre de la Empresa",
+    "email": "Email",
+    "phone": "Teléfono",
+    "address": "Dirección",
+    "city": "Ciudad",
+    "postal_code": "Código Postal",
+    "country": "País",
+    "industry": "Industria",
+    "siret": "SIRET",
+    "vat_number": "Número de IVA",
+    "credit_limit": "Límite de Crédito",
+    "payment_terms": "Términos de Pago",
+    "payment_methods": "Métodos de Pago",
+    "notes": "Notas",
+    "tags": "Etiquetas",
+    "contacts": "Contactos",
+    "created_at": "Creado el",
+    "updated_at": "Modificado el"
+  },
+  "contact": {
+    "title": "Contacto",
+    "first_name": "Nombre",
+    "last_name": "Apellido",
+    "email": "Email",
+    "phone": "Teléfono",
+    "position": "Posición",
+    "department": "Departamento",
+    "is_primary": "Contacto Principal",
+    "add": "Agregar Contacto",
+    "edit": "Editar Contacto",
+    "remove": "Eliminar Contacto"
+  },
+  "form": {
+    "required": "Obligatorio",
+    "invalid_email": "Email inválido",
+    "invalid_phone": "Número de teléfono inválido",
+    "invalid_siret": "SIRET inválido",
+    "invalid_vat": "Número de IVA inválido",
+    "min_length": "Mínimo {min} caracteres",
+    "max_length": "Máximo {max} caracteres",
+    "create_title": "Crear Nuevo Cliente",
+    "edit_title": "Editar Cliente",
+    "select_type": "Seleccionar tipo de cliente",
+    "personal_info": "Información Personal",
+    "company_info": "Información de la Empresa",
+    "contact_info": "Información de Contacto",
+    "commercial_info": "Información Comercial",
+    "additional_info": "Información Adicional"
+  },
+  "table": {
+    "columns": {
+      "select": "Seleccionar",
+      "name": "Nombre",
+      "type": "Tipo",
+      "email": "Email",
+      "phone": "Teléfono",
+      "country": "País",
+      "status": "Estado",
+      "priority": "Prioridad",
+      "created_at": "Creado el",
+      "actions": "Acciones"
+    },
+    "pagination": {
+      "showing": "Mostrando {start} a {end} de {total} resultados",
+      "per_page": "por página",
+      "go_to_page": "Ir a la página",
+      "page": "Página {current} de {total}"
+    }
+  },
+  "empty_states": {
+    "no_clients": "No se encontraron clientes",
+    "no_clients_description": "Comience creando su primer cliente",
+    "no_search_results": "No hay resultados para esta búsqueda",
+    "no_search_results_description": "Intente modificar sus criterios de búsqueda",
+    "no_filtered_results": "Ningún cliente coincide con los filtros",
+    "no_filtered_results_description": "Intente modificar sus filtros"
+  },
+  "notifications": {
+    "created": "Cliente creado exitosamente",
+    "updated": "Cliente actualizado exitosamente",
+    "deleted": "Cliente eliminado exitosamente",
+    "archived": "Cliente archivado exitosamente",
+    "unarchived": "Cliente desarchivado exitosamente",
+    "activated": "Cliente activado exitosamente",
+    "deactivated": "Cliente desactivado exitosamente",
+    "contact_added": "Contacto agregado exitosamente",
+    "contact_updated": "Contacto actualizado exitosamente",
+    "contact_removed": "Contacto eliminado exitosamente",
+    "bulk_action_success": "{count} cliente(s) procesado(s) exitosamente",
+    "import_success": "{count} cliente(s) importado(s) exitosamente",
+    "export_success": "Exportación completada exitosamente"
+  },
+  "errors": {
+    "not_found": "Cliente no encontrado",
+    "email_exists": "Este email ya está en uso",
+    "siret_exists": "Este SIRET ya está en uso",
+    "has_active_folders": "Este cliente tiene carpetas activas",
+    "insufficient_permissions": "Permisos insuficientes",
+    "invalid_data": "Datos inválidos",
+    "primary_contact_required": "Se requiere un contacto principal",
+    "credit_limit_exceeded": "Límite de crédito excedido",
+    "network_error": "Error de conexión",
+    "server_error": "Error del servidor",
+    "validation_error": "Error de validación"
+  },
+  "confirmations": {
+    "delete": "¿Está seguro de que desea eliminar este cliente?",
+    "delete_description": "Esta acción no se puede deshacer.",
+    "archive": "¿Está seguro de que desea archivar este cliente?",
+    "archive_description": "El cliente será archivado y ya no será visible en la lista activa.",
+    "remove_contact": "¿Está seguro de que desea eliminar este contacto?",
+    "remove_contact_description": "Esta acción no se puede deshacer.",
+    "bulk_delete": "¿Está seguro de que desea eliminar {count} cliente(s)?",
+    "bulk_archive": "¿Está seguro de que desea archivar {count} cliente(s)?"
+  },
+  "import": {
+    "title": "Importar Clientes",
+    "description": "Importe sus clientes desde un archivo CSV o Excel",
+    "formats": "Formatos soportados: CSV, Excel (.xlsx)",
+    "max_size": "Tamaño máximo: 10 MB",
+    "drop_zone": "Arrastre su archivo aquí o haga clic para seleccionar",
+    "processing": "Procesando...",
+    "validation": "Validando datos...",
+    "preview": "Vista Previa de Datos",
+    "mapping": "Mapeo de Columnas",
+    "errors": "Errores Detectados",
+    "warnings": "Advertencias"
+  },
+  "export": {
+    "title": "Exportar Clientes",
+    "description": "Exporte sus clientes en diferentes formatos",
+    "format": "Formato de Exportación",
+    "include_contacts": "Incluir Contactos",
+    "include_archived": "Incluir Clientes Archivados",
+    "date_range": "Rango de Fechas",
+    "custom_fields": "Campos Personalizados"
+  },
+  "statistics": {
+    "total": "Total",
+    "active": "Activos",
+    "inactive": "Inactivos",
+    "archived": "Archivados",
+    "individuals": "Individuales",
+    "businesses": "Empresas",
+    "this_month": "Este Mes",
+    "this_year": "Este Año",
+    "growth": "Crecimiento"
+  }
+}

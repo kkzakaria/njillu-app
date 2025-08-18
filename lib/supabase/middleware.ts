@@ -47,20 +47,23 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
 
-  // Extract locale from pathname
-  const pathWithoutLocale = request.nextUrl.pathname.replace(/^\/[a-z]{2}/, '') || '/';
-  const locale = request.nextUrl.pathname.match(/^\/([a-z]{2})/)?.[1] || 'fr';
-  
-  if (
-    pathWithoutLocale !== "/" &&
-    !user &&
-    !pathWithoutLocale.startsWith("/login") &&
-    !pathWithoutLocale.startsWith("/auth")
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
-    const url = request.nextUrl.clone();
-    url.pathname = `/${locale}/auth/login`;
-    return NextResponse.redirect(url);
+  // Skip authentication redirect for API routes
+  if (!request.nextUrl.pathname.startsWith('/api/')) {
+    // Extract locale from pathname
+    const pathWithoutLocale = request.nextUrl.pathname.replace(/^\/[a-z]{2}/, '') || '/';
+    const locale = request.nextUrl.pathname.match(/^\/([a-z]{2})/)?.[1] || 'fr';
+    
+    if (
+      pathWithoutLocale !== "/" &&
+      !user &&
+      !pathWithoutLocale.startsWith("/login") &&
+      !pathWithoutLocale.startsWith("/auth")
+    ) {
+      // no user, potentially respond by redirecting the user to the login page
+      const url = request.nextUrl.clone();
+      url.pathname = `/${locale}/auth/login`;
+      return NextResponse.redirect(url);
+    }
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.

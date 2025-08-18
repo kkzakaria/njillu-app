@@ -1,0 +1,131 @@
+# Staging Docker Compose configuration
+# Includes development tools and staging-specific services
+
+version: '3.8'
+
+services:
+  # Staging Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.staging
+      target: runner
+    container_name: njillu-app-staging
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=staging
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL_STAGING}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY_STAGING}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY_STAGING}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET_STAGING}
+      - PORT=3000
+    networks:
+      - staging-network
+    volumes:
+      - staging-logs:/app/logs
+      - ./logs:/app/debug-logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.staging-app.rule=Host(`staging.your-domain.com`)"
+      - "traefik.http.routers.staging-app.tls=true"
+      - "traefik.http.routers.staging-app.tls.certresolver=letsencrypt"
+
+  # Reverse Proxy for Staging
+  traefik:
+    image: traefik:v3.0
+    container_name: traefik-staging
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    environment:
+      - TRAEFIK_API_DASHBOARD=true
+      - TRAEFIK_API_INSECURE=true
+      - TRAEFIK_PROVIDERS_DOCKER=true
+      - TRAEFIK_PROVIDERS_DOCKER_EXPOSEDBYDEFAULT=false
+      - TRAEFIK_ENTRYPOINTS_HTTP_ADDRESS=:80
+      - TRAEFIK_ENTRYPOINTS_HTTPS_ADDRESS=:443
+      - TRAEFIK_CERTIFICATESRESOLVERS_LETSENCRYPT_ACME_EMAIL=${ACME_EMAIL}
+      - TRAEFIK_CERTIFICATESRESOLVERS_LETSENCRYPT_ACME_STORAGE=/acme.json
+      - TRAEFIK_CERTIFICATESRESOLVERS_LETSENCRYPT_ACME_HTTPCHALLENGE_ENTRYPOINT=http
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-acme-staging:/acme.json
+    networks:
+      - staging-network
+
+  # Redis for staging
+  redis:
+    image: redis:7-alpine
+    container_name: redis-staging
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-staging-data:/data
+    networks:
+      - staging-network
+    command: redis-server --appendonly yes --maxmemory 128mb --maxmemory-policy allkeys-lru
+
+  # Monitoring for staging
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana-staging
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-staging}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+    volumes:
+      - grafana-staging-data:/var/lib/grafana
+    networks:
+      - staging-network
+
+  # Database for staging tests
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres-staging
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=staging_db
+      - POSTGRES_USER=staging_user
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD_STAGING}
+    volumes:
+      - postgres-staging-data:/var/lib/postgresql/data
+      - ./scripts/init-staging-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - staging-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U staging_user -d staging_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  staging-network:
+    driver: bridge
+
+volumes:
+  staging-logs:
+    driver: local
+  redis-staging-data:
+    driver: local
+  grafana-staging-data:
+    driver: local
+  postgres-staging-data:
+    driver: local
+  traefik-acme-staging:
+    driver: local

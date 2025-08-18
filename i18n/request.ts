@@ -22,7 +22,8 @@ async function loadMessages(locale: string) {
       languageSwitcher,
       folders,
       folderFilters,
-      demo
+      demo,
+      clients
     ] = await Promise.all([
       import(`./messages/${locale}/metadata/app.json`),
       import(`./messages/${locale}/home/page.json`),
@@ -40,7 +41,8 @@ async function loadMessages(locale: string) {
       import(`./messages/${locale}/language/switcher.json`),
       import(`./messages/${locale}/folders.json`),
       import(`./messages/${locale}/folder-filters.json`),
-      import(`./messages/${locale}/demo.json`)
+      import(`./messages/${locale}/demo.json`),
+      import(`./messages/${locale}/clients.json`)
     ]);
 
     // Combine all modules into the expected namespace structure
@@ -65,7 +67,8 @@ async function loadMessages(locale: string) {
       language: languageSwitcher.default,
       folders: folders.default,
       'folder-filters': folderFilters.default,
-      demo: demo.default
+      demo: demo.default,
+      clients: clients.default
     };
   } catch (error) {
     console.error(`Failed to load messages for locale ${locale}:`, error);
