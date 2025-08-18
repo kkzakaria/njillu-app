@@ -8,6 +8,11 @@ import { createClient } from '@/lib/supabase/server';
 import { ClientService, ClientValidationService } from '@/lib/services/clients';
 import type { UpdateClientData, DeleteClientParams } from '@/types/clients/operations';
 import type { ApiResponse } from '@/types/shared';
+import { 
+  createErrorResponse, 
+  createSuccessResponse, 
+  createValidationErrorResponse 
+} from '@/lib/utils/api-responses';
 
 // CORS headers for all responses
 const corsHeaders = {
@@ -46,11 +51,7 @@ export async function GET(
     
     if (authError || !authData?.claims) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Unauthorized',
-          message: 'Authentication required'
-        } as ApiResponse<null>,
+        createErrorResponse(401, 'Authentication required'),
         { status: 401, headers: corsHeaders }
       );
     }
@@ -58,11 +59,7 @@ export async function GET(
     const { id: clientId } = await params;
     if (!clientId) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Client ID is required'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Client ID is required'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -80,21 +77,13 @@ export async function GET(
 
     if (!result) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Not Found',
-          message: 'Client not found'
-        } as ApiResponse<null>,
+        createErrorResponse(404, 'Client not found'),
         { status: 404, headers: corsHeaders }
       );
     }
 
     return NextResponse.json(
-      {
-        success: true,
-        data: result,
-        message: 'Client retrieved successfully'
-      } as ApiResponse<typeof result>,
+      createSuccessResponse(result, 'Client retrieved successfully'),
       { status: 200, headers: corsHeaders }
     );
 
@@ -102,11 +91,7 @@ export async function GET(
     const { id: clientId } = await params;
     console.error(`GET /api/clients/${clientId} error:`, error);
     return NextResponse.json(
-      {
-        success: false,
-        error: 'Internal Server Error',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
-      } as ApiResponse<null>,
+      createErrorResponse(500, error instanceof Error ? error.message : 'Unknown error occurred'),
       { status: 500, headers: corsHeaders }
     );
   }
@@ -126,11 +111,7 @@ export async function PUT(
     
     if (authError || !authData?.claims) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Unauthorized',
-          message: 'Authentication required'
-        } as ApiResponse<null>,
+        createErrorResponse(401, 'Authentication required'),
         { status: 401, headers: corsHeaders }
       );
     }
@@ -138,11 +119,7 @@ export async function PUT(
     const { id: clientId } = await params;
     if (!clientId) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Client ID is required'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Client ID is required'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -151,11 +128,7 @@ export async function PUT(
     const existingClient = await ClientService.getById(clientId);
     if (!existingClient) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Not Found',
-          message: 'Client not found'
-        } as ApiResponse<null>,
+        createErrorResponse(404, 'Client not found'),
         { status: 404, headers: corsHeaders }
       );
     }
@@ -166,11 +139,7 @@ export async function PUT(
       updateData = await request.json();
     } catch (parseError) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Invalid JSON in request body'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Invalid JSON in request body'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -189,15 +158,10 @@ export async function PUT(
 
     if (!validation.is_valid) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Validation Error',
-          message: 'Client data validation failed',
-          details: {
-            errors: validation.errors,
-            warnings: validation.warnings
-          }
-        } as ApiResponse<null>,
+        createValidationErrorResponse(
+          validation.errors.map(err => ({ message: err })),
+          validation.warnings?.map(warn => ({ message: warn }))
+        ),
         { status: 422, headers: corsHeaders }
       );
     }
@@ -213,11 +177,7 @@ export async function PUT(
     });
 
     return NextResponse.json(
-      {
-        success: true,
-        data: updatedClient,
-        message: 'Client updated successfully'
-      } as ApiResponse<typeof updatedClient>,
+      createSuccessResponse(updatedClient, 'Client updated successfully'),
       { status: 200, headers: corsHeaders }
     );
 
@@ -229,33 +189,21 @@ export async function PUT(
     if (error instanceof Error) {
       if (error.message.includes('duplicate key') || error.message.includes('already exists')) {
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Conflict',
-            message: 'Client with this email or SIRET already exists'
-          } as ApiResponse<null>,
+          createErrorResponse(409, 'Client with this email or SIRET already exists'),
           { status: 409, headers: corsHeaders }
         );
       }
       
       if (error.message.includes('version')) {
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Conflict',
-            message: 'Client has been modified by another user. Please refresh and try again.'
-          } as ApiResponse<null>,
+          createErrorResponse(409, 'Client has been modified by another user. Please refresh and try again.'),
           { status: 409, headers: corsHeaders }
         );
       }
     }
 
     return NextResponse.json(
-      {
-        success: false,
-        error: 'Internal Server Error',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
-      } as ApiResponse<null>,
+      createErrorResponse(500, error instanceof Error ? error.message : 'Unknown error occurred'),
       { status: 500, headers: corsHeaders }
     );
   }
@@ -275,11 +223,7 @@ export async function DELETE(
     
     if (authError || !authData?.claims) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Unauthorized',
-          message: 'Authentication required'
-        } as ApiResponse<null>,
+        createErrorResponse(401, 'Authentication required'),
         { status: 401, headers: corsHeaders }
       );
     }
@@ -287,11 +231,7 @@ export async function DELETE(
     const { id: clientId } = await params;
     if (!clientId) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Client ID is required'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Client ID is required'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -300,11 +240,7 @@ export async function DELETE(
     const existingClient = await ClientService.getById(clientId);
     if (!existingClient) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Not Found',
-          message: 'Client not found'
-        } as ApiResponse<null>,
+        createErrorResponse(404, 'Client not found'),
         { status: 404, headers: corsHeaders }
       );
     }
@@ -323,11 +259,7 @@ export async function DELETE(
     // Validate deletion parameters
     if (deleteParams.handle_folders === 'transfer' && !deleteParams.transfer_to_client_id) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'transfer_to_client_id is required when handle_folders=transfer'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'transfer_to_client_id is required when handle_folders=transfer'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -336,11 +268,7 @@ export async function DELETE(
     const result = await ClientService.delete(deleteParams);
 
     return NextResponse.json(
-      {
-        success: true,
-        data: result,
-        message: `Client ${deleteParams.deletion_type === 'soft' ? 'deleted' : 'permanently removed'} successfully`
-      } as ApiResponse<typeof result>,
+      createSuccessResponse(result, `Client ${deleteParams.deletion_type === 'soft' ? 'deleted' : 'permanently removed'} successfully`),
       { status: 200, headers: corsHeaders }
     );
 
@@ -352,22 +280,14 @@ export async function DELETE(
     if (error instanceof Error) {
       if (error.message.includes('active folders')) {
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Conflict',
-            message: 'Cannot delete client with active folders. Use force=true to override.'
-          } as ApiResponse<null>,
+          createErrorResponse(409, 'Cannot delete client with active folders. Use force=true to override.'),
           { status: 409, headers: corsHeaders }
         );
       }
     }
 
     return NextResponse.json(
-      {
-        success: false,
-        error: 'Internal Server Error',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
-      } as ApiResponse<null>,
+      createErrorResponse(500, error instanceof Error ? error.message : 'Unknown error occurred'),
       { status: 500, headers: corsHeaders }
     );
   }

@@ -13,6 +13,7 @@ import type {
 } from '@/types/clients/operations';
 import type { ClientSummary } from '@/types/clients/core';
 import type { ApiResponse } from '@/types/shared';
+import { createErrorResponse, createSuccessResponse } from '@/lib/utils/api-responses';
 
 // CORS headers for all responses
 const corsHeaders = {
@@ -42,11 +43,7 @@ export async function POST(request: NextRequest) {
     
     if (authError || !authData?.claims) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Unauthorized',
-          message: 'Authentication required'
-        } as ApiResponse<null>,
+        createErrorResponse(401, 'Authentication required'),
         { status: 401, headers: corsHeaders }
       );
     }
@@ -57,11 +54,7 @@ export async function POST(request: NextRequest) {
       exportConfig = await request.json();
     } catch (parseError) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Invalid JSON in request body'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Invalid JSON in request body'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -69,11 +62,7 @@ export async function POST(request: NextRequest) {
     // Validate export configuration
     if (!exportConfig.format || !['csv', 'excel', 'json'].includes(exportConfig.format)) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Export format must be one of: csv, excel, json'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Export format must be one of: csv, excel, json'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -89,11 +78,7 @@ export async function POST(request: NextRequest) {
       // Export specific clients by IDs
       if (exportConfig.client_ids.length > 10000) {
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Bad Request',
-            message: 'Cannot export more than 10,000 clients at once'
-          } as ApiResponse<null>,
+          createErrorResponse(400, 'Cannot export more than 10,000 clients at once'),
           { status: 400, headers: corsHeaders }
         );
       }
@@ -122,22 +107,14 @@ export async function POST(request: NextRequest) {
 
       if (totalCount > 10000) {
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Bad Request',
-            message: 'Export would exceed 10,000 clients. Please refine your search criteria.'
-          } as ApiResponse<null>,
+          createErrorResponse(400, 'Export would exceed 10,000 clients. Please refine your search criteria.'),
           { status: 400, headers: corsHeaders }
         );
       }
 
     } else {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Either client_ids or search_params must be provided'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Either client_ids or search_params must be provided'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -188,11 +165,7 @@ export async function POST(request: NextRequest) {
     // 3. Set up cleanup for expired files
 
     return NextResponse.json(
-      {
-        success: true,
-        data: result,
-        message: `Export completed successfully. ${clients.length} clients exported.`
-      } as ApiResponse<typeof result>,
+      createSuccessResponse(result, `Export completed successfully. ${clients.length} clients exported.`),
       { 
         status: 200,
         headers: {
@@ -208,11 +181,7 @@ export async function POST(request: NextRequest) {
     console.error('POST /api/clients/export error:', error);
     
     return NextResponse.json(
-      {
-        success: false,
-        error: 'Internal Server Error',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
-      } as ApiResponse<null>,
+      createErrorResponse(500, error instanceof Error ? error.message : 'Unknown error occurred'),
       { status: 500, headers: corsHeaders }
     );
   }

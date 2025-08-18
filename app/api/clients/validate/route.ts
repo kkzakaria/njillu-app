@@ -8,6 +8,7 @@ import { createClient } from '@/lib/supabase/server';
 import { ClientValidationService } from '@/lib/services/clients';
 import type { CreateClientData, UpdateClientData, ClientValidationOptions } from '@/types/clients/operations';
 import type { ApiResponse } from '@/types/shared';
+import { createErrorResponse, createSuccessResponse, createValidationErrorResponse } from '@/lib/utils/api-responses';
 
 // CORS headers for all responses
 const corsHeaders = {
@@ -37,11 +38,7 @@ export async function POST(request: NextRequest) {
     
     if (authError || !authData?.claims) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Unauthorized',
-          message: 'Authentication required'
-        } as ApiResponse<null>,
+        createErrorResponse(401, 'Authentication required'),
         { status: 401, headers: corsHeaders }
       );
     }
@@ -58,11 +55,7 @@ export async function POST(request: NextRequest) {
       requestData = await request.json();
     } catch (parseError) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Invalid JSON in request body'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Invalid JSON in request body'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -70,33 +63,21 @@ export async function POST(request: NextRequest) {
     // Validate request structure
     if (!requestData.data) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Client data is required'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Client data is required'),
         { status: 400, headers: corsHeaders }
       );
     }
 
     if (!requestData.operation_type || !['create', 'update'].includes(requestData.operation_type)) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'operation_type must be either "create" or "update"'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'operation_type must be either "create" or "update"'),
         { status: 400, headers: corsHeaders }
       );
     }
 
     if (requestData.operation_type === 'update' && !requestData.client_id) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'client_id is required for update validation'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'client_id is required for update validation'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -135,11 +116,11 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        success: validationResult.is_valid,
+        status: validationResult.is_valid ? 'success' : 'error',
         data: validationResult,
-        message: validationResult.is_valid 
+        messages: [validationResult.is_valid 
           ? 'Validation passed successfully' 
-          : `Validation failed with ${validationResult.errors.length} error(s) and ${validationResult.warnings.length} warning(s)`
+          : `Validation failed with ${validationResult.errors.length} error(s) and ${validationResult.warnings.length} warning(s)`]
       } as ApiResponse<typeof validationResult>,
       { 
         status,
@@ -159,33 +140,21 @@ export async function POST(request: NextRequest) {
     if (error instanceof Error) {
       if (error.message.includes('not found')) {
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Not Found',
-            message: 'Client not found for update validation'
-          } as ApiResponse<null>,
+          createErrorResponse(404, 'Client not found for update validation'),
           { status: 404, headers: corsHeaders }
         );
       }
       
       if (error.message.includes('uniqueness check failed')) {
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Service Unavailable',
-            message: 'Validation service temporarily unavailable'
-          } as ApiResponse<null>,
+          createErrorResponse(503, 'Validation service temporarily unavailable'),
           { status: 503, headers: corsHeaders }
         );
       }
     }
 
     return NextResponse.json(
-      {
-        success: false,
-        error: 'Internal Server Error',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
-      } as ApiResponse<null>,
+      createErrorResponse(500, error instanceof Error ? error.message : 'Unknown error occurred'),
       { status: 500, headers: corsHeaders }
     );
   }

@@ -12,6 +12,7 @@ import type {
   CreateClientData 
 } from '@/types/clients/operations';
 import type { ApiResponse } from '@/types/shared';
+import { createErrorResponse, createSuccessResponse } from '@/lib/utils/api-responses';
 
 // CORS headers for all responses
 const corsHeaders = {
@@ -41,11 +42,7 @@ export async function POST(request: NextRequest) {
     
     if (authError || !authData?.claims) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Unauthorized',
-          message: 'Authentication required'
-        } as ApiResponse<null>,
+        createErrorResponse(401, 'Authentication required'),
         { status: 401, headers: corsHeaders }
       );
     }
@@ -58,11 +55,7 @@ export async function POST(request: NextRequest) {
       importConfig = await request.json();
     } catch (parseError) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Invalid JSON in request body'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Invalid JSON in request body'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -70,55 +63,35 @@ export async function POST(request: NextRequest) {
     // Validate import configuration
     if (!importConfig.data || !Array.isArray(importConfig.data)) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Data array is required'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Data array is required'),
         { status: 400, headers: corsHeaders }
       );
     }
 
     if (importConfig.data.length === 0) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Data array cannot be empty'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Data array cannot be empty'),
         { status: 400, headers: corsHeaders }
       );
     }
 
     if (importConfig.data.length > 1000) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'Cannot import more than 1000 clients at once'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'Cannot import more than 1000 clients at once'),
         { status: 400, headers: corsHeaders }
       );
     }
 
     if (!importConfig.duplicate_strategy || !['skip', 'update', 'error'].includes(importConfig.duplicate_strategy)) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'duplicate_strategy must be one of: skip, update, error'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'duplicate_strategy must be one of: skip, update, error'),
         { status: 400, headers: corsHeaders }
       );
     }
 
     if (!importConfig.mode || !['test', 'import'].includes(importConfig.mode)) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bad Request',
-          message: 'mode must be either "test" or "import"'
-        } as ApiResponse<null>,
+        createErrorResponse(400, 'mode must be either "test" or "import"'),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -174,13 +147,9 @@ export async function POST(request: NextRequest) {
       if (importConfig.mode === 'test') {
         result.success = result.error_count === 0;
         return NextResponse.json(
-          {
-            success: result.success,
-            data: result,
-            message: result.success 
-              ? `Test passed: All ${importConfig.data.length} clients are valid for import`
-              : `Test failed: ${result.error_count} validation errors found`
-          } as ApiResponse<typeof result>,
+          result.success 
+            ? createSuccessResponse(result, `Test passed: All ${importConfig.data.length} clients are valid for import`)
+            : createErrorResponse(422, `Test failed: ${result.error_count} validation errors found`, result),
           { 
             status: result.success ? 200 : 422,
             headers: {
@@ -197,11 +166,7 @@ export async function POST(request: NextRequest) {
       if (result.error_count > 0) {
         result.success = false;
         return NextResponse.json(
-          {
-            success: false,
-            data: result,
-            message: `Import failed: ${result.error_count} validation errors found`
-          } as ApiResponse<typeof result>,
+          createErrorResponse(422, `Import failed: ${result.error_count} validation errors found`, result),
           { 
             status: 422,
             headers: {
@@ -297,11 +262,9 @@ export async function POST(request: NextRequest) {
     const status = result.success ? 200 : (result.error_count === importConfig.data.length ? 400 : 207);
 
     return NextResponse.json(
-      {
-        success: result.success,
-        data: result,
-        message: `Import completed. Created: ${result.created_count}, Updated: ${result.updated_count}, Skipped: ${result.skipped_count}, Errors: ${result.error_count}`
-      } as ApiResponse<typeof result>,
+      result.success 
+        ? createSuccessResponse(result, `Import completed. Created: ${result.created_count}, Updated: ${result.updated_count}, Skipped: ${result.skipped_count}, Errors: ${result.error_count}`)
+        : createErrorResponse(status, `Import completed with errors. Created: ${result.created_count}, Updated: ${result.updated_count}, Skipped: ${result.skipped_count}, Errors: ${result.error_count}`, result),
       { 
         status,
         headers: {
@@ -319,11 +282,7 @@ export async function POST(request: NextRequest) {
     console.error('POST /api/clients/import error:', error);
     
     return NextResponse.json(
-      {
-        success: false,
-        error: 'Internal Server Error',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
-      } as ApiResponse<null>,
+      createErrorResponse(500, error instanceof Error ? error.message : 'Unknown error occurred'),
       { status: 500, headers: corsHeaders }
     );
   }

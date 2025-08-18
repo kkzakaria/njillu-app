@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import type { ApiResponse } from '@/types/shared';
+import { createErrorResponse, createSuccessResponse } from '@/lib/utils/api-responses';
 
 // CORS headers for all responses
 const corsHeaders = {
@@ -35,11 +36,7 @@ export async function GET(request: NextRequest) {
     
     if (authError || !authData?.claims) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Unauthorized',
-          message: 'Authentication required'
-        } as ApiResponse<null>,
+        createErrorResponse(401, 'Authentication required'),
         { status: 401, headers: corsHeaders }
       );
     }
@@ -72,11 +69,7 @@ export async function GET(request: NextRequest) {
     };
 
     return NextResponse.json(
-      {
-        success: true,
-        data: statistics,
-        message: 'Client statistics retrieved successfully'
-      } as ApiResponse<typeof statistics>,
+      createSuccessResponse(statistics, 'Client statistics retrieved successfully'),
       { 
         status: 200,
         headers: corsHeaders
@@ -86,11 +79,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('GET /api/clients/stats error:', error);
     return NextResponse.json(
-      {
-        success: false,
-        error: 'Internal Server Error',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
-      } as ApiResponse<null>,
+      createErrorResponse(500, error instanceof Error ? error.message : 'Unknown error occurred'),
       { status: 500, headers: corsHeaders }
     );
   }
