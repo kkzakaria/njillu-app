@@ -119,9 +119,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(
-      result.success_count > 0
-        ? createSuccessResponse(result, `Batch operation completed. ${result.success_count} successful, ${result.error_count} failed, ${result.warning_count} warnings`)
-        : createErrorResponse(status, `Batch operation failed. ${result.success_count} successful, ${result.error_count} failed, ${result.warning_count} warnings`, result as Record<string, unknown>),
+      createSuccessResponse(result, `Batch operation completed. ${result.success_count} successful, ${result.error_count} failed, ${result.warning_count} warnings`),
       { 
         status,
         headers: {
