@@ -291,9 +291,11 @@ BEGIN
   -- Vérifier la dernière actualisation (stockée dans une table de métadonnées si elle existe)
   -- Pour l'instant, rafraîchir toutes les 15 minutes
   
-  -- Rafraîchir les vues matérialisées
-  REFRESH MATERIALIZED VIEW CONCURRENTLY public.folder_counters_view;
-  REFRESH MATERIALIZED VIEW CONCURRENTLY public.folder_attention_view;
+  -- Les vues matérialisées ont été déplacées vers le schéma privé
+  -- Utiliser la fonction de rafraîchissement dédiée si elle existe
+  IF EXISTS(SELECT 1 FROM information_schema.routines WHERE routine_name = 'refresh_all_folder_materialized_views' AND routine_schema = 'public') THEN
+    PERFORM public.refresh_all_folder_materialized_views();
+  END IF;
   
   -- Log the refresh (si table de logs existe)
   -- INSERT INTO refresh_log (view_name, refreshed_at) VALUES ('folder_views', current_time);
@@ -311,9 +313,18 @@ SECURITY DEFINER
 SET search_path = ''
 AS $$
 BEGIN
-  -- Rafraîchir toutes les vues matérialisées des dossiers
-  REFRESH MATERIALIZED VIEW CONCURRENTLY public.folder_counters_view;
-  REFRESH MATERIALIZED VIEW CONCURRENTLY public.folder_attention_view;
+  -- Les vues matérialisées sont maintenant dans le schéma privé
+  -- Utiliser la fonction de rafraîchissement appropriée si disponible
+  IF EXISTS(SELECT 1 FROM information_schema.schemata WHERE schema_name = 'private') THEN
+    -- Rafraîchir les vues privées si elles existent
+    IF EXISTS(SELECT 1 FROM information_schema.tables WHERE table_schema = 'private' AND table_name = 'folder_counters') THEN
+      REFRESH MATERIALIZED VIEW CONCURRENTLY private.folder_counters;
+    END IF;
+    
+    IF EXISTS(SELECT 1 FROM information_schema.tables WHERE table_schema = 'private' AND table_name = 'folder_attention_required') THEN  
+      REFRESH MATERIALIZED VIEW private.folder_attention_required;
+    END IF;
+  END IF;
   
   -- Log la réactualisation si nécessaire
   RAISE NOTICE 'Toutes les vues matérialisées des dossiers ont été rafraîchies à %', now();
@@ -335,7 +346,13 @@ BEGIN
   -- Note: En production, il peut être préférable d'utiliser un système de queue
   -- pour éviter de bloquer les transactions
   
-  PERFORM public.refresh_folder_views_if_needed();
+  -- Appeler seulement si la fonction existe (pour éviter les erreurs lors des migrations)
+  BEGIN
+    PERFORM public.refresh_folder_views_if_needed();
+  EXCEPTION WHEN undefined_function THEN
+    -- Ignorer si la fonction n'existe pas encore (pendant les migrations)
+    NULL;
+  END;
   
   RETURN COALESCE(NEW, OLD);
 END;

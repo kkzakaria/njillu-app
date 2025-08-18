@@ -122,37 +122,34 @@ BEGIN
   RAISE NOTICE '🧪 TEST CRITIQUE: Insertion sans folder_number...';
   
   -- Tentative d'insertion sans folder_number (doit auto-générer)
+  DECLARE
+    test_folder_id uuid;
+    generated_number varchar(15);
   BEGIN
     INSERT INTO folders (
       transport_type,
       folder_date,
-      shipper_name,
+      title,
       status
     ) VALUES (
       'M'::transport_type_enum,
       CURRENT_DATE,
       'Test Auto-Generation',
-      'brouillon'::folder_status_enum
-    );
+      'draft'::folder_status_enum
+    ) RETURNING id INTO test_folder_id;
     
     RAISE NOTICE '✅ SUCCÈS: Auto-génération folder_number fonctionne !';
     
     -- Récupérer le numéro généré pour validation
-    DECLARE
-      generated_number varchar(15);
-    BEGIN
-      SELECT folder_number INTO generated_number 
-      FROM folders 
-      WHERE shipper_name = 'Test Auto-Generation' 
-      ORDER BY created_at DESC 
-      LIMIT 1;
-      
-      RAISE NOTICE '📋 Numéro généré: %', generated_number;
-      
-      -- Nettoyer le test
-      DELETE FROM folders WHERE shipper_name = 'Test Auto-Generation';
-      RAISE NOTICE '🧹 Test nettoyé';
-    END;
+    SELECT folder_number INTO generated_number 
+    FROM folders 
+    WHERE id = test_folder_id;
+    
+    RAISE NOTICE '📋 Numéro généré: %', generated_number;
+    
+    -- Nettoyer le test
+    DELETE FROM folders WHERE id = test_folder_id;
+    RAISE NOTICE '🧹 Test nettoyé';
     
   EXCEPTION
     WHEN OTHERS THEN
