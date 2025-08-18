@@ -43,3 +43,6 @@ next-env.d.ts
 
 #BL data set
 /BL/
+
+#Playwright-mcp
+/.playwright-mcp
