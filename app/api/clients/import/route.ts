@@ -147,7 +147,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           result.success 
             ? createSuccessResponse(result, `Test passed: All ${importConfig.data.length} clients are valid for import`)
-            : createErrorResponse(422, `Test failed: ${result.error_count} validation errors found`, result),
+            : createErrorResponse(422, `Test failed: ${result.error_count} validation errors found`, result as unknown as Record<string, unknown>),
           { 
             status: result.success ? 200 : 422,
             headers: {
@@ -164,7 +164,7 @@ export async function POST(request: NextRequest) {
       if (result.error_count > 0) {
         result.success = false;
         return NextResponse.json(
-          createErrorResponse(422, `Import failed: ${result.error_count} validation errors found`, result),
+          createErrorResponse(422, `Import failed: ${result.error_count} validation errors found`, result as unknown as Record<string, unknown>),
           { 
             status: 422,
             headers: {
@@ -214,14 +214,12 @@ export async function POST(request: NextRequest) {
               // Update existing client
               try {
                 const existingClient = existingClientByEmail || existingClientBySiret;
+                // Remove creation fields from update data
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { created_at, created_by, ...updateData } = clientData;
                 await ClientService.update({
                   client_id: existingClient!.id,
-                  data: {
-                    ...clientData,
-                    // Preserve original creation info
-                    created_at: undefined,
-                    created_by: undefined
-                  }
+                  data: updateData
                 });
                 result.updated_ids.push(existingClient!.id);
                 result.updated_count++;
@@ -262,7 +260,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       result.success 
         ? createSuccessResponse(result, `Import completed. Created: ${result.created_count}, Updated: ${result.updated_count}, Skipped: ${result.skipped_count}, Errors: ${result.error_count}`)
-        : createErrorResponse(status, `Import completed with errors. Created: ${result.created_count}, Updated: ${result.updated_count}, Skipped: ${result.skipped_count}, Errors: ${result.error_count}`, result),
+        : createErrorResponse(status, `Import completed with errors. Created: ${result.created_count}, Updated: ${result.updated_count}, Skipped: ${result.skipped_count}, Errors: ${result.error_count}`, result as unknown as Record<string, unknown>),
       { 
         status,
         headers: {
