@@ -257,7 +257,7 @@ async function generateExportData(
   };
 
   const rows = clients.map(client => {
-    const row: Record<string, any> = {};
+    const row: Record<string, string | number> = {};
     
     fields.forEach(field => {
       switch (field) {
@@ -272,7 +272,8 @@ async function generateExportData(
           row[field] = new Date(client[field]).toLocaleDateString(language === 'fr' ? 'fr-FR' : language === 'es' ? 'es-ES' : 'en-US');
           break;
         default:
-          row[field] = (client as any)[field] || '';
+          // Use keyof to ensure type safety
+          row[field] = (client as Record<string, string | number | undefined>)[field] || '';
       }
     });
     

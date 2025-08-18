@@ -8,6 +8,15 @@ import { createClient } from '@/lib/supabase/server';
 import { ClientService, ClientSearchService, ClientValidationService } from '@/lib/services/clients';
 import type { CreateClientData, ClientSearchParams } from '@/types/clients/operations';
 import type { ApiResponse } from '@/types/shared';
+import type { 
+  ClientType, 
+  ClientStatus, 
+  CountryCode, 
+  Industry, 
+  ClientPriority, 
+  LanguageCode,
+  ClientSortField 
+} from '@/types/clients/enums';
 
 // CORS headers for all responses
 const corsHeaders = {
@@ -51,13 +60,13 @@ export async function GET(request: NextRequest) {
     
     const params: ClientSearchParams = {
       search_term: searchParams.get('search') || undefined,
-      client_types: searchParams.get('client_types')?.split(',').filter(Boolean) as any[] || undefined,
-      statuses: searchParams.get('statuses')?.split(',').filter(Boolean) as any[] || undefined,
-      countries: searchParams.get('countries')?.split(',').filter(Boolean) as any[] || undefined,
-      industries: searchParams.get('industries')?.split(',').filter(Boolean) as any[] || undefined,
-      priorities: searchParams.get('priorities')?.split(',').filter(Boolean) as any[] || undefined,
-      languages: searchParams.get('languages')?.split(',').filter(Boolean) as any[] || undefined,
-      sort_field: (searchParams.get('sort_field') as any) || 'created_at',
+      client_types: searchParams.get('client_types')?.split(',').filter(Boolean) as ClientType[] || undefined,
+      statuses: searchParams.get('statuses')?.split(',').filter(Boolean) as ClientStatus[] || undefined,
+      countries: searchParams.get('countries')?.split(',').filter(Boolean) as CountryCode[] || undefined,
+      industries: searchParams.get('industries')?.split(',').filter(Boolean) as Industry[] || undefined,
+      priorities: searchParams.get('priorities')?.split(',').filter(Boolean) as ClientPriority[] || undefined,
+      languages: searchParams.get('languages')?.split(',').filter(Boolean) as LanguageCode[] || undefined,
+      sort_field: (searchParams.get('sort_field') as ClientSortField) || 'created_at',
       sort_direction: (searchParams.get('sort_direction') as 'asc' | 'desc') || 'desc',
       page: parseInt(searchParams.get('page') || '1'),
       page_size: Math.min(parseInt(searchParams.get('page_size') || '50'), 100),

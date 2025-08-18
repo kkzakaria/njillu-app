@@ -17,10 +17,10 @@ const corsHeaders = {
 };
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string;
     contactId: string;
-  };
+  }>;
 }
 
 /**
@@ -56,8 +56,7 @@ export async function PUT(
       );
     }
 
-    const clientId = params.id;
-    const contactId = params.contactId;
+    const { id: clientId, contactId } = await params;
     
     if (!clientId || !contactId) {
       return NextResponse.json(
@@ -137,7 +136,8 @@ export async function PUT(
     );
 
   } catch (error) {
-    console.error(`PUT /api/clients/${params.id}/contacts/${params.contactId} error:`, error);
+    const { id: clientId, contactId } = await params;
+    console.error(`PUT /api/clients/${clientId}/contacts/${contactId} error:`, error);
     
     // Handle specific known errors
     if (error instanceof Error) {
@@ -220,8 +220,7 @@ export async function DELETE(
       );
     }
 
-    const clientId = params.id;
-    const contactId = params.contactId;
+    const { id: clientId, contactId } = await params;
     
     if (!clientId || !contactId) {
       return NextResponse.json(
@@ -288,7 +287,8 @@ export async function DELETE(
     );
 
   } catch (error) {
-    console.error(`DELETE /api/clients/${params.id}/contacts/${params.contactId} error:`, error);
+    const { id: clientId, contactId } = await params;
+    console.error(`DELETE /api/clients/${clientId}/contacts/${contactId} error:`, error);
     
     // Handle specific known errors
     if (error instanceof Error) {

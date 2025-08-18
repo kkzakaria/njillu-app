@@ -16,9 +16,9 @@ const corsHeaders = {
 };
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 /**
@@ -54,7 +54,7 @@ export async function GET(
       );
     }
 
-    const clientId = params.id;
+    const { id: clientId } = await params;
     if (!clientId) {
       return NextResponse.json(
         {
@@ -92,7 +92,8 @@ export async function GET(
     );
 
   } catch (error) {
-    console.error(`GET /api/clients/${params.id}/statistics error:`, error);
+    const { id: clientId } = await params;
+    console.error(`GET /api/clients/${clientId}/statistics error:`, error);
     return NextResponse.json(
       {
         success: false,

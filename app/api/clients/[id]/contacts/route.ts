@@ -17,9 +17,9 @@ const corsHeaders = {
 };
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 /**
@@ -55,7 +55,7 @@ export async function POST(
       );
     }
 
-    const clientId = params.id;
+    const { id: clientId } = await params;
     if (!clientId) {
       return NextResponse.json(
         {
@@ -149,7 +149,8 @@ export async function POST(
     );
 
   } catch (error) {
-    console.error(`POST /api/clients/${params.id}/contacts error:`, error);
+    const { id: clientId } = await params;
+    console.error(`POST /api/clients/${clientId}/contacts error:`, error);
     
     // Handle specific known errors
     if (error instanceof Error) {

@@ -99,6 +99,7 @@ export async function GET(
     );
 
   } catch (error) {
+    const { id: clientId } = await params;
     console.error(`GET /api/clients/${clientId} error:`, error);
     return NextResponse.json(
       {
@@ -221,6 +222,7 @@ export async function PUT(
     );
 
   } catch (error) {
+    const { id: clientId } = await params;
     console.error(`PUT /api/clients/${clientId} error:`, error);
     
     // Handle specific known errors
@@ -314,7 +316,7 @@ export async function DELETE(
       deletion_type: (searchParams.get('type') as 'soft' | 'hard') || 'soft',
       reason: searchParams.get('reason') || undefined,
       force: searchParams.get('force') === 'true',
-      handle_folders: (searchParams.get('handle_folders') as any) || 'keep',
+      handle_folders: (searchParams.get('handle_folders') as 'keep' | 'transfer' | 'archive') || 'keep',
       transfer_to_client_id: searchParams.get('transfer_to') || undefined
     };
 
@@ -343,6 +345,7 @@ export async function DELETE(
     );
 
   } catch (error) {
+    const { id: clientId } = await params;
     console.error(`DELETE /api/clients/${clientId} error:`, error);
     
     // Handle specific known errors
