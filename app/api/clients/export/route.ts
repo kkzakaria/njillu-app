@@ -241,7 +241,7 @@ async function generateExportData(
           break;
         default:
           // Use keyof to ensure type safety
-          row[field] = (client as Record<string, string | number | undefined>)[field] || '';
+          row[field] = (client as unknown as Record<string, string | number | undefined>)[field] || '';
       }
     });
     
