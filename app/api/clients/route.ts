@@ -145,7 +145,7 @@ export async function POST(request: NextRequest) {
     let createData: CreateClientData;
     try {
       createData = await request.json();
-    } catch (_parseError) {
+    } catch {
       return NextResponse.json(
         createErrorResponse(400, 'Invalid JSON in request body'),
         { status: 400, headers: corsHeaders }
@@ -163,8 +163,8 @@ export async function POST(request: NextRequest) {
     if (!validation.is_valid) {
       return NextResponse.json(
         createValidationErrorResponse(
-          validation.errors.map(err => ({ message: err })),
-          validation.warnings?.map(warn => ({ message: warn }))
+          validation.errors,
+          validation.warnings
         ),
         { status: 422, headers: corsHeaders }
       );
