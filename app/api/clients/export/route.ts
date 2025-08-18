@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
     let exportConfig: ClientExportConfig;
     try {
       exportConfig = await request.json();
-    } catch (_parseError) {
+    } catch {
       return NextResponse.json(
         createErrorResponse(400, 'Invalid JSON in request body'),
         { status: 400, headers: corsHeaders }

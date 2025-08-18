@@ -63,7 +63,7 @@ export async function POST(
     let contactData: Omit<ContactPerson, 'is_active'> & { is_active?: boolean };
     try {
       contactData = await request.json();
-    } catch (_parseError) {
+    } catch {
       return NextResponse.json(
         createErrorResponse(400, 'Invalid JSON in request body'),
         { status: 400, headers: corsHeaders }

@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     let batchOperation: ClientBatchOperation;
     try {
       batchOperation = await request.json();
-    } catch (_parseError) {
+    } catch {
       return NextResponse.json(
         createErrorResponse(400, 'Invalid JSON in request body'),
         { status: 400, headers: corsHeaders }
@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       result.success_count > 0
         ? createSuccessResponse(result, `Batch operation completed. ${result.success_count} successful, ${result.error_count} failed, ${result.warning_count} warnings`)
-        : createErrorResponse(status, `Batch operation failed. ${result.success_count} successful, ${result.error_count} failed, ${result.warning_count} warnings`, result),
+        : createErrorResponse(status, `Batch operation failed. ${result.success_count} successful, ${result.error_count} failed, ${result.warning_count} warnings`, result as Record<string, unknown>),
       { 
         status,
         headers: {

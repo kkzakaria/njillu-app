@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     
     try {
       requestData = await request.json();
-    } catch (_parseError) {
+    } catch {
       return NextResponse.json(
         createErrorResponse(400, 'Invalid JSON in request body'),
         { status: 400, headers: corsHeaders }
