@@ -3,7 +3,7 @@
  * /api/clients/stats
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createErrorResponse, createSuccessResponse } from '@/lib/utils/api-responses';
 
@@ -27,7 +27,7 @@ export async function OPTIONS() {
 /**
  * GET - Get global client statistics
  */
-export async function GET(_request: NextRequest) {
+export async function GET() {
   try {
     // Authentication check
     const supabase = await createClient();
