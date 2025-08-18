@@ -38,7 +38,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useClients } from '@/hooks/useTranslation';
 import { Link } from '@/i18n/navigation';
 import { formatDistanceToNow } from 'date-fns';
-import { fr, en, es } from 'date-fns/locale';
+import { fr, enUS, es } from 'date-fns/locale';
 import { useLocale } from 'next-intl';
 import type { 
   ClientSummary, 
@@ -61,7 +61,7 @@ interface ClientTableProps {
   searchParams: ClientSearchParams;
 }
 
-const dateLocaleMap = { fr, en, es };
+const dateLocaleMap = { fr, en: enUS, es };
 
 export function ClientTable({
   clients,
@@ -310,7 +310,7 @@ export function ClientTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {clients.map((client) => (
+          {(clients || []).map((client) => (
             <TableRow 
               key={client.id}
               className={`cursor-pointer hover:bg-muted/50 ${

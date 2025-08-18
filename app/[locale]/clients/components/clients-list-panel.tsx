@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { Plus, Search, Filter, Download, Upload, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -55,62 +55,65 @@ export function ClientsListPanel({
     businesses: 0
   });
 
-  // Apply status filter
-  const effectiveSearchParams = useMemo(() => {
-    const params = { ...searchParams };
-    if (statusFilter && statusFilter.length > 0) {
-      params.filters = [
-        ...params.filters.filter(f => f.field !== 'status'),
-        {
-          field: 'status',
-          operator: 'in',
-          value: statusFilter
-        }
-      ];
-    }
-    return params;
-  }, [searchParams, statusFilter]);
+  // Stabilize statusFilter to prevent unnecessary re-renders
+  const stableStatusFilter = useMemo(() => statusFilter, [JSON.stringify(statusFilter)]);
 
   // Fetch clients
   useEffect(() => {
+    const fetchClients = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const queryParams = new URLSearchParams();
+        queryParams.append('page', searchParams.page.toString());
+        queryParams.append('page_size', searchParams.page_size.toString());
+        queryParams.append('sort_field', searchParams.sort_field);
+        queryParams.append('sort_direction', searchParams.sort_direction);
+        
+        if (searchParams.query) {
+          queryParams.append('search_term', searchParams.query);
+        }
+        
+        // Add status filter if provided
+        if (stableStatusFilter && stableStatusFilter.length > 0) {
+          queryParams.append('statuses', stableStatusFilter.join(','));
+        }
+        
+        // Add other filters
+        searchParams.filters.forEach(filter => {
+          if (filter.field !== 'status' && Array.isArray(filter.value)) {
+            queryParams.append(`${filter.field}s`, filter.value.join(','));
+          }
+        });
+
+        const response = await fetch(`/api/clients?${queryParams}`);
+        if (!response.ok) throw new Error('Failed to fetch clients');
+
+        const data = await response.json();
+        setClients(data.data.clients || []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchClients();
-  }, [effectiveSearchParams]);
+  }, [
+    searchParams.query,
+    searchParams.page, 
+    searchParams.page_size, 
+    searchParams.sort_field, 
+    searchParams.sort_direction,
+    JSON.stringify(searchParams.filters),
+    stableStatusFilter
+  ]);
 
   // Fetch statistics
   useEffect(() => {
     fetchStats();
   }, []);
-
-  const fetchClients = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const queryParams = new URLSearchParams();
-      queryParams.append('page', effectiveSearchParams.page.toString());
-      queryParams.append('page_size', effectiveSearchParams.page_size.toString());
-      queryParams.append('sort_field', effectiveSearchParams.sort_field);
-      queryParams.append('sort_direction', effectiveSearchParams.sort_direction);
-      
-      if (effectiveSearchParams.query) {
-        queryParams.append('query', effectiveSearchParams.query);
-      }
-      
-      if (effectiveSearchParams.filters.length > 0) {
-        queryParams.append('filters', JSON.stringify(effectiveSearchParams.filters));
-      }
-
-      const response = await fetch(`/api/clients?${queryParams}`);
-      if (!response.ok) throw new Error('Failed to fetch clients');
-
-      const data = await response.json();
-      setClients(data.data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const fetchStats = async () => {
     try {
@@ -124,26 +127,26 @@ export function ClientsListPanel({
     }
   };
 
-  const handleSearch = (query: string) => {
+  const handleSearch = useCallback((query: string) => {
     setSearchParams(prev => ({ ...prev, query, page: 1 }));
-  };
+  }, []);
 
-  const handleFilterChange = (filters: any[]) => {
+  const handleFilterChange = useCallback((filters: any[]) => {
     setSearchParams(prev => ({ ...prev, filters, page: 1 }));
-  };
+  }, []);
 
-  const handleSort = (field: string, direction: 'asc' | 'desc') => {
+  const handleSort = useCallback((field: string, direction: 'asc' | 'desc') => {
     setSearchParams(prev => ({ 
       ...prev, 
       sort_field: field, 
       sort_direction: direction,
       page: 1 
     }));
-  };
+  }, []);
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = useCallback((page: number) => {
     setSearchParams(prev => ({ ...prev, page }));
-  };
+  }, []);
 
   const handleSelectionChange = (ids: string[]) => {
     setSelectedIds(ids);
@@ -326,7 +329,7 @@ export function ClientsListPanel({
             onSort={handleSort}
             onPageChange={handlePageChange}
             loading={loading}
-            searchParams={effectiveSearchParams}
+            searchParams={searchParams}
           />
         )}
       </div>

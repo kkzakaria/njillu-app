@@ -32,16 +32,20 @@ import { useClients } from '@/hooks/useTranslation';
 import { Link } from '@/i18n/navigation';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { fr, enUS, es } from 'date-fns/locale';
+import { useLocale } from 'next-intl';
 import type { ClientDetail } from '@/types/clients';
 
 interface ClientDetailPageProps {
   clientId: string;
 }
 
+const dateLocaleMap = { fr, en: enUS, es };
+
 export function ClientDetailPage({ clientId }: ClientDetailPageProps) {
   const t = useClients();
   const router = useRouter();
+  const locale = useLocale() as keyof typeof dateLocaleMap;
   const [client, setClient] = useState<ClientDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -146,7 +150,9 @@ export function ClientDetailPage({ clientId }: ClientDetailPageProps) {
 
   const formatDate = (dateString: string) => {
     try {
-      return format(new Date(dateString), 'PPP', { locale: fr });
+      return format(new Date(dateString), 'PPP', { 
+        locale: dateLocaleMap[locale] 
+      });
     } catch {
       return dateString;
     }

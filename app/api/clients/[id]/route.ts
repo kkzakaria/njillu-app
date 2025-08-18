@@ -17,9 +17,9 @@ const corsHeaders = {
 };
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 /**
@@ -55,7 +55,7 @@ export async function GET(
       );
     }
 
-    const clientId = params.id;
+    const { id: clientId } = await params;
     if (!clientId) {
       return NextResponse.json(
         {
@@ -99,7 +99,7 @@ export async function GET(
     );
 
   } catch (error) {
-    console.error(`GET /api/clients/${params.id} error:`, error);
+    console.error(`GET /api/clients/${clientId} error:`, error);
     return NextResponse.json(
       {
         success: false,
@@ -134,7 +134,7 @@ export async function PUT(
       );
     }
 
-    const clientId = params.id;
+    const { id: clientId } = await params;
     if (!clientId) {
       return NextResponse.json(
         {
@@ -221,7 +221,7 @@ export async function PUT(
     );
 
   } catch (error) {
-    console.error(`PUT /api/clients/${params.id} error:`, error);
+    console.error(`PUT /api/clients/${clientId} error:`, error);
     
     // Handle specific known errors
     if (error instanceof Error) {
@@ -282,7 +282,7 @@ export async function DELETE(
       );
     }
 
-    const clientId = params.id;
+    const { id: clientId } = await params;
     if (!clientId) {
       return NextResponse.json(
         {
@@ -343,7 +343,7 @@ export async function DELETE(
     );
 
   } catch (error) {
-    console.error(`DELETE /api/clients/${params.id} error:`, error);
+    console.error(`DELETE /api/clients/${clientId} error:`, error);
     
     // Handle specific known errors
     if (error instanceof Error) {

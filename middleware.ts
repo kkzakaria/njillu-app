@@ -6,15 +6,20 @@ import { routing } from './i18n/routing';
 const intlMiddleware = createIntlMiddleware(routing);
 
 export async function middleware(request: NextRequest) {
-  // Handle internationalization first
+  // Handle API routes separately (no internationalization, just auth)
+  if (request.nextUrl.pathname.startsWith('/api/')) {
+    return await updateSession(request);
+  }
+  
+  // Handle non-API routes with internationalization first
   const intlResponse = intlMiddleware(request);
   
-  // If intl middleware wants to redirect, let it handle the request
+  // If intl middleware returns a redirect, return it directly
   if (intlResponse instanceof Response) {
     return intlResponse;
   }
   
-  // Otherwise, continue with Supabase auth middleware
+  // Otherwise, apply Supabase auth middleware
   return await updateSession(request);
 }
 
