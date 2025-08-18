@@ -7,7 +7,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { ClientService, ClientValidationService } from '@/lib/services/clients';
 import type { UpdateClientData, DeleteClientParams } from '@/types/clients/operations';
-import type { ApiResponse } from '@/types/shared';
 import { 
   createErrorResponse, 
   createSuccessResponse, 
@@ -137,7 +136,7 @@ export async function PUT(
     let updateData: UpdateClientData;
     try {
       updateData = await request.json();
-    } catch (parseError) {
+    } catch (_parseError) {
       return NextResponse.json(
         createErrorResponse(400, 'Invalid JSON in request body'),
         { status: 400, headers: corsHeaders }

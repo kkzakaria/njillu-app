@@ -12,7 +12,6 @@ import type {
   ClientSearchParams 
 } from '@/types/clients/operations';
 import type { ClientSummary } from '@/types/clients/core';
-import type { ApiResponse } from '@/types/shared';
 import { createErrorResponse, createSuccessResponse } from '@/lib/utils/api-responses';
 
 // CORS headers for all responses
@@ -52,7 +51,7 @@ export async function POST(request: NextRequest) {
     let exportConfig: ClientExportConfig;
     try {
       exportConfig = await request.json();
-    } catch (parseError) {
+    } catch (_parseError) {
       return NextResponse.json(
         createErrorResponse(400, 'Invalid JSON in request body'),
         { status: 400, headers: corsHeaders }

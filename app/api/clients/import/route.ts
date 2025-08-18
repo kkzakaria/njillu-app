@@ -8,10 +8,8 @@ import { createClient } from '@/lib/supabase/server';
 import { ClientService, ClientValidationService } from '@/lib/services/clients';
 import type { 
   ClientImportConfig, 
-  ClientImportResult, 
-  CreateClientData 
+  ClientImportResult
 } from '@/types/clients/operations';
-import type { ApiResponse } from '@/types/shared';
 import { createErrorResponse, createSuccessResponse } from '@/lib/utils/api-responses';
 
 // CORS headers for all responses
@@ -53,7 +51,7 @@ export async function POST(request: NextRequest) {
     let importConfig: ClientImportConfig;
     try {
       importConfig = await request.json();
-    } catch (parseError) {
+    } catch (_parseError) {
       return NextResponse.json(
         createErrorResponse(400, 'Invalid JSON in request body'),
         { status: 400, headers: corsHeaders }

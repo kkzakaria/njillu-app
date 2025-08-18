@@ -7,7 +7,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { ClientValidationService } from '@/lib/services/clients';
 import type { CreateClientData, UpdateClientData, ClientValidationOptions } from '@/types/clients/operations';
-import type { ApiResponse } from '@/types/shared';
 import { createErrorResponse, createSuccessResponse, createValidationErrorResponse } from '@/lib/utils/api-responses';
 
 // CORS headers for all responses
@@ -53,7 +52,7 @@ export async function POST(request: NextRequest) {
     
     try {
       requestData = await request.json();
-    } catch (parseError) {
+    } catch (_parseError) {
       return NextResponse.json(
         createErrorResponse(400, 'Invalid JSON in request body'),
         { status: 400, headers: corsHeaders }
@@ -115,13 +114,9 @@ export async function POST(request: NextRequest) {
     const status = validationResult.is_valid ? 200 : 422;
 
     return NextResponse.json(
-      {
-        status: validationResult.is_valid ? 'success' : 'error',
-        data: validationResult,
-        messages: [validationResult.is_valid 
-          ? 'Validation passed successfully' 
-          : `Validation failed with ${validationResult.errors.length} error(s) and ${validationResult.warnings.length} warning(s)`]
-      } as ApiResponse<typeof validationResult>,
+      validationResult.is_valid
+        ? createSuccessResponse(validationResult, 'Validation passed successfully')
+        : createValidationErrorResponse(validationResult.errors, validationResult.warnings),
       { 
         status,
         headers: {

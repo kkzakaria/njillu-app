@@ -7,7 +7,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { ContactService } from '@/lib/services/clients';
 import type { ContactPerson } from '@/types/clients/core';
-import type { ApiResponse } from '@/types/shared';
 import { createErrorResponse, createSuccessResponse } from '@/lib/utils/api-responses';
 
 // CORS headers for all responses
@@ -64,7 +63,7 @@ export async function POST(
     let contactData: Omit<ContactPerson, 'is_active'> & { is_active?: boolean };
     try {
       contactData = await request.json();
-    } catch (parseError) {
+    } catch (_parseError) {
       return NextResponse.json(
         createErrorResponse(400, 'Invalid JSON in request body'),
         { status: 400, headers: corsHeaders }

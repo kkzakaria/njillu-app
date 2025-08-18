@@ -7,7 +7,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { ClientBatchService } from '@/lib/services/clients';
 import type { ClientBatchOperation } from '@/types/clients/operations';
-import type { ApiResponse } from '@/types/shared';
 import { createErrorResponse, createSuccessResponse } from '@/lib/utils/api-responses';
 
 // CORS headers for all responses
@@ -49,7 +48,7 @@ export async function POST(request: NextRequest) {
     let batchOperation: ClientBatchOperation;
     try {
       batchOperation = await request.json();
-    } catch (parseError) {
+    } catch (_parseError) {
       return NextResponse.json(
         createErrorResponse(400, 'Invalid JSON in request body'),
         { status: 400, headers: corsHeaders }
@@ -120,11 +119,9 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(
-      {
-        status: result.success_count > 0 ? 'success' : 'error',
-        data: result,
-        messages: [`Batch operation completed. ${result.success_count} successful, ${result.error_count} failed, ${result.warning_count} warnings`]
-      } as ApiResponse<typeof result>,
+      result.success_count > 0
+        ? createSuccessResponse(result, `Batch operation completed. ${result.success_count} successful, ${result.error_count} failed, ${result.warning_count} warnings`)
+        : createErrorResponse(status, `Batch operation failed. ${result.success_count} successful, ${result.error_count} failed, ${result.warning_count} warnings`, result),
       { 
         status,
         headers: {
