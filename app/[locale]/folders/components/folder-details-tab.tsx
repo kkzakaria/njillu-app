@@ -221,189 +221,194 @@ export const FolderDetailsTab: React.FC<FolderDetailsTabProps> = ({
   }
 
   return (
-    <div className={cn("w-full p-6", className)}>
-      <Tabs defaultValue="info" className="w-full">
-        <ScrollArea>
-          <TabsList className="mb-3">
-            <TabsTrigger value="info" className="group">
-              <Info
-                className="-ms-0.5 me-1.5 opacity-60"
-                size={16}
-                aria-hidden="true"
-              />
-              Informations
-              <Badge
-                className="bg-primary/15 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
-                variant="secondary"
-              >
-                {indicators.completionPercentage}
-              </Badge>
-            </TabsTrigger>
-            
-            <TabsTrigger value="containers" className="group">
-              <Package
-                className="-ms-0.5 me-1.5 opacity-60"
-                size={16}
-                aria-hidden="true"
-              />
-              Conteneurs
-              {indicators.hasDelayedContainers && (
+    <div className={cn("w-full h-full flex flex-col p-6", className)}>
+      <Tabs defaultValue="info" className="w-full h-full flex flex-col">
+        {/* Onglets fixes en haut */}
+        <div className="flex-shrink-0">
+          <ScrollArea>
+            <TabsList className="mb-3">
+              <TabsTrigger value="info" className="group">
+                <Info
+                  className="-ms-0.5 me-1.5 opacity-60"
+                  size={16}
+                  aria-hidden="true"
+                />
+                Informations
+                <Badge
+                  className="bg-primary/15 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
+                  variant="secondary"
+                >
+                  {indicators.completionPercentage}
+                </Badge>
+              </TabsTrigger>
+              
+              <TabsTrigger value="containers" className="group">
+                <Package
+                  className="-ms-0.5 me-1.5 opacity-60"
+                  size={16}
+                  aria-hidden="true"
+                />
+                Conteneurs
+                {indicators.hasDelayedContainers && (
+                  <Badge 
+                    className="ms-1.5 transition-opacity group-data-[state=inactive]:opacity-50"
+                    variant="destructive"
+                  >
+                    Retard
+                  </Badge>
+                )}
+              </TabsTrigger>
+              
+              <TabsTrigger value="documents" className="group">
+                <FileText
+                  className="-ms-0.5 me-1.5 opacity-60"
+                  size={16}
+                  aria-hidden="true"
+                />
+                Documents
+                {indicators.missingDocuments > 0 && (
+                  <Badge
+                    className="ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
+                    variant="outline"
+                  >
+                    {indicators.missingDocuments}
+                  </Badge>
+                )}
+              </TabsTrigger>
+              
+              <TabsTrigger value="history" className="group">
+                <History
+                  className="-ms-0.5 me-1.5 opacity-60"
+                  size={16}
+                  aria-hidden="true"
+                />
+                Historique
                 <Badge 
                   className="ms-1.5 transition-opacity group-data-[state=inactive]:opacity-50"
-                  variant="destructive"
                 >
-                  Retard
+                  {indicators.lastActivity}
                 </Badge>
-              )}
-            </TabsTrigger>
-            
-            <TabsTrigger value="documents" className="group">
-              <FileText
-                className="-ms-0.5 me-1.5 opacity-60"
-                size={16}
-                aria-hidden="true"
-              />
-              Documents
-              {indicators.missingDocuments > 0 && (
+              </TabsTrigger>
+              
+              <TabsTrigger value="workflow" className="group">
+                <CheckCircle
+                  className="-ms-0.5 me-1.5 opacity-60"
+                  size={16}
+                  aria-hidden="true"
+                />
+                Workflow
+                <Badge
+                  className="ms-1.5 transition-opacity group-data-[state=inactive]:opacity-50"
+                >
+                  {indicators.currentStage === 'elaboration_fdi' ? 'FDI' : 
+                   indicators.currentStage === 'revision_facture_commerciale' ? 'Docs' :
+                   indicators.currentStage === 'declaration_douaniere' ? 'Douane' : 'En cours'}
+                </Badge>
+              </TabsTrigger>
+              
+              <TabsTrigger value="team" className="group">
+                <Users
+                  className="-ms-0.5 me-1.5 opacity-60"
+                  size={16}
+                  aria-hidden="true"
+                />
+                Équipe
                 <Badge
                   className="ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
-                  variant="outline"
+                  variant="secondary"
                 >
-                  {indicators.missingDocuments}
+                  {indicators.teamCount}
                 </Badge>
+              </TabsTrigger>
+            </TabsList>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+        </div>
+
+        {/* Contenu des onglets - scrollable */}
+        <div className="flex-1 overflow-auto">
+          <TabsContent value="info" className="mt-3 h-full">
+            <FolderInfoTab selectedFolder={selectedFolder} />
+          </TabsContent>
+
+          <TabsContent value="containers" className="mt-3 h-full">
+            <ContainersTab selectedFolder={selectedFolder} />
+          </TabsContent>
+
+          <TabsContent value="documents" className="mt-3 h-full">
+            <div className="p-6 border rounded-lg bg-gray-50">
+              <h3 className="text-lg font-semibold mb-4">Documents par étapes</h3>
+              <p className="text-gray-600">
+                Placeholder pour la gestion des documents organisés par workflow.
+                Remplacera l'onglet Documents existant avec une approche par étapes.
+              </p>
+              {indicators.missingDocuments > 0 && (
+                <div className="mt-4 p-3 bg-orange-50 border border-orange-200 rounded">
+                  <div className="flex items-center">
+                    <FileText className="w-4 h-4 text-orange-600 mr-2" />
+                    <span className="text-orange-800 text-sm font-medium">
+                      {indicators.missingDocuments} document(s) manquant(s)
+                    </span>
+                  </div>
+                </div>
               )}
-            </TabsTrigger>
-            
-            <TabsTrigger value="history" className="group">
-              <History
-                className="-ms-0.5 me-1.5 opacity-60"
-                size={16}
-                aria-hidden="true"
-              />
-              Historique
-              <Badge 
-                className="ms-1.5 transition-opacity group-data-[state=inactive]:opacity-50"
-              >
-                {indicators.lastActivity}
-              </Badge>
-            </TabsTrigger>
-            
-            <TabsTrigger value="workflow" className="group">
-              <CheckCircle
-                className="-ms-0.5 me-1.5 opacity-60"
-                size={16}
-                aria-hidden="true"
-              />
-              Workflow
-              <Badge
-                className="ms-1.5 transition-opacity group-data-[state=inactive]:opacity-50"
-              >
-                {indicators.currentStage === 'elaboration_fdi' ? 'FDI' : 
-                 indicators.currentStage === 'revision_facture_commerciale' ? 'Docs' :
-                 indicators.currentStage === 'declaration_douaniere' ? 'Douane' : 'En cours'}
-              </Badge>
-            </TabsTrigger>
-            
-            <TabsTrigger value="team" className="group">
-              <Users
-                className="-ms-0.5 me-1.5 opacity-60"
-                size={16}
-                aria-hidden="true"
-              />
-              Équipe
-              <Badge
-                className="ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
-                variant="secondary"
-              >
-                {indicators.teamCount}
-              </Badge>
-            </TabsTrigger>
-          </TabsList>
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
+            </div>
+          </TabsContent>
 
-        {/* Contenu des onglets */}
-        <TabsContent value="info" className="mt-6">
-          <FolderInfoTab selectedFolder={selectedFolder} />
-        </TabsContent>
-
-        <TabsContent value="containers" className="mt-6">
-          <ContainersTab selectedFolder={selectedFolder} />
-        </TabsContent>
-
-        <TabsContent value="documents" className="mt-6">
-          <div className="p-6 border rounded-lg bg-gray-50">
-            <h3 className="text-lg font-semibold mb-4">Documents par étapes</h3>
-            <p className="text-gray-600">
-              Placeholder pour la gestion des documents organisés par workflow.
-              Remplacera l'onglet Documents existant avec une approche par étapes.
-            </p>
-            {indicators.missingDocuments > 0 && (
-              <div className="mt-4 p-3 bg-orange-50 border border-orange-200 rounded">
+          <TabsContent value="history" className="mt-3 h-full">
+            <div className="p-6 border rounded-lg bg-gray-50">
+              <h3 className="text-lg font-semibold mb-4">Timeline des événements</h3>
+              <p className="text-gray-600">
+                Placeholder pour l'historique amélioré.
+                Remplacera l'onglet Historique existant avec une timeline enrichie.
+              </p>
+              <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded">
                 <div className="flex items-center">
-                  <FileText className="w-4 h-4 text-orange-600 mr-2" />
-                  <span className="text-orange-800 text-sm font-medium">
-                    {indicators.missingDocuments} document(s) manquant(s)
+                  <Clock className="w-4 h-4 text-green-600 mr-2" />
+                  <span className="text-green-800 text-sm font-medium">
+                    Dernière activité: {indicators.lastActivity}
                   </span>
                 </div>
               </div>
-            )}
-          </div>
-        </TabsContent>
+            </div>
+          </TabsContent>
 
-        <TabsContent value="history" className="mt-6">
-          <div className="p-6 border rounded-lg bg-gray-50">
-            <h3 className="text-lg font-semibold mb-4">Timeline des événements</h3>
-            <p className="text-gray-600">
-              Placeholder pour l'historique amélioré.
-              Remplacera l'onglet Historique existant avec une timeline enrichie.
-            </p>
-            <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded">
-              <div className="flex items-center">
-                <Clock className="w-4 h-4 text-green-600 mr-2" />
-                <span className="text-green-800 text-sm font-medium">
-                  Dernière activité: {indicators.lastActivity}
-                </span>
+          <TabsContent value="workflow" className="mt-3 h-full">
+            <div className="p-6 border rounded-lg bg-gray-50">
+              <h3 className="text-lg font-semibold mb-4">ProcessingTimeline (8 étapes)</h3>
+              <p className="text-gray-600">
+                Placeholder pour le composant ProcessingTimeline.
+                Affichera les 8 étapes de traitement avec progression visuelle.
+              </p>
+              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
+                <div className="flex items-center">
+                  <CheckCircle className="w-4 h-4 text-blue-600 mr-2" />
+                  <span className="text-blue-800 text-sm font-medium">
+                    Étape actuelle: {indicators.currentStage}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        </TabsContent>
+          </TabsContent>
 
-        <TabsContent value="workflow" className="mt-6">
-          <div className="p-6 border rounded-lg bg-gray-50">
-            <h3 className="text-lg font-semibold mb-4">ProcessingTimeline (8 étapes)</h3>
-            <p className="text-gray-600">
-              Placeholder pour le composant ProcessingTimeline.
-              Affichera les 8 étapes de traitement avec progression visuelle.
-            </p>
-            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
-              <div className="flex items-center">
-                <CheckCircle className="w-4 h-4 text-blue-600 mr-2" />
-                <span className="text-blue-800 text-sm font-medium">
-                  Étape actuelle: {indicators.currentStage}
-                </span>
+          <TabsContent value="team" className="mt-3 h-full">
+            <div className="p-6 border rounded-lg bg-gray-50">
+              <h3 className="text-lg font-semibold mb-4">UserAssignments</h3>
+              <p className="text-gray-600">
+                Placeholder pour le composant UserAssignments.
+                Gérera les assignations d'utilisateurs par rôle et étape.
+              </p>
+              <div className="mt-4 p-3 bg-purple-50 border border-purple-200 rounded">
+                <div className="flex items-center">
+                  <Users className="w-4 h-4 text-purple-600 mr-2" />
+                  <span className="text-purple-800 text-sm font-medium">
+                    {indicators.teamCount} personne(s) assignée(s)
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="team" className="mt-6">
-          <div className="p-6 border rounded-lg bg-gray-50">
-            <h3 className="text-lg font-semibold mb-4">UserAssignments</h3>
-            <p className="text-gray-600">
-              Placeholder pour le composant UserAssignments.
-              Gérera les assignations d'utilisateurs par rôle et étape.
-            </p>
-            <div className="mt-4 p-3 bg-purple-50 border border-purple-200 rounded">
-              <div className="flex items-center">
-                <Users className="w-4 h-4 text-purple-600 mr-2" />
-                <span className="text-purple-800 text-sm font-medium">
-                  {indicators.teamCount} personne(s) assignée(s)
-                </span>
-              </div>
-            </div>
-          </div>
-        </TabsContent>
+          </TabsContent>
+        </div>
       </Tabs>
     </div>
   );
