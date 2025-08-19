@@ -98,6 +98,12 @@ export const deletionPeriodParser = parseAsStringEnum([
 export const clientFiltersParser = parseAsArrayOf(parseAsString).withDefault([]);
 
 // ============================================================================
+// Folder selection parsers
+// ============================================================================
+
+export const selectedFolderParser = parseAsString;
+
+// ============================================================================
 // Utility functions
 // ============================================================================
 

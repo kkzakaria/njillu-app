@@ -30,6 +30,7 @@ import {
   performanceRatingParser,
   archiveAgeParser,
   deletionPeriodParser,
+  selectedFolderParser,
 } from './parsers';
 
 // ============================================================================
@@ -64,6 +65,9 @@ const folderFiltersSchema = {
   
   // Status category (separate from filters but related)
   status: statusCategoryParser,
+  
+  // Folder selection
+  selectedFolder: selectedFolderParser,
 } as const;
 
 // ============================================================================
@@ -83,6 +87,7 @@ export function useFolderFiltersUrl() {
   const filters = useMemo((): FolderFilters => {
     const {
       status, // Extract status separately
+      selectedFolder, // Extract selectedFolder separately
       ...filterData
     } = urlState;
 
@@ -171,6 +176,14 @@ export function useFolderFiltersUrl() {
     setUrlState({ status });
   };
 
+  const setSelectedFolderId = (folderId: string | null) => {
+    setUrlState({ selectedFolder: folderId || undefined });
+  };
+
+  const clearSelectedFolder = () => {
+    setUrlState({ selectedFolder: undefined });
+  };
+
   // ============================================================================
   // Return API
   // ============================================================================
@@ -184,11 +197,14 @@ export function useFolderFiltersUrl() {
   return {
     // State
     ...state,
+    selectedFolderId: urlState.selectedFolder || null,
     
     // Actions
     updateFilters,
     clearAllFilters,
     setStatusCategory,
+    setSelectedFolderId,
+    clearSelectedFolder,
     
     // Raw URL state for advanced use cases
     urlState,
