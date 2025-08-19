@@ -22,7 +22,6 @@ async function loadMessages(locale: string) {
       languageSwitcher,
       folders,
       folderFilters,
-      demo,
       clients
     ] = await Promise.all([
       import(`./messages/${locale}/metadata/app.json`),
@@ -41,7 +40,6 @@ async function loadMessages(locale: string) {
       import(`./messages/${locale}/language/switcher.json`),
       import(`./messages/${locale}/folders.json`),
       import(`./messages/${locale}/folder-filters.json`),
-      import(`./messages/${locale}/demo.json`),
       import(`./messages/${locale}/clients.json`)
     ]);
 
@@ -67,7 +65,6 @@ async function loadMessages(locale: string) {
       language: languageSwitcher.default,
       folders: folders.default,
       'folder-filters': folderFilters.default,
-      demo: demo.default,
       clients: clients.default
     };
   } catch (error) {
