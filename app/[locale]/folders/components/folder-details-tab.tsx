@@ -12,6 +12,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import type { FolderSummary } from '@/types/folders';
@@ -222,67 +223,130 @@ export const FolderDetailsTab: React.FC<FolderDetailsTabProps> = ({
   return (
     <div className={cn("w-full", className)}>
       <Tabs defaultValue="info" className="w-full">
-        <TabsList className="grid w-full grid-cols-6">
-          <TabsTrigger 
-            value="info" 
-            className="flex items-center text-xs px-2 py-2"
-          >
-            <TabIcon icon="info" />
-            <span className="hidden sm:inline">Informations</span>
-            <span className="sm:hidden">Info</span>
-            <CompletionBadge value={indicators.completionPercentage} />
-          </TabsTrigger>
-          
-          <TabsTrigger 
-            value="containers" 
-            className="flex items-center text-xs px-2 py-2"
-          >
-            <TabIcon icon="container" />
-            <span className="hidden sm:inline">Conteneurs</span>
-            <span className="sm:hidden">Cont.</span>
-            <AlertDot show={indicators.hasDelayedContainers} />
-          </TabsTrigger>
-          
-          <TabsTrigger 
-            value="documents" 
-            className="flex items-center text-xs px-2 py-2"
-          >
-            <TabIcon icon="documents" />
-            <span className="hidden sm:inline">Documents</span>
-            <span className="sm:hidden">Docs</span>
-            <CountBadge count={indicators.missingDocuments} variant="warning" />
-          </TabsTrigger>
-          
-          <TabsTrigger 
-            value="history" 
-            className="flex items-center text-xs px-2 py-2"
-          >
-            <TabIcon icon="history" />
-            <span className="hidden sm:inline">Historique</span>
-            <span className="sm:hidden">Hist.</span>
-            <ActivityIndicator lastActivity={indicators.lastActivity} />
-          </TabsTrigger>
-          
-          <TabsTrigger 
-            value="workflow" 
-            className="flex items-center text-xs px-2 py-2"
-          >
-            <TabIcon icon="workflow" />
-            <span className="hidden sm:inline">Workflow</span>
-            <span className="sm:hidden">Work.</span>
-            <StageBadge currentStage={indicators.currentStage} />
-          </TabsTrigger>
-          
-          <TabsTrigger 
-            value="team" 
-            className="flex items-center text-xs px-2 py-2"
-          >
-            <TabIcon icon="team" />
-            <span className="hidden sm:inline">Équipe</span>
-            <span className="sm:hidden">Team</span>
-            <TeamCountBadge count={indicators.teamCount} />
-          </TabsTrigger>
-        </TabsList>
+        <ScrollArea>
+          <TabsList className="mb-3">
+            <TabsTrigger 
+              value="info" 
+              className="group"
+            >
+              <Info
+                className="-ms-0.5 me-1.5 opacity-60"
+                size={16}
+                aria-hidden="true"
+              />
+              <span className="hidden sm:inline">Informations</span>
+              <span className="sm:hidden">Info</span>
+              <Badge
+                className="bg-primary/15 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
+                variant="secondary"
+              >
+                {indicators.completionPercentage}
+              </Badge>
+            </TabsTrigger>
+            
+            <TabsTrigger 
+              value="containers" 
+              className="group"
+            >
+              <Package
+                className="-ms-0.5 me-1.5 opacity-60"
+                size={16}
+                aria-hidden="true"
+              />
+              <span className="hidden sm:inline">Conteneurs</span>
+              <span className="sm:hidden">Cont.</span>
+              {indicators.hasDelayedContainers && (
+                <Badge 
+                  className="ms-1.5 transition-opacity group-data-[state=inactive]:opacity-50"
+                  variant="destructive"
+                >
+                  Retard
+                </Badge>
+              )}
+            </TabsTrigger>
+            
+            <TabsTrigger 
+              value="documents" 
+              className="group"
+            >
+              <FileText
+                className="-ms-0.5 me-1.5 opacity-60"
+                size={16}
+                aria-hidden="true"
+              />
+              <span className="hidden sm:inline">Documents</span>
+              <span className="sm:hidden">Docs</span>
+              {indicators.missingDocuments > 0 && (
+                <Badge
+                  className="ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
+                  variant="outline"
+                >
+                  {indicators.missingDocuments}
+                </Badge>
+              )}
+            </TabsTrigger>
+            
+            <TabsTrigger 
+              value="history" 
+              className="group"
+            >
+              <History
+                className="-ms-0.5 me-1.5 opacity-60"
+                size={16}
+                aria-hidden="true"
+              />
+              <span className="hidden sm:inline">Historique</span>
+              <span className="sm:hidden">Hist.</span>
+              <Badge 
+                className="bg-green-100 text-green-800 ms-1.5 transition-opacity group-data-[state=inactive]:opacity-50"
+                variant="secondary"
+              >
+                {indicators.lastActivity}
+              </Badge>
+            </TabsTrigger>
+            
+            <TabsTrigger 
+              value="workflow" 
+              className="group"
+            >
+              <CheckCircle
+                className="-ms-0.5 me-1.5 opacity-60"
+                size={16}
+                aria-hidden="true"
+              />
+              <span className="hidden sm:inline">Workflow</span>
+              <span className="sm:hidden">Work.</span>
+              <Badge
+                className="bg-blue-100 text-blue-800 ms-1.5 transition-opacity group-data-[state=inactive]:opacity-50"
+                variant="secondary"
+              >
+                {indicators.currentStage === 'elaboration_fdi' ? 'FDI' : 
+                 indicators.currentStage === 'revision_facture_commerciale' ? 'Docs' :
+                 indicators.currentStage === 'declaration_douaniere' ? 'Douane' : 'En cours'}
+              </Badge>
+            </TabsTrigger>
+            
+            <TabsTrigger 
+              value="team" 
+              className="group"
+            >
+              <Users
+                className="-ms-0.5 me-1.5 opacity-60"
+                size={16}
+                aria-hidden="true"
+              />
+              <span className="hidden sm:inline">Équipe</span>
+              <span className="sm:hidden">Team</span>
+              <Badge
+                className="bg-purple-100 text-purple-800 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
+                variant="secondary"
+              >
+                {indicators.teamCount}
+              </Badge>
+            </TabsTrigger>
+          </TabsList>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
 
         {/* Contenu des onglets */}
         <TabsContent value="info" className="mt-6">
