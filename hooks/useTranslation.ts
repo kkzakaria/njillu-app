@@ -24,9 +24,6 @@ export function useFolders() {
   return useTranslations('folders.card');
 }
 
-export function useDemo() {
-  return useTranslations('demo');
-}
 
 export function useFolderFilters() {
   return useTranslations('folder-filters');
