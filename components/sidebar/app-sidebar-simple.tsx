@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect, useState } from 'react'
 import { 
   FolderOpen, 
   FolderCheck, 
@@ -73,6 +73,13 @@ export const AppSidebarSimple: React.FC<AppSidebarSimpleProps> = ({
   // State management
   const sidebarState = useSidebarState()
   
+  // État pour éviter les erreurs d'hydratation
+  const [mounted, setMounted] = useState(false)
+  
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+  
   // Navigation par défaut avec dossiers et clients
   const defaultNavigationItems: INavigationItem[] = useMemo(() => [
     { 
@@ -125,10 +132,10 @@ export const AppSidebarSimple: React.FC<AppSidebarSimpleProps> = ({
   const currentBreakpoint = responsiveProvider.isMobile() ? 'mobile' : 
                            responsiveProvider.isTablet() ? 'tablet' : 'desktop'
   
-  // Logique responsive
-  const isMobileOrTablet = currentBreakpoint === 'mobile' || currentBreakpoint === 'tablet'
+  // Logique responsive - éviter l'hydratation mismatch
+  const isMobileOrTablet = mounted && (currentBreakpoint === 'mobile' || currentBreakpoint === 'tablet')
   const showDesktopSidebar = !isMobileOrTablet
-  const showMobileButton = isMobileOrTablet
+  const showMobileButton = mounted && isMobileOrTablet
   
   // Handlers d'événements
   const handleMouseEnter = () => {
