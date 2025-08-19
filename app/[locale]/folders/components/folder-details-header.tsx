@@ -28,8 +28,7 @@ import {
   Package,
   CalendarClock,
   FileText,
-  Printer,
-  Home
+  Printer
 } from 'lucide-react';
 import type { FolderSummary, FolderStatus, FolderPriority } from '@/types/folders';
 
@@ -125,18 +124,6 @@ export function FolderDetailsHeader({
 
   return (
     <div className="border-b bg-white">
-      {/* Breadcrumb */}
-      <div className="px-6 pt-4">
-        <nav className="flex items-center space-x-2 text-sm text-gray-600">
-          <a href="/folders" className="flex items-center hover:text-gray-900">
-            <Home className="w-4 h-4 mr-1" />
-            Dossiers
-          </a>
-          <span className="text-gray-400">/</span>
-          <span className="text-gray-900 font-medium">{selectedFolder.folder_number}</span>
-        </nav>
-      </div>
-
       {/* Header principal */}
       <div className="p-6">
         <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
