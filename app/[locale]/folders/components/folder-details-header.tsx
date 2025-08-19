@@ -1,0 +1,288 @@
+'use client'
+
+import { 
+  Button 
+} from '@/components/ui/button';
+import { 
+  Badge 
+} from '@/components/ui/badge';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Progress } from "@/components/ui/progress";
+import { 
+  Edit, 
+  Trash2, 
+  Share2,
+  Download,
+  Bell,
+  MoreHorizontal,
+  Ship,
+  Truck,
+  Plane,
+  Clock,
+  Package,
+  CalendarClock,
+  FileText,
+  Printer,
+  Home
+} from 'lucide-react';
+import type { FolderSummary, FolderStatus, FolderPriority } from '@/types/folders';
+
+interface FolderDetailsHeaderProps {
+  selectedFolder?: FolderSummary | null;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  onShare?: () => void;
+  onExportPDF?: () => void;
+  onExportExcel?: () => void;
+  onToggleNotifications?: () => void;
+}
+
+export function FolderDetailsHeader({
+  selectedFolder,
+  onEdit,
+  onDelete,
+  onShare,
+  onExportPDF,
+  onExportExcel,
+  onToggleNotifications
+}: FolderDetailsHeaderProps) {
+  if (!selectedFolder) {
+    return (
+      <div className="p-6 border-b bg-white">
+        <div className="flex items-center justify-center py-8">
+          <p className="text-gray-500">Sélectionnez un dossier pour voir les détails</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Fonctions utilitaires pour les couleurs
+  const getStatusColor = (status: FolderStatus): string => {
+    switch (status) {
+      case 'processing': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'on_hold': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'completed': return 'bg-green-100 text-green-800 border-green-200';
+      case 'closed': return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'cancelled': return 'bg-red-100 text-red-800 border-red-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  const getPriorityColor = (priority: FolderPriority): string => {
+    switch (priority) {
+      case 'critical': return 'bg-red-100 text-red-800 border-red-200';
+      case 'urgent': return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'normal': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'low': return 'bg-gray-100 text-gray-800 border-gray-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  const getTransportTypeIcon = (folderNumber: string) => {
+    const prefix = folderNumber.charAt(0).toLowerCase();
+    switch (prefix) {
+      case 'm': return { icon: Ship, label: 'Maritime' };
+      case 't': return { icon: Truck, label: 'Terrestre' };
+      case 'a': return { icon: Plane, label: 'Aérien' };
+      default: return { icon: Package, label: 'Standard' };
+    }
+  };
+
+  // Calculs pour les métriques
+  const mockProgress = Math.floor(Math.random() * 100); // Mock progression
+  const mockContainers = Math.floor(Math.random() * 5) + 1; // Mock nombre conteneurs
+  const mockDaysRemaining = Math.floor(Math.random() * 30) + 1; // Mock jours restants
+  
+  const transportType = getTransportTypeIcon(selectedFolder.folder_number);
+  const TransportIcon = transportType.icon;
+
+  const getStatusLabel = (status: FolderStatus): string => {
+    switch (status) {
+      case 'processing': return 'En cours';
+      case 'on_hold': return 'En attente';
+      case 'completed': return 'Terminé';
+      case 'closed': return 'Fermé';
+      case 'cancelled': return 'Annulé';
+      default: return status;
+    }
+  };
+
+  const getPriorityLabel = (priority: FolderPriority): string => {
+    switch (priority) {
+      case 'critical': return 'Critique';
+      case 'urgent': return 'Urgent';
+      case 'normal': return 'Normale';
+      case 'low': return 'Faible';
+      default: return priority;
+    }
+  };
+
+  return (
+    <div className="border-b bg-white">
+      {/* Breadcrumb */}
+      <div className="px-6 pt-4">
+        <nav className="flex items-center space-x-2 text-sm text-gray-600">
+          <a href="/folders" className="flex items-center hover:text-gray-900">
+            <Home className="w-4 h-4 mr-1" />
+            Dossiers
+          </a>
+          <span className="text-gray-400">/</span>
+          <span className="text-gray-900 font-medium">{selectedFolder.folder_number}</span>
+        </nav>
+      </div>
+
+      {/* Header principal */}
+      <div className="p-6">
+        <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
+          {/* Informations principales */}
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-4">
+              <h1 className="text-2xl font-bold text-gray-900">
+                {selectedFolder.folder_number}
+              </h1>
+              <Badge className={getStatusColor(selectedFolder.status)}>
+                {getStatusLabel(selectedFolder.status)}
+              </Badge>
+              <Badge className={getPriorityColor(selectedFolder.priority)}>
+                Priorité {getPriorityLabel(selectedFolder.priority)}
+              </Badge>
+              <Badge variant="outline" className="flex items-center gap-1">
+                <TransportIcon className="w-3 h-3" />
+                {transportType.label}
+              </Badge>
+            </div>
+
+            {/* Métriques rapides */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {/* Progression */}
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-50 rounded-lg">
+                  <Clock className="w-4 h-4 text-blue-600" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium text-gray-900">Progression</span>
+                    <span className="text-sm font-bold text-blue-600">{mockProgress}%</span>
+                  </div>
+                  <Progress value={mockProgress} className="h-2" />
+                </div>
+              </div>
+
+              {/* Conteneurs */}
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-green-50 rounded-lg">
+                  <Package className="w-4 h-4 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Conteneurs</p>
+                  <p className="text-lg font-bold text-green-600">{mockContainers}</p>
+                </div>
+              </div>
+
+              {/* Jours restants */}
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-orange-50 rounded-lg">
+                  <CalendarClock className="w-4 h-4 text-orange-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Jours restants</p>
+                  <p className="text-lg font-bold text-orange-600">{mockDaysRemaining}j</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center gap-2">
+            <Button 
+              onClick={onEdit}
+              variant="outline" 
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <Edit className="w-4 h-4" />
+              <span className="hidden sm:inline">Modifier</span>
+            </Button>
+
+            <Button 
+              onClick={onShare}
+              variant="outline" 
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <Share2 className="w-4 h-4" />
+              <span className="hidden sm:inline">Partager</span>
+            </Button>
+
+            <Button 
+              onClick={onToggleNotifications}
+              variant="outline" 
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <Bell className="w-4 h-4" />
+              <span className="hidden sm:inline">Alertes</span>
+            </Button>
+
+            {/* Menu d'actions supplémentaires */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <MoreHorizontal className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem onClick={onExportPDF}>
+                  <FileText className="w-4 h-4 mr-2" />
+                  Exporter en PDF
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={onExportExcel}>
+                  <Download className="w-4 h-4 mr-2" />
+                  Exporter en Excel
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Printer className="w-4 h-4 mr-2" />
+                  Imprimer
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                  onClick={onDelete}
+                  className="text-red-600 focus:text-red-600"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Supprimer
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+
+        {/* Route et informations complémentaires */}
+        <div className="mt-4 pt-4 border-t border-gray-100">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm text-gray-600">
+            <div className="flex items-center gap-4">
+              <span className="font-medium">
+                {selectedFolder.origin_name} → {selectedFolder.destination_name}
+              </span>
+              <span>•</span>
+              <span>
+                Créé le {new Date(selectedFolder.created_date).toLocaleDateString('fr-FR')}
+              </span>
+            </div>
+            {selectedFolder.reference_number && (
+              <div>
+                Réf. client: <span className="font-medium">{selectedFolder.reference_number}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
