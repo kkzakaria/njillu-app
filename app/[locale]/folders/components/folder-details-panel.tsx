@@ -1,6 +1,5 @@
 'use client'
 
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { FileText } from 'lucide-react';
 import type { FolderSummary } from '@/types/folders';
 import { FolderDetailsHeader } from './folder-details-header';
@@ -67,10 +66,10 @@ export function FolderDetailsPanel({ selectedFolder }: FolderDetailsPanelProps) 
         onPrint={handlePrint}
       />
 
-      {/* Enhanced Tab System with all functionality */}
-      <ScrollArea className="flex-1">
+      {/* Enhanced Tab System with all functionality - Remove double scroll */}
+      <div className="flex-1 overflow-auto">
         <FolderDetailsTab selectedFolder={selectedFolder} />
-      </ScrollArea>
+      </div>
     </div>
   );
 }

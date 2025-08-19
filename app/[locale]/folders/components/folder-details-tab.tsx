@@ -221,21 +221,17 @@ export const FolderDetailsTab: React.FC<FolderDetailsTabProps> = ({
   }
 
   return (
-    <div className={cn("w-full", className)}>
+    <div className={cn("w-full p-6", className)}>
       <Tabs defaultValue="info" className="w-full">
         <ScrollArea>
           <TabsList className="mb-3">
-            <TabsTrigger 
-              value="info" 
-              className="group data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
-            >
+            <TabsTrigger value="info" className="group">
               <Info
-                className="-ms-0.5 me-1.5 opacity-60 group-data-[state=active]:opacity-100"
+                className="-ms-0.5 me-1.5 opacity-60"
                 size={16}
                 aria-hidden="true"
               />
-              <span className="hidden sm:inline">Informations</span>
-              <span className="sm:hidden">Info</span>
+              Informations
               <Badge
                 className="bg-primary/15 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
                 variant="secondary"
@@ -244,17 +240,13 @@ export const FolderDetailsTab: React.FC<FolderDetailsTabProps> = ({
               </Badge>
             </TabsTrigger>
             
-            <TabsTrigger 
-              value="containers" 
-              className="group data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
-            >
+            <TabsTrigger value="containers" className="group">
               <Package
-                className="-ms-0.5 me-1.5 opacity-60 group-data-[state=active]:opacity-100"
+                className="-ms-0.5 me-1.5 opacity-60"
                 size={16}
                 aria-hidden="true"
               />
-              <span className="hidden sm:inline">Conteneurs</span>
-              <span className="sm:hidden">Cont.</span>
+              Conteneurs
               {indicators.hasDelayedContainers && (
                 <Badge 
                   className="ms-1.5 transition-opacity group-data-[state=inactive]:opacity-50"
@@ -265,17 +257,13 @@ export const FolderDetailsTab: React.FC<FolderDetailsTabProps> = ({
               )}
             </TabsTrigger>
             
-            <TabsTrigger 
-              value="documents" 
-              className="group data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
-            >
+            <TabsTrigger value="documents" className="group">
               <FileText
-                className="-ms-0.5 me-1.5 opacity-60 group-data-[state=active]:opacity-100"
+                className="-ms-0.5 me-1.5 opacity-60"
                 size={16}
                 aria-hidden="true"
               />
-              <span className="hidden sm:inline">Documents</span>
-              <span className="sm:hidden">Docs</span>
+              Documents
               {indicators.missingDocuments > 0 && (
                 <Badge
                   className="ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
@@ -286,39 +274,29 @@ export const FolderDetailsTab: React.FC<FolderDetailsTabProps> = ({
               )}
             </TabsTrigger>
             
-            <TabsTrigger 
-              value="history" 
-              className="group data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
-            >
+            <TabsTrigger value="history" className="group">
               <History
-                className="-ms-0.5 me-1.5 opacity-60 group-data-[state=active]:opacity-100"
+                className="-ms-0.5 me-1.5 opacity-60"
                 size={16}
                 aria-hidden="true"
               />
-              <span className="hidden sm:inline">Historique</span>
-              <span className="sm:hidden">Hist.</span>
+              Historique
               <Badge 
-                className="bg-green-100 text-green-800 ms-1.5 transition-opacity group-data-[state=inactive]:opacity-50"
-                variant="secondary"
+                className="ms-1.5 transition-opacity group-data-[state=inactive]:opacity-50"
               >
                 {indicators.lastActivity}
               </Badge>
             </TabsTrigger>
             
-            <TabsTrigger 
-              value="workflow" 
-              className="group data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
-            >
+            <TabsTrigger value="workflow" className="group">
               <CheckCircle
-                className="-ms-0.5 me-1.5 opacity-60 group-data-[state=active]:opacity-100"
+                className="-ms-0.5 me-1.5 opacity-60"
                 size={16}
                 aria-hidden="true"
               />
-              <span className="hidden sm:inline">Workflow</span>
-              <span className="sm:hidden">Work.</span>
+              Workflow
               <Badge
-                className="bg-blue-100 text-blue-800 ms-1.5 transition-opacity group-data-[state=inactive]:opacity-50"
-                variant="secondary"
+                className="ms-1.5 transition-opacity group-data-[state=inactive]:opacity-50"
               >
                 {indicators.currentStage === 'elaboration_fdi' ? 'FDI' : 
                  indicators.currentStage === 'revision_facture_commerciale' ? 'Docs' :
@@ -326,19 +304,15 @@ export const FolderDetailsTab: React.FC<FolderDetailsTabProps> = ({
               </Badge>
             </TabsTrigger>
             
-            <TabsTrigger 
-              value="team" 
-              className="group data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
-            >
+            <TabsTrigger value="team" className="group">
               <Users
-                className="-ms-0.5 me-1.5 opacity-60 group-data-[state=active]:opacity-100"
+                className="-ms-0.5 me-1.5 opacity-60"
                 size={16}
                 aria-hidden="true"
               />
-              <span className="hidden sm:inline">Équipe</span>
-              <span className="sm:hidden">Team</span>
+              Équipe
               <Badge
-                className="bg-purple-100 text-purple-800 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
+                className="ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
                 variant="secondary"
               >
                 {indicators.teamCount}
