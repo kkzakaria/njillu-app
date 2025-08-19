@@ -227,10 +227,10 @@ export const FolderDetailsTab: React.FC<FolderDetailsTabProps> = ({
           <TabsList className="mb-3">
             <TabsTrigger 
               value="info" 
-              className="group"
+              className="group data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
             >
               <Info
-                className="-ms-0.5 me-1.5 opacity-60"
+                className="-ms-0.5 me-1.5 opacity-60 group-data-[state=active]:opacity-100"
                 size={16}
                 aria-hidden="true"
               />
@@ -246,10 +246,10 @@ export const FolderDetailsTab: React.FC<FolderDetailsTabProps> = ({
             
             <TabsTrigger 
               value="containers" 
-              className="group"
+              className="group data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
             >
               <Package
-                className="-ms-0.5 me-1.5 opacity-60"
+                className="-ms-0.5 me-1.5 opacity-60 group-data-[state=active]:opacity-100"
                 size={16}
                 aria-hidden="true"
               />
@@ -267,10 +267,10 @@ export const FolderDetailsTab: React.FC<FolderDetailsTabProps> = ({
             
             <TabsTrigger 
               value="documents" 
-              className="group"
+              className="group data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
             >
               <FileText
-                className="-ms-0.5 me-1.5 opacity-60"
+                className="-ms-0.5 me-1.5 opacity-60 group-data-[state=active]:opacity-100"
                 size={16}
                 aria-hidden="true"
               />
@@ -288,10 +288,10 @@ export const FolderDetailsTab: React.FC<FolderDetailsTabProps> = ({
             
             <TabsTrigger 
               value="history" 
-              className="group"
+              className="group data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
             >
               <History
-                className="-ms-0.5 me-1.5 opacity-60"
+                className="-ms-0.5 me-1.5 opacity-60 group-data-[state=active]:opacity-100"
                 size={16}
                 aria-hidden="true"
               />
@@ -307,10 +307,10 @@ export const FolderDetailsTab: React.FC<FolderDetailsTabProps> = ({
             
             <TabsTrigger 
               value="workflow" 
-              className="group"
+              className="group data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
             >
               <CheckCircle
-                className="-ms-0.5 me-1.5 opacity-60"
+                className="-ms-0.5 me-1.5 opacity-60 group-data-[state=active]:opacity-100"
                 size={16}
                 aria-hidden="true"
               />
@@ -328,10 +328,10 @@ export const FolderDetailsTab: React.FC<FolderDetailsTabProps> = ({
             
             <TabsTrigger 
               value="team" 
-              className="group"
+              className="group data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
             >
               <Users
-                className="-ms-0.5 me-1.5 opacity-60"
+                className="-ms-0.5 me-1.5 opacity-60 group-data-[state=active]:opacity-100"
                 size={16}
                 aria-hidden="true"
               />
