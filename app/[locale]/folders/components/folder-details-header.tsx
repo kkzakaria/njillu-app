@@ -50,9 +50,14 @@ export function FolderDetailsHeader({
   }
 
   // Calculs pour les métriques
-  const mockProgress = Math.floor(Math.random() * 100); // Mock progression
-  const mockContainers = Math.floor(Math.random() * 5) + 1; // Mock nombre conteneurs
-  const mockDaysRemaining = Math.floor(Math.random() * 30) + 1; // Mock jours restants
+  // Mock progression - valeur déterministe basée sur l'ID du dossier pour éviter l'hydratation mismatch
+  const mockProgress = selectedFolder ? 
+    (parseInt(selectedFolder.id) * 23) % 100 : 0; // Utilise l'ID pour une valeur déterministe
+  // Mock valeurs déterministes basées sur l'ID du dossier
+  const mockContainers = selectedFolder ? 
+    ((parseInt(selectedFolder.id) * 7) % 5) + 1 : 1; // Mock nombre conteneurs
+  const mockDaysRemaining = selectedFolder ?
+    ((parseInt(selectedFolder.id) * 11) % 30) + 1 : 1; // Mock jours restants
 
 
   return (
