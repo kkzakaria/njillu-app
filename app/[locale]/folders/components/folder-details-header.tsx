@@ -48,7 +48,7 @@ export function FolderDetailsHeader({
 }: FolderDetailsHeaderProps) {
   if (!selectedFolder) {
     return (
-      <div className="p-6 border-b bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800">
+      <div className="p-6 border-b bg-background border-border">
         <div className="flex items-center justify-center py-8">
           <p className="text-gray-500 dark:text-gray-400">Sélectionnez un dossier pour voir les détails</p>
         </div>
@@ -63,7 +63,7 @@ export function FolderDetailsHeader({
 
 
   return (
-    <div className="border-b bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800">
+    <div className="border-b bg-background border-border">
       {/* Header principal */}
       <div className="p-6">
         <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
