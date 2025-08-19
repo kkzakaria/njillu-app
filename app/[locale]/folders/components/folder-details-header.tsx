@@ -48,9 +48,9 @@ export function FolderDetailsHeader({
 }: FolderDetailsHeaderProps) {
   if (!selectedFolder) {
     return (
-      <div className="p-6 border-b bg-white">
+      <div className="p-6 border-b bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800">
         <div className="flex items-center justify-center py-8">
-          <p className="text-gray-500">Sélectionnez un dossier pour voir les détails</p>
+          <p className="text-gray-500 dark:text-gray-400">Sélectionnez un dossier pour voir les détails</p>
         </div>
       </div>
     );
@@ -63,14 +63,14 @@ export function FolderDetailsHeader({
 
 
   return (
-    <div className="border-b bg-white">
+    <div className="border-b bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800">
       {/* Header principal */}
       <div className="p-6">
         <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
           {/* Informations principales */}
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-4">
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                 {selectedFolder.folder_number}
               </h1>
               <PriorityBadge priority={selectedFolder.priority} />
@@ -80,12 +80,12 @@ export function FolderDetailsHeader({
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {/* Progression */}
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-50 rounded-lg">
-                  <Clock className="w-4 h-4 text-blue-600" />
+                <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                  <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium text-gray-900">Progression</span>
+                    <span className="text-sm font-medium text-gray-900 dark:text-white">Progression</span>
                     <span className="text-sm font-bold text-blue-600">{mockProgress}%</span>
                   </div>
                   <Progress value={mockProgress} className="h-2" />
@@ -94,23 +94,23 @@ export function FolderDetailsHeader({
 
               {/* Conteneurs */}
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-green-50 rounded-lg">
-                  <Package className="w-4 h-4 text-green-600" />
+                <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                  <Package className="w-4 h-4 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">Conteneurs</p>
-                  <p className="text-lg font-bold text-green-600">{mockContainers}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">Conteneurs</p>
+                  <p className="text-lg font-bold text-green-600 dark:text-green-400">{mockContainers}</p>
                 </div>
               </div>
 
               {/* Jours restants */}
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-orange-50 rounded-lg">
-                  <CalendarClock className="w-4 h-4 text-orange-600" />
+                <div className="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+                  <CalendarClock className="w-4 h-4 text-orange-600 dark:text-orange-400" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">Jours restants</p>
-                  <p className="text-lg font-bold text-orange-600">{mockDaysRemaining}j</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">Jours restants</p>
+                  <p className="text-lg font-bold text-orange-600 dark:text-orange-400">{mockDaysRemaining}j</p>
                 </div>
               </div>
             </div>
@@ -182,8 +182,8 @@ export function FolderDetailsHeader({
         </div>
 
         {/* Route et informations complémentaires */}
-        <div className="mt-4 pt-4 border-t border-gray-100">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm text-gray-600">
+        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm text-gray-600 dark:text-gray-300">
             <div className="flex items-center gap-4">
               <span className="font-medium">
                 {selectedFolder.origin_name} → {selectedFolder.destination_name}
