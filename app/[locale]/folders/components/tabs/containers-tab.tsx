@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Package, AlertTriangle, Plus } from 'lucide-react';
+import { Package, AlertTriangle, Plus, Zap, List } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -9,6 +9,7 @@ import type { Folder } from '@/types/folders';
 import type { BLContainer, ContainerType } from '@/types/bl';
 import type { ContainerArrivalTracking } from '@/types/containers';
 import { ContainersSummary, ContainerCard, QuickActions } from '../containers';
+import { InfoSection } from '../info-section';
 
 interface ContainersTabProps {
   selectedFolder: Folder | null;
@@ -259,11 +260,7 @@ export const ContainersTab: React.FC<ContainersTabProps> = ({ selectedFolder, cl
       {hasContainers ? (
         <>
           {/* Section 1: Vue d'ensemble des conteneurs */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4 flex items-center">
-              <Package className="w-5 h-5 mr-2 text-blue-600" />
-              Vue d&apos;Ensemble des Conteneurs
-            </h3>
+          <InfoSection title="Vue d'Ensemble des Conteneurs" icon={Package}>
             <ContainersSummary
               totalContainers={totalContainers}
               totalTEU={totalTEU}
@@ -271,30 +268,27 @@ export const ContainersTab: React.FC<ContainersTabProps> = ({ selectedFolder, cl
               delayed={delayed}
               arrived={arrived}
             />
-          </div>
+          </InfoSection>
 
           {/* Section 2: Actions rapides */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Actions Rapides</h3>
+          <InfoSection title="Actions Rapides" icon={Zap}>
             <QuickActions
               onTrackAll={handleTrackAll}
               onUpdateArrivals={handleUpdateArrivals}
               onGenerateReport={handleGenerateReport}
               onAddContainer={handleAddContainer}
               hasContainers={hasContainers}
-              className="mb-6"
             />
-          </div>
+          </InfoSection>
 
           {/* Section 3: Liste détaillée des conteneurs */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Liste Détaillée des Conteneurs</h3>
+          <InfoSection title="Liste Détaillée des Conteneurs" icon={List}>
             <div className="space-y-4">
               {containers.map((container) => (
                 <ContainerCard key={container.id} container={container} />
               ))}
             </div>
-          </div>
+          </InfoSection>
         </>
       ) : (
         <div className="flex items-center justify-center p-12 text-gray-500">

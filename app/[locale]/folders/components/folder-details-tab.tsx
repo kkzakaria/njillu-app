@@ -18,6 +18,7 @@ import { cn } from '@/lib/utils';
 import type { FolderSummary } from '@/types/folders';
 import { ContainersTab } from './tabs/containers-tab';
 import { FolderInfoTab } from './tabs';
+import { InfoSection } from './info-section';
 
 interface FolderDetailsTabProps {
   selectedFolder: FolderSummary | null;
@@ -327,86 +328,90 @@ export const FolderDetailsTab: React.FC<FolderDetailsTabProps> = ({
 
         {/* Contenu des onglets - scrollable */}
         <div className="flex-1 overflow-auto">
-          <TabsContent value="info" className="mt-3 h-full">
+          <TabsContent value="info" className="h-full">
             <FolderInfoTab selectedFolder={selectedFolder} />
           </TabsContent>
 
-          <TabsContent value="containers" className="mt-3 h-full">
+          <TabsContent value="containers" className="h-full">
             <ContainersTab selectedFolder={selectedFolder} />
           </TabsContent>
 
-          <TabsContent value="documents" className="mt-3 h-full">
-            <div className="p-6 border rounded-lg bg-gray-50">
-              <h3 className="text-lg font-semibold mb-4">Documents par étapes</h3>
-              <p className="text-gray-600">
-                Placeholder pour la gestion des documents organisés par workflow.
-                Remplacera l'onglet Documents existant avec une approche par étapes.
-              </p>
-              {indicators.missingDocuments > 0 && (
-                <div className="mt-4 p-3 bg-orange-50 border border-orange-200 rounded">
+          <TabsContent value="documents" className="h-full">
+            <InfoSection title="Documents par étapes" icon={FileText}>
+              <div className="space-y-4">
+                <p className="text-gray-600">
+                  Placeholder pour la gestion des documents organisés par workflow.
+                  Remplacera l'onglet Documents existant avec une approche par étapes.
+                </p>
+                {indicators.missingDocuments > 0 && (
+                  <div className="mt-4 p-3 bg-orange-50 border border-orange-200 rounded">
+                    <div className="flex items-center">
+                      <FileText className="w-4 h-4 text-orange-600 mr-2" />
+                      <span className="text-orange-800 text-sm font-medium">
+                        {indicators.missingDocuments} document(s) manquant(s)
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </InfoSection>
+          </TabsContent>
+
+          <TabsContent value="history" className="h-full">
+            <InfoSection title="Timeline des événements" icon={History}>
+              <div className="space-y-4">
+                <p className="text-gray-600">
+                  Placeholder pour l'historique amélioré.
+                  Remplacera l'onglet Historique existant avec une timeline enrichie.
+                </p>
+                <div className="p-3 bg-green-50 border border-green-200 rounded">
                   <div className="flex items-center">
-                    <FileText className="w-4 h-4 text-orange-600 mr-2" />
-                    <span className="text-orange-800 text-sm font-medium">
-                      {indicators.missingDocuments} document(s) manquant(s)
+                    <Clock className="w-4 h-4 text-green-600 mr-2" />
+                    <span className="text-green-800 text-sm font-medium">
+                      Dernière activité: {indicators.lastActivity}
                     </span>
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            </InfoSection>
           </TabsContent>
 
-          <TabsContent value="history" className="mt-3 h-full">
-            <div className="p-6 border rounded-lg bg-gray-50">
-              <h3 className="text-lg font-semibold mb-4">Timeline des événements</h3>
-              <p className="text-gray-600">
-                Placeholder pour l'historique amélioré.
-                Remplacera l'onglet Historique existant avec une timeline enrichie.
-              </p>
-              <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded">
-                <div className="flex items-center">
-                  <Clock className="w-4 h-4 text-green-600 mr-2" />
-                  <span className="text-green-800 text-sm font-medium">
-                    Dernière activité: {indicators.lastActivity}
-                  </span>
+          <TabsContent value="workflow" className="h-full">
+            <InfoSection title="ProcessingTimeline (8 étapes)" icon={CheckCircle}>
+              <div className="space-y-4">
+                <p className="text-gray-600">
+                  Placeholder pour le composant ProcessingTimeline.
+                  Affichera les 8 étapes de traitement avec progression visuelle.
+                </p>
+                <div className="p-3 bg-blue-50 border border-blue-200 rounded">
+                  <div className="flex items-center">
+                    <CheckCircle className="w-4 h-4 text-blue-600 mr-2" />
+                    <span className="text-blue-800 text-sm font-medium">
+                      Étape actuelle: {indicators.currentStage}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </InfoSection>
           </TabsContent>
 
-          <TabsContent value="workflow" className="mt-3 h-full">
-            <div className="p-6 border rounded-lg bg-gray-50">
-              <h3 className="text-lg font-semibold mb-4">ProcessingTimeline (8 étapes)</h3>
-              <p className="text-gray-600">
-                Placeholder pour le composant ProcessingTimeline.
-                Affichera les 8 étapes de traitement avec progression visuelle.
-              </p>
-              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
-                <div className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-blue-600 mr-2" />
-                  <span className="text-blue-800 text-sm font-medium">
-                    Étape actuelle: {indicators.currentStage}
-                  </span>
+          <TabsContent value="team" className="h-full">
+            <InfoSection title="UserAssignments" icon={Users}>
+              <div className="space-y-4">
+                <p className="text-gray-600">
+                  Placeholder pour le composant UserAssignments.
+                  Gérera les assignations d'utilisateurs par rôle et étape.
+                </p>
+                <div className="p-3 bg-purple-50 border border-purple-200 rounded">
+                  <div className="flex items-center">
+                    <Users className="w-4 h-4 text-purple-600 mr-2" />
+                    <span className="text-purple-800 text-sm font-medium">
+                      {indicators.teamCount} personne(s) assignée(s)
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="team" className="mt-3 h-full">
-            <div className="p-6 border rounded-lg bg-gray-50">
-              <h3 className="text-lg font-semibold mb-4">UserAssignments</h3>
-              <p className="text-gray-600">
-                Placeholder pour le composant UserAssignments.
-                Gérera les assignations d'utilisateurs par rôle et étape.
-              </p>
-              <div className="mt-4 p-3 bg-purple-50 border border-purple-200 rounded">
-                <div className="flex items-center">
-                  <Users className="w-4 h-4 text-purple-600 mr-2" />
-                  <span className="text-purple-800 text-sm font-medium">
-                    {indicators.teamCount} personne(s) assignée(s)
-                  </span>
-                </div>
-              </div>
-            </div>
+            </InfoSection>
           </TabsContent>
         </div>
       </Tabs>
