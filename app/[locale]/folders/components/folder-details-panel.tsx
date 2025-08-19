@@ -27,15 +27,6 @@ export function FolderDetailsPanel({ selectedFolder }: FolderDetailsPanelProps) 
     // TODO: Implement share functionality
   };
 
-  const handleExportPDF = () => {
-    console.log('Export PDF:', selectedFolder?.id);
-    // TODO: Implement PDF export functionality
-  };
-
-  const handleArchive = () => {
-    console.log('Archive folder:', selectedFolder?.id);
-    // TODO: Implement archive functionality
-  };
 
   const handlePrint = () => {
     console.log('Print folder:', selectedFolder?.id);
@@ -61,8 +52,6 @@ export function FolderDetailsPanel({ selectedFolder }: FolderDetailsPanelProps) 
         onEdit={handleEdit}
         onDelete={handleDelete}
         onShare={handleShare}
-        onExportPDF={handleExportPDF}
-        onArchive={handleArchive}
         onPrint={handlePrint}
       />
 
