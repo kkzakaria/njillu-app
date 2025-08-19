@@ -15,13 +15,10 @@ import {
   Edit, 
   Trash2, 
   Share2,
-  Download,
-  Bell,
-  MoreHorizontal,
+  MoreVertical,
   Clock,
   Package,
   CalendarClock,
-  FileText,
   Printer
 } from 'lucide-react';
 import type { FolderSummary, FolderStatus, FolderPriority } from '@/types/folders';
@@ -32,9 +29,7 @@ interface FolderDetailsHeaderProps {
   onEdit?: () => void;
   onDelete?: () => void;
   onShare?: () => void;
-  onExportPDF?: () => void;
-  onExportExcel?: () => void;
-  onToggleNotifications?: () => void;
+  onPrint?: () => void;
 }
 
 export function FolderDetailsHeader({
@@ -42,9 +37,7 @@ export function FolderDetailsHeader({
   onEdit,
   onDelete,
   onShare,
-  onExportPDF,
-  onExportExcel,
-  onToggleNotifications
+  onPrint
 }: FolderDetailsHeaderProps) {
   if (!selectedFolder) {
     return (
@@ -118,66 +111,81 @@ export function FolderDetailsHeader({
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <Button 
-              onClick={onEdit}
-              variant="outline" 
-              size="sm"
-              className="flex items-center gap-2"
-            >
-              <Edit className="w-4 h-4" />
-              <span className="hidden sm:inline">Modifier</span>
-            </Button>
+            {/* Boutons desktop - masqués sur mobile */}
+            <div className="hidden md:flex items-center gap-2">
+              <Button 
+                onClick={onEdit}
+                variant="outline" 
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <Edit className="w-4 h-4" />
+                <span>Modifier</span>
+              </Button>
 
-            <Button 
-              onClick={onShare}
-              variant="outline" 
-              size="sm"
-              className="flex items-center gap-2"
-            >
-              <Share2 className="w-4 h-4" />
-              <span className="hidden sm:inline">Partager</span>
-            </Button>
+              <Button 
+                onClick={onShare}
+                variant="outline" 
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <Share2 className="w-4 h-4" />
+                <span>Partager</span>
+              </Button>
 
-            <Button 
-              onClick={onToggleNotifications}
-              variant="outline" 
-              size="sm"
-              className="flex items-center gap-2"
-            >
-              <Bell className="w-4 h-4" />
-              <span className="hidden sm:inline">Alertes</span>
-            </Button>
+              <Button 
+                onClick={onPrint}
+                variant="outline" 
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <Printer className="w-4 h-4" />
+                <span>Imprimer</span>
+              </Button>
 
-            {/* Menu d'actions supplémentaires */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <MoreHorizontal className="w-4 h-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem onClick={onExportPDF}>
-                  <FileText className="w-4 h-4 mr-2" />
-                  Exporter en PDF
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={onExportExcel}>
-                  <Download className="w-4 h-4 mr-2" />
-                  Exporter en Excel
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Printer className="w-4 h-4 mr-2" />
-                  Imprimer
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem 
-                  onClick={onDelete}
-                  className="text-red-600 focus:text-red-600"
-                >
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  Supprimer
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              <Button 
+                onClick={onDelete}
+                variant="outline" 
+                size="sm"
+                className="flex items-center gap-2 text-red-600 hover:text-red-600 border-red-200 hover:border-red-300"
+              >
+                <Trash2 className="w-4 h-4" />
+                <span>Supprimer</span>
+              </Button>
+            </div>
+
+            {/* Menu mobile - visible uniquement sur mobile */}
+            <div className="md:hidden">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <MoreVertical className="w-4 h-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onClick={onEdit}>
+                    <Edit className="w-4 h-4 mr-2" />
+                    Modifier
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={onShare}>
+                    <Share2 className="w-4 h-4 mr-2" />
+                    Partager
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={onPrint}>
+                    <Printer className="w-4 h-4 mr-2" />
+                    Imprimer
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    onClick={onDelete}
+                    className="text-red-600 focus:text-red-600"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Supprimer
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </div>
 
