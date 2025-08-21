@@ -1,0 +1,40 @@
+meta {
+  name: Get Statistics
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{api_base}}/folders/stats?type=overview
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+tests {
+  test("Status should be 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Response should contain statistics", function() {
+    expect(res.body).to.have.property('type');
+    expect(res.body).to.have.property('data');
+    expect(res.body).to.have.property('generated_at');
+    expect(res.body.type).to.equal('overview');
+  });
+  
+  test("Overview stats should have required sections", function() {
+    const data = res.body.data;
+    expect(data).to.have.property('by_transport');
+    expect(data).to.have.property('by_status');
+    expect(data).to.have.property('requiring_attention');
+    expect(data).to.have.property('summary');
+  });
+}

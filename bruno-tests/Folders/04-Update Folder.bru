@@ -1,0 +1,48 @@
+meta {
+  name: Update Folder
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{api_base}}/folders/{{test_folder_id}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "title": "Test Folder UPDATED via Bruno",
+    "status": "active",
+    "priority": "urgent",
+    "description": "Description mise à jour via l'API",
+    "estimated_value": 25000.00,
+    "internal_notes": "Dossier mis à jour pour test"
+  }
+}
+
+tests {
+  test("Status should be 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Response should contain updated folder data", function() {
+    expect(res.body).to.have.property('message');
+    expect(res.body).to.have.property('data');
+    expect(res.body.data.title).to.equal('Test Folder UPDATED via Bruno');
+    expect(res.body.data.status).to.equal('active');
+    expect(res.body.data.priority).to.equal('urgent');
+  });
+  
+  test("Estimated value should be updated", function() {
+    expect(parseFloat(res.body.data.estimated_value)).to.equal(25000.00);
+  });
+}

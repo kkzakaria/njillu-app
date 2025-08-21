@@ -1,0 +1,68 @@
+meta {
+  name: Search Folders
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{api_base}}/folders/search
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "query": "Bruno",
+    "filters": {
+      "transport_type": ["M"],
+      "status": ["draft", "active"],
+      "priority": ["normal", "urgent"],
+      "has_bl": false,
+      "is_urgent": false
+    },
+    "pagination": {
+      "page": 1,
+      "limit": 20
+    },
+    "sort": {
+      "field": "created_at",
+      "order": "desc"
+    }
+  }
+}
+
+tests {
+  test("Status should be 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Response should contain search results", function() {
+    expect(res.body).to.have.property('data');
+    expect(res.body).to.have.property('pagination');
+    expect(res.body).to.have.property('search_metadata');
+    expect(res.body).to.have.property('applied_filters');
+  });
+  
+  test("Search metadata should be complete", function() {
+    const metadata = res.body.search_metadata;
+    expect(metadata).to.have.property('total_results');
+    expect(metadata).to.have.property('page_results');
+    expect(metadata).to.have.property('filters_applied');
+  });
+  
+  test("Results should match search criteria", function() {
+    if (res.body.data.length > 0) {
+      const folder = res.body.data[0];
+      expect(['M']).to.include(folder.transport_type);
+      expect(['draft', 'active']).to.include(folder.status);
+    }
+  });
+}

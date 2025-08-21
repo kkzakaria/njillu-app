@@ -1,0 +1,35 @@
+meta {
+  name: Delete Folder
+  type: http
+  seq: 10
+}
+
+delete {
+  url: {{api_base}}/folders/{{test_folder_id}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+tests {
+  test("Status should be 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Response should confirm deletion", function() {
+    expect(res.body).to.have.property('message');
+    expect(res.body).to.have.property('data');
+    expect(res.body.message).to.contain('supprimé avec succès');
+  });
+  
+  test("Deleted folder data should match", function() {
+    expect(res.body.data.id).to.equal(bru.getEnvVar("test_folder_id"));
+  });
+}

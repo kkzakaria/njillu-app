@@ -1,0 +1,35 @@
+meta {
+  name: Login
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{api_base}}/auth/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "test@example.com",
+    "password": "password123"
+  }
+}
+
+script:post-response {
+  if (res.status === 200 && res.body.session) {
+    bru.setEnvVar("access_token", res.body.session.access_token);
+    bru.setEnvVar("user_id", res.body.user.id);
+    console.log("✅ Token configuré");
+    console.log("✅ Session avec cookies établie");
+  } else {
+    console.log("❌ Échec de l'authentification");
+    console.log("Status:", res.status);
+    console.log("Response:", JSON.stringify(res.body, null, 2));
+  }
+}

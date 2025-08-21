@@ -1,0 +1,64 @@
+meta {
+  name: Create Folder
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{api_base}}/folders
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "transport_type": "M",
+    "status": "draft",
+    "title": "Test Folder via Bruno",
+    "description": "Dossier créé pour tester l'API via Bruno",
+    "priority": "normal",
+    "client_reference": "REF-BRUNO-001",
+    "estimated_value": 15000.50,
+    "estimated_value_currency": "EUR",
+    "internal_notes": "Dossier de test créé automatiquement",
+    "initialize_stages": true
+  }
+}
+
+tests {
+  test("Status should be 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  
+  test("Response should contain folder data", function() {
+    expect(res.body).to.have.property('message');
+    expect(res.body).to.have.property('data');
+    expect(res.body.data).to.have.property('id');
+    expect(res.body.data).to.have.property('folder_number');
+  });
+  
+  test("Folder should have correct transport type", function() {
+    expect(res.body.data.transport_type).to.equal('M');
+  });
+  
+  test("Folder number should have correct format", function() {
+    const folderNumber = res.body.data.folder_number;
+    expect(folderNumber).to.match(/^M\d{6}-\d{6}$/);
+  });
+}
+
+script:post-response {
+  if (res.status === 201 && res.body.data && res.body.data.id) {
+    bru.setEnvVar("test_folder_id", res.body.data.id);
+    bru.setEnvVar("test_folder_number", res.body.data.folder_number);
+    console.log(`✅ Dossier créé: ${res.body.data.folder_number}`);
+  }
+}
