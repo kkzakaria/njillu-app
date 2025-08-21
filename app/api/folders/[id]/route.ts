@@ -38,7 +38,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
           id, first_name, last_name, company_name, email, phone,
           address_line1, address_line2, city, postal_code, country
         ),
-        bill_of_lading:bills_of_lading(
+        bill_of_lading:bills_of_lading!folders_bl_id_fkey(
           id, bl_number, booking_reference, export_reference,
           shipping_company_id, shipper_info, consignee_info, notify_party_info,
           port_of_loading, port_of_discharge, vessel_name, voyage_number,

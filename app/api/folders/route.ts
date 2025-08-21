@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
         created_by_user:users!folders_created_by_fkey(id, first_name, last_name, email),
         assigned_to_user:users!folders_assigned_to_fkey(id, first_name, last_name, email),
         client:clients(id, first_name, last_name, company_name, email),
-        bill_of_lading:bills_of_lading(
+        bill_of_lading:bills_of_lading!folders_bl_id_fkey(
           id, bl_number, shipping_company_id, issue_date, status,
           shipping_company:shipping_companies(id, name, short_name)
         )

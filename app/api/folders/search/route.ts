@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
         created_by_user:users!folders_created_by_fkey(id, first_name, last_name, email),
         assigned_to_user:users!folders_assigned_to_fkey(id, first_name, last_name, email),
         client:clients(id, first_name, last_name, company_name, email),
-        bill_of_lading:bills_of_lading(
+        bill_of_lading:bills_of_lading!folders_bl_id_fkey(
           id, bl_number, shipping_company_id, issue_date, status,
           shipping_company:shipping_companies(id, name, short_name)
         ),
@@ -154,26 +154,14 @@ export async function POST(request: NextRequest) {
     if (query && query.trim()) {
       const searchTerms = query.trim();
       
-      // Recherche dans plusieurs champs avec opérateur OR
-      searchQuery = searchQuery.or(`
-        title.ilike.%${searchTerms}%,
-        description.ilike.%${searchTerms}%,
-        client_reference.ilike.%${searchTerms}%,
-        folder_number.ilike.%${searchTerms}%,
-        internal_notes.ilike.%${searchTerms}%,
-        client_notes.ilike.%${searchTerms}%
-      `);
-
       // Si le terme ressemble à un numéro de dossier (format: M250804-000001)
       const folderNumberPattern = /^[MTA]\d{6}-\d{6}$/;
       if (folderNumberPattern.test(searchTerms)) {
-        searchQuery = searchQuery.or(`folder_number.eq.${searchTerms}`);
-      }
-
-      // Si le terme ressemble à un UUID (pour rechercher par ID)
-      const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-      if (uuidPattern.test(searchTerms)) {
-        searchQuery = searchQuery.or(`id.eq.${searchTerms}`);
+        // Recherche exacte sur le numéro de dossier
+        searchQuery = searchQuery.eq('folder_number', searchTerms);
+      } else {
+        // Recherche textuelle dans plusieurs champs avec syntaxe Supabase correcte
+        searchQuery = searchQuery.or(`title.ilike.*${searchTerms}*,description.ilike.*${searchTerms}*,client_reference.ilike.*${searchTerms}*,folder_number.ilike.*${searchTerms}*,internal_notes.ilike.*${searchTerms}*,client_notes.ilike.*${searchTerms}*`);
       }
     }
 
