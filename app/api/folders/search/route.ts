@@ -35,9 +35,10 @@ export async function POST(request: NextRequest) {
         client:clients(id, first_name, last_name, company_name, email),
         bill_of_lading:bills_of_lading!folders_bl_id_fkey(
           id, bl_number, shipping_company_id, issue_date, status,
+          port_of_loading, port_of_discharge, shipped_on_board_date, bl_type,
           shipping_company:shipping_companies(id, name, short_name),
           containers:bl_containers!bl_containers_bl_id_fkey(
-            id, container_number, arrival_status,
+            id, container_number, arrival_status, seal_number, tare_weight_kg,
             container_type:container_types(iso_code, size_feet)
           )
         ),
@@ -134,6 +135,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Filtres BL spécifiques (temporairement désactivés - nécessitent une approche différente pour les relations)
+    // TODO: Implémenter avec des requêtes RPC ou des sous-requêtes pour les filtres sur les relations BL
+
     // Filtres spéciaux
     if (filters.has_bl === true) {
       searchQuery = searchQuery.not('bl_id', 'is', null);
@@ -164,7 +168,7 @@ export async function POST(request: NextRequest) {
         // Recherche exacte sur le numéro de dossier
         searchQuery = searchQuery.eq('folder_number', searchTerms);
       } else {
-        // Recherche textuelle dans plusieurs champs avec syntaxe Supabase correcte
+        // Recherche textuelle dans les champs du dossier uniquement (les relations BL sont filtrées séparément)
         searchQuery = searchQuery.or(`title.ilike.*${searchTerms}*,description.ilike.*${searchTerms}*,client_reference.ilike.*${searchTerms}*,folder_number.ilike.*${searchTerms}*,internal_notes.ilike.*${searchTerms}*,client_notes.ilike.*${searchTerms}*`);
       }
     }

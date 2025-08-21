@@ -20,7 +20,7 @@ headers {
 
 body:json {
   {
-    "query": "Bruno",
+    "query": "M250821",
     "filters": {
       "transport_type": ["M"],
       "status": ["draft", "active"],
@@ -63,6 +63,22 @@ tests {
       const folder = res.body.data[0];
       expect(['M']).to.include(folder.transport_type);
       expect(['draft', 'active']).to.include(folder.status);
+    }
+  });
+  
+  test("Basic filters should work correctly", function() {
+    const appliedFilters = res.body.applied_filters;
+    expect(appliedFilters).to.have.property('transport_type');
+    expect(appliedFilters).to.have.property('status');
+    expect(appliedFilters).to.have.property('priority');
+    expect(appliedFilters).to.have.property('has_bl');
+    
+    // Vérifier que les résultats respectent les filtres de base
+    if (res.body.data.length > 0) {
+      const folder = res.body.data[0];
+      expect(['M']).to.include(folder.transport_type);
+      expect(['draft', 'active']).to.include(folder.status);
+      expect(['normal', 'urgent']).to.include(folder.priority);
     }
   });
 }
