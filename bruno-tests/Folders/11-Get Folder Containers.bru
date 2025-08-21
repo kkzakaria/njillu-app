@@ -1,0 +1,41 @@
+meta {
+  name: Get Folder Containers
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{api_base}}/folders/{{folder_id}}/containers
+  body: none
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+tests {
+  test("Status should be 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Response should contain containers data", function() {
+    expect(res.getBody()).to.have.property("data");
+    expect(res.getBody()).to.have.property("folder_info");
+    expect(res.getBody()).to.have.property("container_summary");
+  });
+  
+  test("Folder info should be complete", function() {
+    const folderInfo = res.getBody().folder_info;
+    expect(folderInfo).to.have.property("id");
+    expect(folderInfo).to.have.property("folder_number");
+    expect(folderInfo).to.have.property("has_bill_of_lading");
+  });
+  
+  test("Container summary should have counts", function() {
+    const summary = res.getBody().container_summary;
+    expect(summary).to.have.property("total_containers");
+    expect(summary).to.have.property("arrival_status_summary");
+    expect(summary).to.have.property("container_types_summary");
+  });
+}

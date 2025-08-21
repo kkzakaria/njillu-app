@@ -46,7 +46,12 @@ export async function GET(request: NextRequest) {
         client:clients(id, first_name, last_name, company_name, email),
         bill_of_lading:bills_of_lading!folders_bl_id_fkey(
           id, bl_number, shipping_company_id, issue_date, status,
-          shipping_company:shipping_companies(id, name, short_name)
+          shipping_company:shipping_companies(id, name, short_name),
+          containers:bl_containers!bl_containers_bl_id_fkey(
+            id, container_number, container_type_id, arrival_status,
+            estimated_arrival_date, actual_arrival_date,
+            container_type:container_types(iso_code, size_feet)
+          )
         )
       `)
       .is('deleted_at', null)

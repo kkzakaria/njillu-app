@@ -48,7 +48,10 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
           containers:bl_containers(
             id, container_number, seal_number, container_type_id,
             tare_weight_kg, gross_weight_kg, net_weight_kg, volume_cbm,
-            container_type:container_types(id, iso_code, description, size_feet)
+            loading_method, marks_and_numbers, shipper_load_stow_count,
+            estimated_arrival_date, actual_arrival_date, arrival_status,
+            arrival_notes, arrival_location, customs_clearance_date, delivery_ready_date,
+            container_type:container_types(id, iso_code, description, size_feet, category, height_type, teu_equivalent)
           ),
           freight_charges:bl_freight_charges(
             id, charge_type, description, amount, currency,

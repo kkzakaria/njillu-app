@@ -1,0 +1,54 @@
+meta {
+  name: Update Container Status
+  type: http
+  seq: 12
+}
+
+put {
+  url: {{api_base}}/folders/{{folder_id}}/containers
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "container_updates": [
+      {
+        "container_id": "{{container_id}}",
+        "arrival_status": "arrived",
+        "actual_arrival_date": "2025-08-21",
+        "arrival_notes": "Conteneur arrivé en bon état",
+        "arrival_location": "Port de Marseille"
+      }
+    ]
+  }
+}
+
+tests {
+  test("Status should be 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Response should contain update results", function() {
+    expect(res.getBody()).to.have.property("message");
+    expect(res.getBody()).to.have.property("summary");
+    expect(res.getBody()).to.have.property("results");
+  });
+  
+  test("Update should be successful", function() {
+    const summary = res.getBody().summary;
+    expect(summary.successful).to.be.greaterThan(0);
+    expect(summary.failed).to.equal(0);
+  });
+  
+  test("Results should contain container data", function() {
+    const results = res.getBody().results;
+    expect(results).to.be.an("array");
+    expect(results[0]).to.have.property("success", true);
+    expect(results[0]).to.have.property("data");
+  });
+}
