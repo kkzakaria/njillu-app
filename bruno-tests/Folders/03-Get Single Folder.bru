@@ -1,0 +1,46 @@
+meta {
+  name: Get Single Folder
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{api_base}}/folders/{{test_folder_id}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+tests {
+  test("Status should be 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Response should contain folder data with relations", function() {
+    expect(res.body).to.have.property('data');
+    const folder = res.body.data;
+    expect(folder).to.have.property('id');
+    expect(folder).to.have.property('folder_number');
+    expect(folder).to.have.property('created_by_user');
+    expect(folder).to.have.property('processing_stages');
+    expect(folder).to.have.property('metrics');
+  });
+  
+  test("Folder should have correct ID", function() {
+    expect(res.body.data.id).to.equal(bru.getEnvVar("test_folder_id"));
+  });
+  
+  test("Metrics should be present", function() {
+    const metrics = res.body.data.metrics;
+    expect(metrics).to.have.property('total_stages');
+    expect(metrics).to.have.property('completed_stages');
+    expect(metrics).to.have.property('completion_percentage');
+  });
+}

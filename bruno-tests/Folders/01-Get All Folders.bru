@@ -1,0 +1,44 @@
+meta {
+  name: Get All Folders
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{api_base}}/folders?page=1&limit=10&transport_type=M&status=active
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+tests {
+  test("Status should be 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Response should have data and pagination", function() {
+    expect(res.body).to.have.property('data');
+    expect(res.body).to.have.property('pagination');
+    expect(res.body.pagination).to.have.property('page');
+    expect(res.body.pagination).to.have.property('limit');
+    expect(res.body.pagination).to.have.property('total');
+  });
+  
+  test("All folders should have required fields", function() {
+    if (res.body.data && res.body.data.length > 0) {
+      const folder = res.body.data[0];
+      expect(folder).to.have.property('id');
+      expect(folder).to.have.property('folder_number');
+      expect(folder).to.have.property('transport_type');
+      expect(folder).to.have.property('status');
+      expect(folder).to.have.property('created_at');
+    }
+  });
+}

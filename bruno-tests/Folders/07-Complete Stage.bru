@@ -1,0 +1,43 @@
+meta {
+  name: Complete Stage
+  type: http
+  seq: 7
+}
+
+put {
+  url: {{api_base}}/folders/{{test_folder_id}}/stages/{{test_stage_name}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "action": "complete",
+    "notes": "Étape complétée via Bruno API test",
+    "documents": ["doc1.pdf", "doc2.xlsx"]
+  }
+}
+
+tests {
+  test("Status should be 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Stage should be completed", function() {
+    expect(res.body).to.have.property('data');
+    expect(res.body.data.status).to.equal('completed');
+    expect(res.body.data.completed_at).to.not.be.null;
+  });
+  
+  test("Completion notes should be set", function() {
+    expect(res.body.data.notes).to.contain('Étape complétée via Bruno API test');
+  });
+}

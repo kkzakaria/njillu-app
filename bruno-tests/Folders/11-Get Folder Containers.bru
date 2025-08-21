@@ -1,0 +1,68 @@
+meta {
+  name: Get Folder Containers
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{api_base}}/folders/{{folder_id}}/containers
+  body: none
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+tests {
+  test("Status should be 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Response should contain containers data", function() {
+    expect(res.getBody()).to.have.property("data");
+    expect(res.getBody()).to.have.property("folder_info");
+    expect(res.getBody()).to.have.property("container_summary");
+  });
+  
+  test("Folder info should be complete", function() {
+    const folderInfo = res.getBody().folder_info;
+    expect(folderInfo).to.have.property("id");
+    expect(folderInfo).to.have.property("folder_number");
+    expect(folderInfo).to.have.property("has_bill_of_lading");
+  });
+  
+  test("Container summary should have counts", function() {
+    const summary = res.getBody().container_summary;
+    expect(summary).to.have.property("total_containers");
+    expect(summary).to.have.property("arrival_status_summary");
+    expect(summary).to.have.property("container_types_summary");
+  });
+  
+  test("Containers should have essential BL fields from real BL analysis", function() {
+    const containers = res.getBody().data;
+    if (containers && containers.length > 0) {
+      const container = containers[0];
+      // Champs essentiels identifiés dans l'analyse des vrais BL
+      expect(container).to.have.property('container_number');
+      expect(container).to.have.property('seal_number'); // Nouveau champ essentiel
+      expect(container).to.have.property('tare_weight_kg'); // Nouveau champ essentiel
+      expect(container).to.have.property('container_type');
+      expect(container.container_type).to.have.property('iso_code');
+      expect(container.container_type).to.have.property('size_feet');
+    }
+  });
+  
+  test("BL should have port and shipping details from real BL", function() {
+    const folderInfo = res.getBody().folder_info;
+    if (folderInfo.has_bill_of_lading && folderInfo.bill_of_lading) {
+      const bl = folderInfo.bill_of_lading;
+      // Nouveaux champs essentiels des vrais BL
+      expect(bl).to.have.property('port_of_loading'); 
+      expect(bl).to.have.property('port_of_discharge');
+      expect(bl).to.have.property('shipped_on_board_date');
+      expect(bl).to.have.property('bl_type'); // NEGOTIABLE, NON_NEGOTIABLE, SEA_WAYBILL
+      expect(bl).to.have.property('bl_number');
+    }
+  });
+}

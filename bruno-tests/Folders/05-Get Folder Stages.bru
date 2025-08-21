@@ -1,0 +1,57 @@
+meta {
+  name: Get Folder Stages
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{api_base}}/folders/{{test_folder_id}}/stages
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+tests {
+  test("Status should be 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Response should contain stages data", function() {
+    expect(res.body).to.have.property('data');
+    expect(res.body.data).to.have.property('folder');
+    expect(res.body.data).to.have.property('stages');
+    expect(res.body.data).to.have.property('metrics');
+  });
+  
+  test("Stages should be ordered by sequence", function() {
+    const stages = res.body.data.stages;
+    if (stages.length > 1) {
+      for (let i = 1; i < stages.length; i++) {
+        expect(stages[i].sequence_order).to.be.greaterThan(stages[i-1].sequence_order);
+      }
+    }
+  });
+  
+  test("First stage should be enregistrement", function() {
+    const stages = res.body.data.stages;
+    if (stages.length > 0) {
+      expect(stages[0].stage).to.equal('enregistrement');
+    }
+  });
+}
+
+script:post-response {
+  if (res.status === 200 && res.body.data.stages.length > 0) {
+    const firstStage = res.body.data.stages[0];
+    bru.setEnvVar("test_stage_id", firstStage.id);
+    bru.setEnvVar("test_stage_name", firstStage.stage);
+    console.log(`✅ Étapes récupérées, première étape: ${firstStage.stage}`);
+  }
+}
