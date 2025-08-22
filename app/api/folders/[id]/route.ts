@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import type { FolderUpdateData } from '@/types/api';
 
 interface RouteParams {
   params: { id: string };
@@ -216,7 +217,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 
     // Préparer les données à mettre à jour (uniquement les champs fournis)
-    const updateData: any = {};
+    const updateData: FolderUpdateData = {};
     
     const allowedFields = [
       'transport_type', 'status', 'title', 'description', 'client_reference',
