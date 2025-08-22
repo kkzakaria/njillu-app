@@ -79,30 +79,52 @@ export interface ContainerUpdateData extends Record<string, unknown> {
 
 /**
  * Interface pour un container avec ses types et métadonnées
- * Remplace les 'any' dans les operations reduce() sur les containers
+ * Basée sur la structure réelle de la base de données Supabase
  */
 export interface ContainerWithType {
   id?: string;
-  arrival_status?: string | null;
-  container_type?: {
-    iso_code?: string;
-    size_feet?: number;
-    teu_equivalent?: number;
-  } | null;
-  volume_cbm?: number | null;
+  container_number?: string;
+  seal_number?: string | null;
+  container_type_id?: string;
+  tare_weight_kg?: number | null;
   gross_weight_kg?: number | null;
+  net_weight_kg?: number | null;
+  volume_cbm?: number | null;
+  loading_method?: string | null;
+  marks_and_numbers?: string | null;
+  shipper_load_stow_count?: number | null;
   estimated_arrival_date?: string | Date | null;
   actual_arrival_date?: string | Date | null;
-  delay_reason?: string | null;
-  customs_status?: string | null;
-  inspection_status?: string | null;
-  release_status?: string | null;
-  location?: string | null;
-  terminal?: string | null;
-  notes?: string | null;
-  priority_level?: number | null;
-  tracking_number?: string | null;
+  arrival_status?: string | null;
+  arrival_notes?: string | null;
+  arrival_location?: string | null;
+  customs_clearance_date?: string | Date | null;
+  delivery_ready_date?: string | Date | null;
+  created_at?: string | Date;
+  updated_at?: string | Date;
+  container_type?: {
+    id?: string;
+    iso_code?: string;
+    description?: string;
+    category?: string;
+    size_feet?: number;
+    height_type?: string;
+    teu_equivalent?: number;
+    length_meters?: number;
+    width_meters?: number;
+    height_meters?: number;
+    max_payload_kg?: number;
+    max_gross_weight_kg?: number;
+    volume_cubic_meters?: number;
+    special_features?: string | null;
+  } | null;
 }
+
+/**
+ * Type union flexible pour les containers venant de Supabase
+ * Permet d'accepter la structure réelle des données avec unknown fields
+ */
+export type SupabaseContainer = ContainerWithType & Record<string, unknown>;
 
 // ============================================================================
 // Types pour les résumés et statistiques

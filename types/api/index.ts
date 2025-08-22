@@ -15,6 +15,7 @@ export type {
   StageUpdateData,
   ContainerUpdateData,
   ContainerWithType,
+  SupabaseContainer,
   ArrivalStatusSummary,
   ContainerTypeSummary,
   StatsData,

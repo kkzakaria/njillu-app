@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import type { 
-  ContainerWithType, 
+  SupabaseContainer, 
   ContainerUpdateData, 
   ArrivalStatusSummary, 
   ContainerTypeSummary 
@@ -127,13 +127,13 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     }
 
     // Calculer les résumés et statistiques
-    const arrivalStatusSummary = containers.reduce((acc: ArrivalStatusSummary, container: ContainerWithType) => {
+    const arrivalStatusSummary = containers.reduce((acc: ArrivalStatusSummary, container: SupabaseContainer) => {
       const status = container.arrival_status || 'unknown';
       acc[status] = (acc[status] || 0) + 1;
       return acc;
     }, {});
 
-    const containerTypesSummary = containers.reduce((acc: ContainerTypeSummary, container: ContainerWithType) => {
+    const containerTypesSummary = containers.reduce((acc: ContainerTypeSummary, container: SupabaseContainer) => {
       const isoCode = container.container_type?.iso_code || 'unknown';
       const sizeFeet = container.container_type?.size_feet || 0;
       const key = `${isoCode}_${sizeFeet}ft`;
@@ -141,15 +141,15 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       return acc;
     }, {});
 
-    const totalTEU = containers.reduce((sum: number, container: ContainerWithType) => {
+    const totalTEU = containers.reduce((sum: number, container: SupabaseContainer) => {
       return sum + (container.container_type?.teu_equivalent || 1);
     }, 0);
 
-    const totalVolumeCBM = containers.reduce((sum: number, container: ContainerWithType) => {
+    const totalVolumeCBM = containers.reduce((sum: number, container: SupabaseContainer) => {
       return sum + (container.volume_cbm || 0);
     }, 0);
 
-    const totalGrossWeight = containers.reduce((sum: number, container: ContainerWithType) => {
+    const totalGrossWeight = containers.reduce((sum: number, container: SupabaseContainer) => {
       return sum + (container.gross_weight_kg || 0);
     }, 0);
 
