@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import type { StatsData, FolderStatEntry } from '@/types/api';
 
 // GET /api/folders/stats - Récupérer les statistiques des dossiers
 export async function GET(request: NextRequest) {
@@ -18,7 +19,7 @@ export async function GET(request: NextRequest) {
     const transportType = searchParams.get('transport_type');
     const assigneeId = searchParams.get('assignee_id');
 
-    let statsData: any = {};
+    let statsData: StatsData = {};
 
     switch (statsType) {
       case 'overview':
@@ -42,7 +43,7 @@ export async function GET(request: NextRequest) {
         }
 
         // Calculer les statistiques par statut
-        const statusCounts = statusStats?.reduce((acc: any, folder: any) => {
+        const statusCounts = statusStats?.reduce((acc: Record<string, number>, folder: FolderStatEntry) => {
           acc[folder.status] = (acc[folder.status] || 0) + 1;
           return acc;
         }, {});

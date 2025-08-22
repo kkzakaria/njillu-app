@@ -1,23 +1,32 @@
 'use client'
 
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useState, useCallback } from 'react';
 import { Archive } from 'lucide-react';
 import { FolderCard } from './folder-card';
 import { InfoBanner } from './info-banner';
 import { FolderSearchBar } from './folder-search-bar';
-import { useFolders } from '@/hooks/useTranslation';
+import { useFolders as useFoldersTranslation } from '@/hooks/useTranslation';
 import { useFolderFilters } from '@/hooks/useFolderFilters';
+import { useFoldersSimple, useFolderMutations } from '@/hooks/use-folders';
+import { useCurrentUser } from '@/hooks/use-current-user';
 import type { FolderSummary, FolderStatus } from '@/types/folders';
+
+// Type pour les mutations
+type FolderMutations = ReturnType<typeof useFolderMutations>;
 
 interface FoldersListPanelProps {
   selectedFolderId?: string;
-  onFolderSelect?: (folder: FolderSummary) => void;
+  onFolderSelect?: (folderId: string | null) => void;
   statusFilter?: FolderStatus[];
   statusCategory?: string;
+  folderMutations?: FolderMutations;
 }
 
-export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilter, statusCategory }: FoldersListPanelProps) {
-  const t = useFolders();
+export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilter, statusCategory, folderMutations }: FoldersListPanelProps) {
+  const t = useFoldersTranslation();
+  const { userId } = useCurrentUser();
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Déduction de la statusCategory pour le hook de filtres
   const getStatusCategory = (category?: string): 'active' | 'completed' | 'archived' | 'deleted' => {
@@ -34,126 +43,37 @@ export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilte
         return 'active';
     }
   };
-  // Mock data étendue pour tous les statuts
-  const allFolders: FolderSummary[] = [
-    // Active folders (open, processing)
-    {
-      id: '1',
-      folder_number: 'M250113-000001',
-      reference_number: 'ACME-2024-001',
-      type: 'import',
-      category: 'commercial',
-      priority: 'urgent',
-      status: 'processing',
-      processing_stage: 'declaration_douaniere',
-      health_status: 'healthy',
-      client_name: 'ACME Corporation',
-      origin_name: 'Shanghai, China',
-      destination_name: 'Le Havre, France',
-      created_date: '2024-01-15T10:30:00Z',
-      expected_completion_date: '2024-01-25T18:00:00Z',
-      sla_compliance: 95,
-    },
-    {
-      id: '2',
-      folder_number: 'M250113-000002',
-      reference_number: 'BETA-2024-002',
-      type: 'export',
-      category: 'urgent',
-      priority: 'normal',
-      status: 'open',
-      processing_stage: 'enregistrement',
-      health_status: 'healthy',
-      client_name: 'Beta Industries',
-      origin_name: 'Lyon, France',
-      destination_name: 'New York, USA',
-      created_date: '2024-01-16T08:00:00Z',
-      expected_completion_date: '2024-01-28T17:00:00Z',
-      sla_compliance: 88,
-    },
-    // Completed folders (completed, closed)
-    {
-      id: '3',
-      folder_number: 'M250113-000003',
-      reference_number: 'GAMMA-2024-003',
-      type: 'import',
-      category: 'commercial',
-      priority: 'low',
-      status: 'completed',
-      processing_stage: 'livraison',
-      health_status: 'healthy',
-      client_name: 'Gamma Solutions',
-      origin_name: 'Barcelona, Spain',
-      destination_name: 'Marseille, France',
-      created_date: '2024-01-13T09:45:00Z',
-      expected_completion_date: '2024-01-18T16:00:00Z',
-      completion_date: '2024-01-18T14:30:00Z',
-      sla_compliance: 100,
-    },
-    {
-      id: '4',
-      folder_number: 'M250113-000004',
-      reference_number: 'DELTA-2024-004',
-      type: 'export',
-      category: 'commercial',
-      priority: 'normal',
-      status: 'closed',
-      processing_stage: 'livraison',
-      health_status: 'healthy',
-      client_name: 'Delta Corp',
-      origin_name: 'Paris, France',
-      destination_name: 'Tokyo, Japan',
-      created_date: '2024-01-10T15:20:00Z',
-      expected_completion_date: '2024-01-15T12:00:00Z',
-      completion_date: '2024-01-15T11:45:00Z',
-      sla_compliance: 98,
-    },
-    // Archived folders (on_hold)
-    {
-      id: '5',
-      folder_number: 'M250113-000005',
-      reference_number: 'ECHO-2024-005',
-      type: 'import',
-      category: 'urgent',
-      priority: 'urgent',
-      status: 'on_hold',
-      processing_stage: 'revision_facture_commerciale',
-      health_status: 'warning',
-      client_name: 'Echo Enterprises',
-      origin_name: 'Hamburg, Germany',
-      destination_name: 'Bordeaux, France',
-      created_date: '2024-01-12T11:30:00Z',
-      expected_completion_date: '2024-01-22T14:00:00Z',
-      archived_date: '2024-01-14T16:45:00Z',
-      sla_compliance: 65,
-    },
-    // Deleted folders (cancelled)
-    {
-      id: '6',
-      folder_number: 'M250113-000006',
-      reference_number: 'FOXTROT-2024-006',
-      type: 'export',
-      category: 'commercial',
-      priority: 'low',
-      status: 'cancelled',
-      processing_stage: 'enregistrement',
-      health_status: 'critical',
-      client_name: 'Foxtrot Ltd',
-      origin_name: 'Marseille, France',
-      destination_name: 'Naples, Italy',
-      created_date: '2024-01-08T14:15:00Z',
-      expected_completion_date: '2024-01-20T10:00:00Z',
-      deleted_date: '2024-01-09T10:20:00Z',
-      sla_compliance: 0,
-    },
-  ];
 
-  // Filter folders based on status filter first
-  const statusFilteredFolders = statusFilter 
-    ? allFolders.filter(folder => statusFilter.includes(folder.status))
-    : allFolders;
+  // Mapper les FolderStatus vers les statuts de la DB (memoized)
+  const mapStatusFilter = useCallback((statusFilter?: FolderStatus[]) => {
+    if (!statusFilter) return undefined;
+    
+    return statusFilter.map(status => {
+      switch (status) {
+        case 'open': return 'draft'
+        case 'processing': return 'active'
+        case 'completed': return 'completed'
+        case 'cancelled': return 'cancelled'
+        case 'on_hold': return 'archived'
+        default: return status
+      }
+    }).join(',') // Pour multiple statuts
+  }, []);
 
-  // Hook de filtrage avec état de recherche
+  // Utiliser les vraies données API avec recherche
+  const { 
+    data: foldersData, 
+    isLoading, 
+    error 
+  } = useFoldersSimple({
+    status: statusFilter?.[0] ? mapStatusFilter(statusFilter) as string : undefined,
+    search: searchQuery.trim() || undefined,
+    limit: 50 // Pagination optimisée
+  });
+
+  const allFolders = foldersData?.data || [];
+
+  // Hook de filtrage avec état de recherche  
   const {
     filters,
     setFilters,
@@ -161,25 +81,75 @@ export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilte
     filteredFolders,
     clearAllFilters
   } = useFolderFilters({
-    folders: statusFilteredFolders,
+    folders: allFolders,
     statusCategory: getStatusCategory(statusCategory),
-    searchQuery: '' // TODO: Gérer la recherche textuelle
+    searchQuery: searchQuery
   });
 
-  // Handlers pour la barre de recherche
-  const handleSearch = (value: string) => {
-    // TODO: Implémenter la logique de recherche textuelle
-    console.log('Search:', value);
-  };
+  // Handlers pour la barre de recherche (memoized)
+  const handleSearch = useCallback((value: string) => {
+    setSearchQuery(value);
+  }, []);
 
-  const handleFiltersChange = (newFilters: typeof filters) => {
+  const handleFiltersChange = useCallback((newFilters: typeof filters) => {
     setFilters(newFilters);
-  };
+  }, [setFilters]);
 
-  const handleAdd = () => {
+  const handleAdd = useCallback(() => {
     // TODO: Implémenter la logique d'ajout
     console.log('Add clicked');
-  };
+  }, []);
+
+  // Handler pour les actions sur les dossiers (memoized)
+  const handleFolderAction = useCallback((actionId: string, folder: FolderSummary) => {
+    if (!folderMutations) return;
+    
+    switch (actionId) {
+      case 'view':
+        onFolderSelect?.(folder.id);
+        break;
+      
+      case 'edit':
+        console.log('Edit folder:', folder.id);
+        // TODO: Ouvrir le modal d'édition
+        break;
+      
+      case 'archive':
+        folderMutations.updateStatus([folder.id], 'archived');
+        break;
+      
+      case 'restore':
+        folderMutations.updateStatus([folder.id], 'active');
+        break;
+      
+      case 'delete':
+        const confirmDelete = window.confirm(
+          `Êtes-vous sûr de vouloir supprimer le dossier ${folder.folder_number} ?`
+        );
+        if (confirmDelete && userId) {
+          folderMutations.deleteFolder([folder.id], userId);
+        }
+        break;
+      
+      case 'duplicate':
+        console.log('Duplicate folder:', folder.id);
+        // TODO: Implémenter la duplication
+        break;
+      
+      case 'export':
+        console.log('Export folder:', folder.id);
+        // TODO: Implémenter l'export
+        break;
+      
+      default:
+        console.log(`Action not implemented: ${actionId}`, folder.id);
+    }
+  }, [folderMutations, userId, onFolderSelect]);
+
+  // Handler pour la sélection de dossier (memoized)
+  const handleFolderSelect = useCallback((folder: FolderSummary) => {
+    onFolderSelect?.(folder.id);
+  }, [onFolderSelect]);
 
   return (
     <div className="h-full flex flex-col p-4">
@@ -221,8 +191,22 @@ export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilte
 
       {/* Folders list */}
       <ScrollArea className="flex-1">
-        <div className="space-y-2">
-          {filteredFolders.map((folder) => (
+        {isLoading ? (
+          <div className="text-center py-8 text-muted-foreground">
+            <div className="animate-spin w-6 h-6 border-2 border-primary border-t-transparent rounded-full mx-auto mb-2"></div>
+            <p className="text-sm">Chargement des dossiers...</p>
+            {searchQuery && (
+              <p className="text-xs mt-1">Recherche en cours : &quot;{searchQuery}&quot;</p>
+            )}
+          </div>
+        ) : error ? (
+          <div className="text-center py-8 text-destructive">
+            <p className="text-sm">Erreur lors du chargement des dossiers</p>
+            <p className="text-xs mt-1">{error.message}</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {filteredFolders.map((folder) => (
             <FolderCard
               key={folder.id}
               folder={folder}
@@ -232,33 +216,54 @@ export function FoldersListPanel({ selectedFolderId, onFolderSelect, statusFilte
               showActions={true}
               statusCategory={statusCategory}
               className={selectedFolderId === folder.id ? 'border-l-2 border-primary bg-primary/5' : ''}
-              onClick={(folder) => {
-                onFolderSelect?.(folder);
-              }}
+              onClick={handleFolderSelect}
+              onActionClick={handleFolderAction}
             />
           ))}
           
-          {/* Message si aucun résultat */}
-          {filteredFolders.length === 0 && (
-            <div className="text-center py-8 text-muted-foreground">
-              <p className="text-sm">Aucun dossier ne correspond aux critères</p>
-              {activeFiltersCount > 0 && (
-                <button 
-                  onClick={clearAllFilters}
-                  className="mt-2 text-primary hover:underline text-xs"
-                >
-                  Effacer les filtres
-                </button>
-              )}
-            </div>
-          )}
-        </div>
+            {/* Message si aucun résultat */}
+            {filteredFolders.length === 0 && !isLoading && (
+              <div className="text-center py-8 text-muted-foreground">
+                <p className="text-sm">Aucun dossier ne correspond aux critères</p>
+                {activeFiltersCount > 0 && (
+                  <button 
+                    onClick={clearAllFilters}
+                    className="mt-2 text-primary hover:underline text-xs"
+                  >
+                    Effacer les filtres
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </ScrollArea>
       
-      {/* Footer stats */}
-      <div className="mt-4 pt-4 border-t">
+      {/* Load more / Footer stats */}
+      <div className="mt-4 pt-4 border-t space-y-2">
+        {/* Afficher un bouton "Charger plus" si on a atteint la limite */}
+        {foldersData && foldersData.count > allFolders.length && (
+          <div className="text-center">
+            <p className="text-xs text-muted-foreground mb-2">
+              {allFolders.length} dossiers affichés sur {foldersData.count} au total
+            </p>
+            <button
+              className="text-xs text-primary hover:underline"
+              onClick={() => console.log('TODO: Implement load more')}
+            >
+              Afficher plus de résultats
+            </button>
+          </div>
+        )}
+        
+        {/* Stats finales */}
         <div className="text-xs text-gray-500 text-center">
-          {filteredFolders.length} sur {statusFilteredFolders.length} dossier(s)
+          {filteredFolders.length} sur {allFolders.length} dossier(s) affichés
+          {foldersData?.count && foldersData.count > allFolders.length && (
+            <span className="ml-1 text-muted-foreground">
+              (sur {foldersData.count} au total)
+            </span>
+          )}
           {activeFiltersCount > 0 && (
             <span className="ml-2 text-primary">
               ({activeFiltersCount} filtre{activeFiltersCount > 1 ? 's' : ''})

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import type { StageUpdateData } from '@/types/api';
 
 interface RouteParams {
   params: { id: string; stage: string };
@@ -172,7 +173,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 
     // Préparer les données à mettre à jour
-    const updateData: any = {};
+    const updateData: StageUpdateData = {};
     
     const allowedFields = [
       'status', 'priority', 'assigned_to', 'due_date', 'estimated_completion_date',

@@ -8,6 +8,7 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { routing } from '@/i18n/routing';
 import { Messages } from '@/types/i18n.types';
 import { AlertProvider } from '@/components/alert-system';
+import { QueryProvider } from '@/lib/providers/query-provider';
 import "../globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -66,11 +67,13 @@ export default async function LocaleLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <NuqsAdapter>
-              <AlertProvider>
-                {children}
-              </AlertProvider>
-            </NuqsAdapter>
+            <QueryProvider>
+              <NuqsAdapter>
+                <AlertProvider>
+                  {children}
+                </AlertProvider>
+              </NuqsAdapter>
+            </QueryProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

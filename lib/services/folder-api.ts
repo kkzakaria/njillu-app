@@ -16,32 +16,74 @@ export type { FolderSummary } from '@/types/folders'
 interface SupabaseFolderSearchResult {
   id: string
   folder_number: string
-  priority: string
+  title?: string
   status: string
-  created_at: string
-  transport_type?: string
+  priority: string
+  transport_type: 'M' | 'T' | 'A'
   assigned_to?: string
-  updated_at?: string
+  created_at: string
+  search_rank?: number
 }
 
 interface SupabaseFolderDetail {
   id: string
   folder_number: string
-  priority: string
+  transport_type: 'M' | 'T' | 'A'
   status: string
+  title?: string
+  description?: string
+  client_reference?: string
+  folder_date: string
+  expected_delivery_date?: string
+  actual_delivery_date?: string
+  priority: string
+  estimated_value?: number
+  estimated_value_currency?: string
+  internal_notes?: string
+  client_notes?: string
   created_at: string
-  transport_type?: string
-  assigned_to?: string
-  updated_at?: string
-  deleted_at?: string | null
+  updated_at: string
   created_by?: string
+  assigned_to?: string
+  deleted_at?: string | null
+  deleted_by?: string
+  bl_id?: string
+  client_id?: string
+  // Relations
   assigned_user?: {
+    id: string
     email: string
-    full_name: string
+    first_name?: string
+    last_name?: string
   }
   creator?: {
+    id: string
     email: string
-    full_name: string
+    first_name?: string
+    last_name?: string
+  }
+  client?: {
+    id: string
+    client_type: 'individual' | 'business'
+    email: string
+    first_name?: string
+    last_name?: string
+    company_name?: string
+    city?: string
+    country?: string
+  }
+  bill_of_lading?: {
+    id: string
+    bl_number: string
+    status: string
+    port_of_loading?: string
+    port_of_discharge?: string
+    issue_date: string
+    shipping_company?: {
+      id: string
+      name: string
+      short_name?: string
+    }
   }
 }
 
@@ -52,7 +94,7 @@ interface FolderUpdateData {
 }
 
 // ============================================================================
-// Utilitaires de validation de types
+// Utilitaires de validation et mapping de types
 // ============================================================================
 
 function isSupabaseFolderSearchResult(item: unknown): item is SupabaseFolderSearchResult {
@@ -73,6 +115,54 @@ function validateSupabaseFolderArray(data: unknown[]): SupabaseFolderSearchResul
   return data.filter(isSupabaseFolderSearchResult)
 }
 
+// Mapping functions pour convertir les données DB vers les types FolderSummary
+function mapPriority(priority: string): FolderSummary['priority'] {
+  switch (priority) {
+    case 'low': return 'low'
+    case 'normal': return 'medium'
+    case 'urgent': return 'urgent'
+    case 'critical': return 'critical'
+    default: return 'medium'
+  }
+}
+
+function mapFolderStatus(status: string): FolderSummary['status'] {
+  switch (status) {
+    case 'draft': return 'open'
+    case 'active': return 'processing'
+    case 'shipped': return 'processing'
+    case 'delivered': return 'processing'
+    case 'completed': return 'completed'
+    case 'cancelled': return 'cancelled'
+    case 'archived': return 'on_hold'
+    default: return 'open'
+  }
+}
+
+function mapProcessingStage(stage?: string): FolderSummary['processing_stage'] {
+  switch (stage) {
+    case 'enregistrement': return 'enregistrement'
+    case 'revision_facture_commerciale': return 'revision_facture_commerciale'
+    case 'elaboration_fdi': return 'elaboration_fdi'
+    case 'elaboration_rfcv': return 'elaboration_rfcv'
+    case 'declaration_douaniere': return 'declaration_douaniere'
+    case 'service_exploitation': return 'service_exploitation'
+    case 'facturation_client': return 'facturation_client'
+    case 'livraison': return 'livraison'
+    default: return 'enregistrement'
+  }
+}
+
+function getDisplayName(client?: SupabaseFolderDetail['client']): string {
+  if (!client) return 'Client non assigné'
+  
+  if (client.client_type === 'business') {
+    return client.company_name || 'Entreprise'
+  } else {
+    return `${client.first_name || ''} ${client.last_name || ''}`.trim() || 'Particulier'
+  }
+}
+
 // ============================================================================
 // Types pour l'API
 // ============================================================================
@@ -80,8 +170,8 @@ function validateSupabaseFolderArray(data: unknown[]): SupabaseFolderSearchResul
 export interface FolderApiSearchParams {
   search?: string
   transport_type?: 'M' | 'T' | 'A'
-  status?: string
-  priority?: string
+  status?: 'draft' | 'active' | 'shipped' | 'delivered' | 'completed' | 'cancelled' | 'archived'
+  priority?: 'low' | 'normal' | 'urgent' | 'critical'
   assigned_to?: string
   page?: number
   limit?: number
@@ -162,66 +252,70 @@ class FolderApiService {
     const offset = page * limit
 
     try {
-      // Utiliser la fonction PostgreSQL optimisée
-      const { data: searchData, error: searchError } = await this.supabase
-        .rpc('search_folders_optimized', {
-          search_term: search,
-          transport_filter: transport_type || null,
-          status_filter: status || null,
-          priority_filter: priority || null,
-          assigned_to_filter: assigned_to || null,
-          limit_count: limit + 1, // +1 pour détecter hasNextPage
-          offset_count: offset
-        })
+      // Utiliser une requête manuelle plus complète au lieu de la fonction RPC
+      // pour récupérer aussi les relations
+      let query = this.supabase
+        .from('folders')
+        .select(`
+          id, folder_number, title, status, priority, transport_type,
+          assigned_to, created_at, client_reference, expected_delivery_date,
+          client:clients(id, client_type, first_name, last_name, company_name),
+          bill_of_lading:bills_of_lading(
+            id, bl_number, port_of_loading, port_of_discharge
+          )
+        `, { count: 'exact' })
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false })
+        .range(offset, offset + limit - 1)
+
+      // Appliquer les filtres
+      if (search) {
+        query = query.or(`title.ilike.%${search}%,client_reference.ilike.%${search}%,folder_number.ilike.%${search}%`)
+      }
+      if (transport_type) {
+        query = query.eq('transport_type', transport_type)
+      }
+      if (status) {
+        query = query.eq('status', status)
+      }
+      if (priority) {
+        query = query.eq('priority', priority)
+      }
+      if (assigned_to) {
+        query = query.eq('assigned_to', assigned_to)
+      }
+
+      const { data: searchData, error: searchError, count } = await query
 
       if (searchError) {
         console.error('Erreur recherche dossiers:', searchError)
         throw new Error(`Erreur recherche: ${searchError.message}`)
       }
 
-      // Récupérer le count total séparément
-      const { data: countData, error: countError } = await this.supabase
-        .rpc('count_folders_optimized', {
-          search_term: search,
-          transport_filter: transport_type || null,
-          status_filter: status || null,
-          priority_filter: priority || null,
-          assigned_to_filter: assigned_to || null,
-        })
+      const hasNextPage = (count || 0) > offset + limit
 
-      if (countError) {
-        console.error('Erreur count dossiers:', countError)
-        throw new Error(`Erreur count: ${countError.message}`)
-      }
-
-      const hasNextPage = searchData.length > limit
-      const data = hasNextPage ? searchData.slice(0, -1) : searchData
-
-      // Validation et conversion sécurisée des types
-      const validatedData = validateSupabaseFolderArray(data)
-
-      // Convertir les résultats au format FolderSummary
-      const folders: FolderSummary[] = validatedData.map((item) => ({
+      // Convertir les résultats au format FolderSummary avec plus de données
+      const folders: FolderSummary[] = (searchData || []).map((item: any) => ({
         id: item.id,
         folder_number: item.folder_number,
-        type: 'import', // TODO: ajouter dans la fonction search
-        category: 'commercial', // TODO: ajouter dans la fonction search
-        priority: item.priority as FolderSummary['priority'],
-        status: item.status as FolderSummary['status'],
-        processing_stage: 'enregistrement', // TODO: ajouter dans la fonction search
-        health_status: 'healthy', // TODO: ajouter dans la fonction search
-        client_name: 'Client Name', // TODO: joindre avec les données client
-        origin_name: 'Origin', // TODO: joindre avec les données location
-        destination_name: 'Destination', // TODO: joindre avec les données location
+        reference_number: item.client_reference || undefined,
+        type: item.transport_type === 'M' ? 'import' : 'export',
+        category: 'commercial', // Valeur par défaut
+        priority: mapPriority(item.priority),
+        status: mapFolderStatus(item.status),
+        processing_stage: 'enregistrement', // Sera amélioré avec les étapes
+        health_status: 'healthy', // Sera calculé avec des métriques
+        client_name: getDisplayName(item.client),
+        origin_name: item.bill_of_lading?.port_of_loading || undefined,
+        destination_name: item.bill_of_lading?.port_of_discharge || undefined,
         created_date: item.created_at,
-        reference_number: undefined, // TODO: ajouter si nécessaire
-        expected_completion_date: undefined, // TODO: ajouter si nécessaire
-        sla_compliance: undefined, // TODO: calculer si nécessaire
+        expected_completion_date: item.expected_delivery_date || undefined,
+        sla_compliance: undefined, // Sera calculé avec des métriques
       }))
 
       return {
         data: folders,
-        count: countData || 0,
+        count: count || 0,
         hasNextPage
       }
     } catch (error) {
@@ -283,7 +377,7 @@ class FolderApiService {
   }
 
   /**
-   * Récupérer un dossier par ID
+   * Récupérer un dossier par ID avec toutes ses relations
    */
   async getFolderById(id: string): Promise<FolderSummary | null> {
     try {
@@ -291,11 +385,20 @@ class FolderApiService {
         .from('folders')
         .select(`
           *,
-          assigned_user:users!assigned_to(email, full_name),
-          creator:users!created_by(email, full_name)
+          assigned_user:users!assigned_to(id, email, first_name, last_name),
+          creator:users!created_by(id, email, first_name, last_name),
+          client:clients(
+            id, client_type, email, first_name, last_name, 
+            company_name, city, country
+          ),
+          bill_of_lading:bills_of_lading(
+            id, bl_number, status, port_of_loading, port_of_discharge, 
+            issue_date,
+            shipping_company:shipping_companies(id, name, short_name)
+          )
         `)
         .eq('id', id)
-        .eq('deleted_at', null)
+        .is('deleted_at', null)
         .single()
 
       if (error) {
@@ -309,25 +412,56 @@ class FolderApiService {
       // Type assertion sécurisée avec vérification
       const folderData = data as SupabaseFolderDetail
 
-      // Convertir au format FolderSummary
-      // TODO: Mapper correctement toutes les propriétés
+      // Obtenir l'étape actuelle depuis les étapes de traitement
+      const currentStage = await this.getCurrentProcessingStage(id)
+
+      // Convertir au format FolderSummary avec données complètes
       return {
         id: folderData.id,
         folder_number: folderData.folder_number,
-        type: 'import', // TODO: mapper correctement
-        category: 'commercial',
-        priority: folderData.priority as FolderSummary['priority'],
-        status: folderData.status as FolderSummary['status'],
-        processing_stage: 'enregistrement',
-        health_status: 'healthy',
-        client_name: 'Client Name',
-        origin_name: 'Origin',
-        destination_name: 'Destination',
+        reference_number: folderData.client_reference || undefined,
+        type: folderData.transport_type === 'M' ? 'import' : 'export',
+        category: 'commercial', // Peut être étendu selon les besoins
+        priority: mapPriority(folderData.priority),
+        status: mapFolderStatus(folderData.status),
+        processing_stage: mapProcessingStage(currentStage),
+        health_status: 'healthy', // Sera calculé avec des métriques
+        client_name: getDisplayName(folderData.client),
+        origin_name: folderData.bill_of_lading?.port_of_loading || undefined,
+        destination_name: folderData.bill_of_lading?.port_of_discharge || undefined,
         created_date: folderData.created_at,
+        expected_completion_date: folderData.expected_delivery_date || undefined,
+        completion_date: folderData.actual_delivery_date || undefined,
+        sla_compliance: undefined, // Sera calculé avec des métriques
       }
     } catch (error) {
       console.error('Erreur dans getFolderById:', error)
       throw error
+    }
+  }
+
+  /**
+   * Récupérer l'étape de traitement actuelle d'un dossier
+   */
+  private async getCurrentProcessingStage(folderId: string): Promise<string | undefined> {
+    try {
+      const { data, error } = await this.supabase
+        .from('folder_processing_stages')
+        .select('stage')
+        .eq('folder_id', folderId)
+        .eq('status', 'in_progress')
+        .order('sequence_order', { ascending: true })
+        .limit(1)
+        .single()
+
+      if (error && error.code !== 'PGRST116') {
+        console.warn('Erreur récupération étape courante:', error)
+      }
+
+      return data?.stage || 'enregistrement'
+    } catch (error) {
+      console.warn('Erreur dans getCurrentProcessingStage:', error)
+      return 'enregistrement'
     }
   }
 
