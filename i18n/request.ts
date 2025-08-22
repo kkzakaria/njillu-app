@@ -21,8 +21,7 @@ async function loadMessages(locale: string) {
       customsRfcv,
       languageSwitcher,
       folders,
-      folderFilters,
-      clients
+      folderFilters
     ] = await Promise.all([
       import(`./messages/${locale}/metadata/app.json`),
       import(`./messages/${locale}/home/page.json`),
@@ -39,8 +38,7 @@ async function loadMessages(locale: string) {
       import(`./messages/${locale}/customs/rfcv.json`),
       import(`./messages/${locale}/language/switcher.json`),
       import(`./messages/${locale}/folders.json`),
-      import(`./messages/${locale}/folder-filters.json`),
-      import(`./messages/${locale}/clients.json`)
+      import(`./messages/${locale}/folder-filters.json`)
     ]);
 
     // Combine all modules into the expected namespace structure
@@ -64,8 +62,7 @@ async function loadMessages(locale: string) {
       },
       language: languageSwitcher.default,
       folders: folders.default,
-      'folder-filters': folderFilters.default,
-      clients: clients.default
+      'folder-filters': folderFilters.default
     };
   } catch (error) {
     console.error(`Failed to load messages for locale ${locale}:`, error);
