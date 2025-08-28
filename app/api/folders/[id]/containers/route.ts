@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import type { 
+  SupabaseContainer, 
+  ContainerUpdateData, 
+  ArrivalStatusSummary, 
+  ContainerTypeSummary 
+} from '@/types/api';
 
 interface RouteParams {
   params: { id: string };
@@ -121,13 +127,13 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     }
 
     // Calculer les résumés et statistiques
-    const arrivalStatusSummary = containers.reduce((acc: any, container: any) => {
+    const arrivalStatusSummary = containers.reduce((acc: ArrivalStatusSummary, container: SupabaseContainer) => {
       const status = container.arrival_status || 'unknown';
       acc[status] = (acc[status] || 0) + 1;
       return acc;
     }, {});
 
-    const containerTypesSummary = containers.reduce((acc: any, container: any) => {
+    const containerTypesSummary = containers.reduce((acc: ContainerTypeSummary, container: SupabaseContainer) => {
       const isoCode = container.container_type?.iso_code || 'unknown';
       const sizeFeet = container.container_type?.size_feet || 0;
       const key = `${isoCode}_${sizeFeet}ft`;
@@ -135,15 +141,15 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       return acc;
     }, {});
 
-    const totalTEU = containers.reduce((sum: number, container: any) => {
+    const totalTEU = containers.reduce((sum: number, container: SupabaseContainer) => {
       return sum + (container.container_type?.teu_equivalent || 1);
     }, 0);
 
-    const totalVolumeCBM = containers.reduce((sum: number, container: any) => {
+    const totalVolumeCBM = containers.reduce((sum: number, container: SupabaseContainer) => {
       return sum + (container.volume_cbm || 0);
     }, 0);
 
-    const totalGrossWeight = containers.reduce((sum: number, container: any) => {
+    const totalGrossWeight = containers.reduce((sum: number, container: SupabaseContainer) => {
       return sum + (container.gross_weight_kg || 0);
     }, 0);
 
@@ -261,7 +267,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     const updateResults = [];
     
     for (const update of body.container_updates) {
-      const updateData: any = {};
+      const updateData: ContainerUpdateData = {};
       
       // Champs autorisés pour mise à jour
       const allowedFields = [
